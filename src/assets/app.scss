@@ -1,0 +1,15 @@
+// Define variable defaults
+$body-bg: #ffffff;
+$body-color: #ffffff;
+
+// 커스텀 색 추가( 숫자 커질수록 어두워짐
+$theme-colors: (
+  "custom-color1": #f9f7f7,
+  "custom-color2": #dbe2ef,
+  "custom-color3": #3f72af,
+  "custom-color4": #112d4e,
+);
+
+// Then import Bootstrap and BootstrapVue SCSS files (order is important)
+@import "node_modules/bootstrap/scss/bootstrap.scss";
+@import "node_modules/bootstrap-vue/src/index.scss";

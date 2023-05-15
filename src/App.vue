@@ -1,12 +1,26 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <the-header-navi-bar></the-header-navi-bar>
   </div>
 </template>
+
+<script>
+import TheHeaderNaviBar from "./components/common/TheHeaderNaviBar.vue";
+
+export default {
+  name: "App",
+  components: {
+    TheHeaderNaviBar,
+  },
+  data() {
+    return {
+      message: "",
+    };
+  },
+  created() {},
+  methods: {},
+};
+</script>
 
 <style>
 #app {
