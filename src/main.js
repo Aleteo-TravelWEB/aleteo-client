@@ -8,6 +8,7 @@ import { BootstrapVue, IconsPlugin, BootstrapVueIcons } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import "./assets/app.scss";
+import vuetify from './plugins/vuetify'
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);
@@ -20,5 +21,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  vuetify,
+  render: (h) => h(App)
 }).$mount("#app");
