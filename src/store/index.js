@@ -87,7 +87,7 @@ export default new Vuex.Store({
         areaCode: sidoCode,
         sigunguCode: gugunCode
       };
-      console.log("areaCode: " + sidoCode + ", gugunCode: " + gugunCode)
+      // console.log("areaCode: " + sidoCode + ", gugunCode: " + gugunCode)
       http
         .get(SERVICE_URL, { params })
         .then(({ data }) => {
