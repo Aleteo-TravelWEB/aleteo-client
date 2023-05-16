@@ -1,18 +1,18 @@
 <template>
   <div class="background">
     메인 페이지
-    <search-bar></search-bar>
+    <attraction-search-bar></attraction-search-bar>
     <div>지도</div>
   </div>
 </template>
 
 <script>
-import SearchBar from "@/components/main/SearchBar.vue";
+import AttractionSearchBar from "@/components/main/AttractionSearchBar.vue";
 
 export default {
   name: "AppMain",
   components: {
-    SearchBar,
+    AttractionSearchBar,
   },
   data() {
     return {
