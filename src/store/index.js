@@ -21,6 +21,10 @@ export default new Vuex.Store({
       });
     },
     SET_GUGUN_LIST(state, guguns) {
+      if (!Array.isArray(guguns)) {
+        console.log(guguns);
+        return;
+      }
       guguns.forEach((gugun) => {
         state.guguns.push({ value: gugun.gugunCode, text: gugun.gugunName });
       });
@@ -32,7 +36,7 @@ export default new Vuex.Store({
       state.attractions = [];
       state.attraction = null;
     },
-    CLAER_GUGUN_LIST(state) {
+    CLEAR_GUGUN_LIST(state) {
       state.guguns = [{ value: null, text: "선택하세요" }];
     },
     SET_ATTRACTION_LIST(state, attractions) {
@@ -66,19 +70,29 @@ export default new Vuex.Store({
           console.log(error);
         });
     },
-    getAttractionList({ commit }, gugunCode) {
+    getAttractionList({ commit },[sidoCode, gugunCode]) {
       const SERVICE_KEY = process.env.VUE_APP_TRIP_DEAL_API_KEY;
       const SERVICE_URL = 
-        "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev";
+        "https://apis.data.go.kr/B551011/KorService1/areaBasedList1";
       const params = {
-        LAWD_CD: gugunCode,
-        DEAL_YMD: "202304",
         serviceKey: decodeURIComponent(SERVICE_KEY),
+        numOfRows: 30,
+        pageNo: 1,
+        MobileOS: "ETC",
+        MobileApp: "AppTest",
+        _type: "json",
+        listYN: "Y",
+        arrange: "A",
+        contentTypeId: 12,
+        areaCode: sidoCode,
+        sigunguCode: gugunCode
       };
+      console.log("areaCode: " + sidoCode + ", gugunCode: " + gugunCode)
       http
         .get(SERVICE_URL, { params })
         .then(({ data }) => {
-          commit("SET_HOUSE_LIST", data.response.body.items.item);
+          console.log(data.response.body.items.item);
+          commit("SET_ATTRACTION_LIST", data.response.body.items.item);
         })
         .catch((error) => {
           console.log(error);

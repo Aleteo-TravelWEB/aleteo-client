@@ -14,7 +14,7 @@
       <b-form-select v-model="sidoCode" :options="sidos" @change="gugunList"></b-form-select>
     </b-col>
     <b-col class="sm-3">
-      <b-form-select v-model="gugunCode" :options="guguns" @change="searchApt"></b-form-select>
+      <b-form-select v-model="gugunCode" :options="guguns" @change="searchAttr"></b-form-select>
     </b-col>
   </b-row>
 
@@ -43,13 +43,14 @@ export default {
   methods: {
     ...mapActions(["getSido", "getGugun", "getAttractionList"]),
     ...mapMutations(["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_ATTRACTION_LIST"]),
-    gugnList() {
+    gugunList() {
       this.CLEAR_GUGUN_LIST();
       this.gugunCode = null;
       if (this.sidoCode) this.getGugun(this.sidoCode);
     },
     searchAttr() {
-      if (this.gugunCode) this.getAttractionList(this.gugunCode);
+      console.log(this.sidoCode + ", " + this.gugunCode)
+      if (this.sidoCode && this.gugunCode) this.getAttractionList([this.sidoCode, this.gugunCode]);
     },
   },
 };
