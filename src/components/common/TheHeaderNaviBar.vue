@@ -6,14 +6,16 @@
         Aleto
       </b-navbar-brand>
 
-      <b-navbar-nav>
-        <b-nav-item href="/plan">여행계획</b-nav-item>
-        <b-nav-item href="/hotplace">핫플레이스</b-nav-item>
-        <b-nav-item href="/board">공지사항</b-nav-item>
-        <b-nav-item href="/notification">게시판</b-nav-item>
-      </b-navbar-nav>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
+
+        <b-navbar-nav>
+          <b-nav-item href="/plan">여행계획</b-nav-item>
+          <b-nav-item href="/hotplace">핫플레이스</b-nav-item>
+          <b-nav-item href="/board">공지사항</b-nav-item>
+          <b-nav-item href="/notification">게시판</b-nav-item>
+        </b-navbar-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
