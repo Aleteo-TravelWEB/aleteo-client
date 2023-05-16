@@ -24,10 +24,30 @@ const routes = [
     children: [
       {
         path: "list",
-        name: "baordlist",
+        name: "boardlist",
         component: () => import("@/components/board/BoardList"),
-      }
-    ]
+      },
+      {
+        path: "view/:id",
+        name: "boardview",
+        component: () => import("@/components/board/BoardView"),
+      },
+      {
+        path: "write",
+        name: "boardwrite",
+        component: () => import("@/components/board/BoardWrite"),
+      },
+      {
+        path: "modify",
+        name: "boardmodify",
+        component: () => import("@/components/board/BoardModify"),
+      },
+      {
+        path: "delete",
+        name: "boarddelete",
+        component: () => import("@/components/board/BoardDelete"),
+      },
+    ],
   },
   {
     path: "/notice",
@@ -49,8 +69,8 @@ const routes = [
         path: "list",
         name: "hotplacelist",
         component: () => import("@/components/hotplace/HotplaceList"),
-      }
-    ]
+      },
+    ],
   },
 ];
 
