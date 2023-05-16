@@ -1,11 +1,16 @@
 <template>
-  <div>핫플레이스</div>
+  <div>
+    <h3>Hot place</h3>
+    <hotplace-list></hotplace-list>
+  </div>
 </template>
 
 <script>
+import HotplaceList from "@/components/hotplace/HotplaceList.vue";
+
 export default {
   name: "AppHotplace",
-  components: {},
+  components: {HotplaceList},
   data() {
     return {
       message: "",

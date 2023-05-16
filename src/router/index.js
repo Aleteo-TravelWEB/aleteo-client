@@ -6,7 +6,7 @@ import AppMain from "@/views/AppMain";
 import AppBoard from "@/views/AppBoard";
 import AppPlan from "@/views/AppPlan";
 import AppHotPlace from "@/views/AppHotPlace";
-import AppNotification from "@/views/AppNotice";
+import AppNotice from "@/views/AppNotice";
 
 Vue.use(VueRouter);
 
@@ -20,11 +20,19 @@ const routes = [
     path: "/board",
     name: "board",
     component: AppBoard,
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "baordlist",
+        component: () => import("@/components/board/BoardList"),
+      }
+    ]
   },
   {
-    path: "/notification",
-    name: "notification",
-    component: AppNotification,
+    path: "/notice",
+    name: "notice",
+    component: AppNotice,
   },
   {
     path: "/plan",
@@ -33,8 +41,16 @@ const routes = [
   },
   {
     path: "/hotplace",
-    name: "hoplace",
+    name: "hotplace",
     component: AppHotPlace,
+    redirect: "/hotplace/list",
+    children: [
+      {
+        path: "list",
+        name: "hotplacelist",
+        component: () => import("@/components/hotplace/HotplaceList"),
+      }
+    ]
   },
 ];
 

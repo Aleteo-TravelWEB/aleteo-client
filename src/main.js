@@ -8,7 +8,9 @@ import { BootstrapVue, IconsPlugin, BootstrapVueIcons } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import "./assets/app.scss";
-import vuetify from './plugins/vuetify'
+import vuetify from './plugins/vuetify';
+import "@/api/fontAwesomeIcon.js"; // fontAwesomeIcon.js 불러옴
+
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue);

@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "AppNotification",
+  name: "AppNotice",
   components: {},
   data() {
     return {
