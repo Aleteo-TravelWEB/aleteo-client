@@ -8,6 +8,17 @@ export default new Vuex.Store({
   state: {
     sidos: [{ value: null, text: "선택하세요" }],
     guguns: [{ value: null, text: "선택하세요" }],
+    types: [
+      { id: 12, name: '관광지' },
+      { id: 14, name: '문화시설' },
+      { id: 15, name: '축제공연행사' },
+      { id: 25, name: '여행코스' },
+      { id: 28, name: '레포츠' },
+      { id: 32, name: '숙박' },
+      { id: 38, name: '쇼핑' },
+      { id: 39, name: '음식점' }  
+    ],
+    checkedTypes: [], // 선택된 체크박스 값들이 저장될 배열
     attractions: [],
     attraction: null,
   },
@@ -21,10 +32,6 @@ export default new Vuex.Store({
       });
     },
     SET_GUGUN_LIST(state, guguns) {
-      if (!Array.isArray(guguns)) {
-        console.log(guguns);
-        return;
-      }
       guguns.forEach((gugun) => {
         state.guguns.push({ value: gugun.gugunCode, text: gugun.gugunName });
       });
@@ -38,6 +45,15 @@ export default new Vuex.Store({
     },
     CLEAR_GUGUN_LIST(state) {
       state.guguns = [{ value: null, text: "선택하세요" }];
+    },
+    CLEAR_TYPE_LIST(state) {
+      state.checkedTypes = [];
+    },
+    SET_TYPE(state, contentTypeIds) {
+      state.checkedTypes = Object.values(contentTypeIds).map((type) => type.id);
+    },
+    SET_TYPE_LIST(state) {
+      state.checkedTypes = Object.values(state.types).map((type) => type.id);
     },
     SET_ATTRACTION_LIST(state, attractions) {
       state.attractions = attractions;
@@ -70,7 +86,13 @@ export default new Vuex.Store({
           console.log(error);
         });
     },
-    getAttractionList({ commit },[sidoCode, gugunCode]) {
+    getType({ commit }, contentTypeIds) {
+      commit("SET_TYPE", contentTypeIds);
+    },
+    getTypeList({ commit }) {
+      commit("SET_TYPE_LIST");
+    },
+    getAttractionList({ commit },[sidoCode, gugunCode, ]) {
       const SERVICE_KEY = process.env.VUE_APP_TRIP_DEAL_API_KEY;
       const SERVICE_URL = 
         "https://apis.data.go.kr/B551011/KorService1/areaBasedList1";
@@ -83,10 +105,14 @@ export default new Vuex.Store({
         _type: "json",
         listYN: "Y",
         arrange: "A",
-        contentTypeId: 12,
+        // contentTypeId: 12,
         areaCode: sidoCode,
         sigunguCode: gugunCode
       };
+
+      // state.checkedTypes.forEach((type) => {
+      //   params[`contentTypeId`] = type.id;
+      // })
       // console.log("areaCode: " + sidoCode + ", gugunCode: " + gugunCode)
       http
         .get(SERVICE_URL, { params })

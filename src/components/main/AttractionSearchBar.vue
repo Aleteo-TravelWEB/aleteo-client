@@ -18,10 +18,14 @@
         <b-form-select v-model="gugunCode" :options="guguns" @change="searchAttr"></b-form-select>
       </b-col>
     </b-row>
-    <b-row class="mt-4 mb-4 p-4">
+    <b-row class="mt-4 mb-4 p-4 justify-content-md-center">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="customSwitch1" :value="toggleOn" @change="selectAll">
+          <label class="custom-control-label" for="customSwitch1">전체 선택</label>
+        </div> 
         <b-form-checkbox class="m-1"
           v-for="(type, index) in types" :key="index"
-          v-model="checkedTypes" :value="type.id" :id="String(type.id)" :name="type.name">
+          v-model="contentTypeIds" :value="type.id" :id="String(type.id)" :name="type.name" @change="selectType">
           {{ type.name }}
         </b-form-checkbox>
     </b-row>
@@ -38,22 +42,12 @@ export default {
     return {
       sidoCode: null,
       gugunCode: null,
-      types: [
-        { id: 0, name: "전체 보여주기"},
-        { id: 12, name: '관광지' },
-        { id: 14, name: '문화시설' },
-        { id: 15, name: '축제공연행사' },
-        { id: 25, name: '여행코스' },
-        { id: 28, name: '레포츠' },
-        { id: 32, name: '숙박' },
-        { id: 38, name: '쇼핑' },
-        { id: 39, name: '음식점' }
-      ],
-      checkedTypes: [] // 선택된 체크박스 값들이 저장될 배열
+      contentTypeIds: [],
+      toggleOn: false, 
     };
   },
   computed: {
-    ...mapState(["sidos", "guguns"]),
+    ...mapState(["sidos", "guguns", "types", "checkedTypes", "attractions"]),
   },
   created() {
     this.CLEAR_SIDO_LIST();
@@ -61,12 +55,26 @@ export default {
     this.getSido();
   },
   methods: {
-    ...mapActions(["getSido", "getGugun", "getAttractionList"]),
-    ...mapMutations(["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_ATTRACTION_LIST"]),
+    ...mapActions(["getSido", "getGugun", "getType", "getTypeList", "getAttractionList"]),
+    ...mapMutations(["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_TYPE_LIST", "CLEAR_ATTRACTION_LIST"]),
     gugunList() {
       this.CLEAR_GUGUN_LIST();
       this.gugunCode = null;
       if (this.sidoCode) this.getGugun(this.sidoCode);
+    },
+    selectType(checked) {
+      this.CLEAR_TYPE_LIST();
+      if (checked) this.getType(this.contentTypeIds);
+    },
+    selectAll() {
+      this.CLEAR_TYPE_LIST();
+      this.contentTypeIds = [];
+      let toggleValue = this.toggleOn;
+      this.toggleOn = !toggleValue;
+      if (this.toggleOn) {
+        this.getTypeList();
+        this.contentTypeIds = this.types.map((type) => type.id);
+      }
     },
     searchAttr() {
       // console.log(this.sidoCode + ", " + this.gugunCode)
@@ -76,4 +84,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped></style> 
