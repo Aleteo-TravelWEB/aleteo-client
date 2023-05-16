@@ -21,6 +21,7 @@ export default new Vuex.Store({
     checkedTypes: [], // 선택된 체크박스 값들이 저장될 배열
     attractions: [],
     attraction: null,
+    positions: [],
   },
   getters: {
   },
@@ -49,6 +50,9 @@ export default new Vuex.Store({
     CLEAR_TYPE_LIST(state) {
       state.checkedTypes = [];
     },
+    CLEAR_POSITION_LIST(state) {
+      state.positions = [];
+    },
     SET_TYPE(state, contentTypeIds) {
       state.checkedTypes = Object.values(contentTypeIds).map((type) => type.id);
     },
@@ -60,6 +64,19 @@ export default new Vuex.Store({
     },
     SET_DETAIL_ATTRACTION(state, attraction) {
       state.attraction = attraction;
+    },
+    SET_POSITION_LIST(state, positions) {
+      positions.forEach((position) => {
+        state.positions.push({ 
+          title: position["title"],
+          lat: position["mapy"],
+          lng: position["mapx"],
+          image: position["firstimage"],
+          addr: position["addr1"],
+          zipcode: position["zipcode"],
+          tel: position["tel"]
+        })
+      })
     }
     //////////////////// Attraction end ////////////////////`
   },
@@ -92,8 +109,8 @@ export default new Vuex.Store({
     getTypeList({ commit }) {
       commit("SET_TYPE_LIST");
     },
-    getAttractionList({ commit },[sidoCode, gugunCode, ]) {
-      const SERVICE_KEY = process.env.VUE_APP_TRIP_DEAL_API_KEY;
+    getAttractionList({ commit },[sidoCode, gugunCode, contentTypeIds]) {
+      const SERVICE_KEY = process.env.VUE_APP_TRIP_API_KEY;
       const SERVICE_URL = 
         "https://apis.data.go.kr/B551011/KorService1/areaBasedList1";
       const params = {
@@ -105,24 +122,24 @@ export default new Vuex.Store({
         _type: "json",
         listYN: "Y",
         arrange: "A",
-        // contentTypeId: 12,
         areaCode: sidoCode,
         sigunguCode: gugunCode
       };
 
-      // state.checkedTypes.forEach((type) => {
-      //   params[`contentTypeId`] = type.id;
-      // })
-      // console.log("areaCode: " + sidoCode + ", gugunCode: " + gugunCode)
-      http
+      // 관광지 유형을 선택한 만큼 정보 가져오기
+      contentTypeIds.forEach((type) => {
+        params[`contentTypeId`] = type;
+
+        http
         .get(SERVICE_URL, { params })
         .then(({ data }) => {
-          console.log(data.response.body.items.item);
           commit("SET_ATTRACTION_LIST", data.response.body.items.item);
+          commit("SET_POSITION_LIST", data.response.body.items.item);
         })
         .catch((error) => {
           console.log(error);
         });
+      })
     },
     detailAttr({ commit }, attraction) {
       commit("SET_DETAIL_ATTRACTION", attraction);

@@ -1,16 +1,6 @@
 <template>
-  <b-container>
-    <b-row class="mt-4 mb-4 text-center">
-      <!-- <b-col class="sm-3">
-        <b-form-input
-          v-model.trim="dongCode"
-          placeholder="동코드 입력...(예 : 11110)"
-          @keypress.enter="sendKeyword"
-        ></b-form-input>
-      </b-col>
-      <b-col class="sm-3" align="left">
-        <b-button variant="outline-primary" @click="sendKeyword">검색</b-button>
-      </b-col> -->
+  <b-container class="box mb-4">
+    <b-row class="mt-4 mb-2 p-3 text-center">
       <b-col class="sm-4">
         <b-form-select v-model="sidoCode" :options="sidos" @change="gugunList"></b-form-select>
       </b-col>
@@ -29,15 +19,19 @@
           {{ type.name }}
         </b-form-checkbox>
     </b-row>
+    <kakao-map-vue class="mb-4 p-3"></kakao-map-vue>
   </b-container>
 </template>
 
 <script> 
 import { mapState, mapActions, mapMutations } from "vuex";
+import KakaoMapVue from '@/components/kakaoMap/KakaoMap.vue';
 
 export default {
   name: "AttractionSearchBar",
-  components: {},
+  components: {
+    KakaoMapVue,
+  },
   data() {
     return {
       sidoCode: null,
@@ -65,23 +59,34 @@ export default {
     selectType(checked) {
       this.CLEAR_TYPE_LIST();
       if (checked) this.getType(this.contentTypeIds);
+      if (this.sidoCode && this.gugunCode) this.getAttractionList([this.sidoCode, this.gugunCode, this.contentTypeIds]);
     },
     selectAll() {
       this.CLEAR_TYPE_LIST();
       this.contentTypeIds = [];
       let toggleValue = this.toggleOn;
       this.toggleOn = !toggleValue;
-      if (this.toggleOn) {
+      if (this.sidoCode && this.gugunCode && this.toggleOn) {
         this.getTypeList();
         this.contentTypeIds = this.types.map((type) => type.id);
+        this.getAttractionList([this.sidoCode, this.gugunCode, this.contentTypeIds]);
       }
     },
     searchAttr() {
-      // console.log(this.sidoCode + ", " + this.gugunCode)
-      if (this.sidoCode && this.gugunCode) this.getAttractionList([this.sidoCode, this.gugunCode]);
+      // if (this.sidoCode && this.gugunCode & this.contentTypeIds) this.getAttractionList([this.sidoCode, this.gugunCode, this.contentTypeIds]);
     },
   },
 };
 </script>
 
-<style scoped></style> 
+<style scoped>
+  * {
+    color: black;
+  }
+  
+  .box::after {
+    background-color: whitesmoke;
+    border-radius: 3%;
+    opacity: 0.5;
+  }
+</style> 
