@@ -45,7 +45,7 @@ const routes = [
       },
       {
         path: "delete",
-        name: "boarddelete",
+        name: "deleteboard",
         component: () => import("@/components/board/BoardDelete"),
       },
     ],

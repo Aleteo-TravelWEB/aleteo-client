@@ -12,26 +12,32 @@
 </template>
 
 <script>
-import http from "@/api/http";
+import { deleteBoard } from "@/api/board";
 
 export default {
-  name: "BoardDelete",
+  name: 'BoardDelete',
   components: {},
   data() {
     return {
-      message: "",
+      message: '',
     };
   },
   created() {
-    console.log(this.$route.params.id);
-    http.delete(`/board/${this.$route.params.id}`).then(({ data }) => {
-      let msg = "삭제 할 수 없습ㄴ디ㅏ.";
-      if (data === "success") {
-        msg = "삭제 완료!";
+    let param = this.$route.params.id;
+    deleteBoard(
+      param,
+      ({ data })=>{
+        let msg = "삭제시 문제 발생";
+        if(data === "success") {
+          msg = "삭제 완료!";
+        }
+        alert(msg);
+        this.$router.push({ name: "boardlist" });
+      },
+      (error) => {
+        console.log(error);
       }
-      alert(msg);
-      this.$router.push({ name: "boardlist" });
-    });
+    )
   },
   methods: {},
 };

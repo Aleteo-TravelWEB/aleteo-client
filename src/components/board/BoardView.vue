@@ -9,10 +9,8 @@
       <b-col class="text-left">
         <b-button variant="outline-primary" @click="moveList">목록</b-button>
       </b-col>
-      <b-col class="text-right">
-        <b-button variant="outline-info" size="sm" @click="moveModfifyBoard" class="mr-2"
-          >글수정</b-button
-        >
+      <b-col class="text-right"> <!-- v-if="userInfo.userid === article.userid" -->
+        <b-button variant="outline-info" size="sm" @click="moveModifyBoard" class="mr-2">글수정</b-button>
         <b-button variant="outline-danger" size="sm" @click="deleteBoard">글삭제</b-button>
       </b-col>
     </b-row>
@@ -20,7 +18,7 @@
       <b-col>
         <b-card
           :header-html="`<h3>${board.id}.
-          ${board.title}</h3><div><h6>${board.userId}</div><div>조회수 : ${board.hit}</div><div>${board.createdAt}</h6></div>`"
+          ${board.title}</h3><div><h6>${board.userName}</div><div>조회수 : ${board.hit}</div><div>${board.createdAt}</h6></div>`"
           class="mb-2"
           border-variant="dark"
           no-body
@@ -35,10 +33,11 @@
 </template>
 
 <script>
-import http from "@/api/http";
+import { viewBoard } from "@/api/board";
 
 export default {
-  name: "BoardView",
+  name: 'BoardView',
+  components: {},
   data() {
     return {
       board: {},
@@ -46,34 +45,41 @@ export default {
   },
   computed: {
     message() {
-      if (this.board.content) return this.board.content.split("\n").join("<br>");
+      if(this.board.content) return this.board.content.split("\n").join("<br>");
       return "";
-    },
+    }
   },
   created() {
-    http.get(`board/${this.$route.params.id}`).then(({ data }) => {
-      console.log(data);
-      this.board = data;
-    });
+    let param = this.$route.params.id;
+    console.log(param);
+    viewBoard(
+      param, 
+      ({ data })=>{
+        console.log(data);
+        this.board = data;
+      }),
+      (error) => {
+        console.log(error);
+      }
   },
   methods: {
     moveList() {
-      this.$router.push({ name: "boardList" });
+      this.$router.push({name: "boardlist"});
     },
     moveModifyBoard() {
-      this.$router.replace({
+      this.$router.push({
         name: "boardmodify",
         params: { id: this.board.id },
-      });
+      })
     },
     deleteBoard() {
-      if (confirm("정말로 삭제하시겠습니까?")) {
+      if(confirm("삭제 하시겠습니까?")) {
         this.$router.replace({
-          name: "boarddelete",
+          name: "deleteboard",
           params: { id: this.board.id },
-        });
+        })
       }
-    },
+    }
   },
 };
 </script>
