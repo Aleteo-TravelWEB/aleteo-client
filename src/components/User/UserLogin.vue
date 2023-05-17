@@ -28,7 +28,7 @@
             <div class="col-10">
               <input
                 type="text"
-                v-model="userId"
+                v-model="user.userId"
                 class="form-control"
                 name="userId"
                 id="signin-id"
@@ -40,7 +40,7 @@
             <div class="col-10">
               <input
                 type="password"
-                v-model="userPwd"
+                v-model="user.userPwd"
                 class="form-control"
                 name="userPwd"
                 id="signin-password"
@@ -59,7 +59,7 @@
             <div class="col-10">
               <button
                 type="button"
-                @click="login"
+                @click="confirm"
                 id="signin-btn"
                 class="btn submit-btn"
                 style="width: 100%"
@@ -75,22 +75,41 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
+const userStore = "userStore";
+
 export default {
   name: 'UserLogin',
   components: {},
   data() {
     return {
-      message: '',
       saveId: false,
-      userId: "",
-      userPwd: "",
-      searchId: "",
-      searchEmailId: "",
-      searchEmailDomain: ""
+      user: {
+        userId: null,
+        userPwd: null,
+      }
     };
   },
-  created() {},
-  methods: {},
+  computed: {
+    ...mapState(userStore, ["isLogin", "isLoginError", "userInfo"]),
+  },
+  methods: {
+    ...mapActions(userStore, ["userConfirm", "getUserInfo"]),
+    async confirm() {
+      await this.userConfirm(this.user);
+      let token = sessionStorage.getItem("access-token");
+      console.log("1. confirm() token >> " + token);
+      if (this.isLogin) {
+        await this.getUserInfo(token);
+        console.log("4. confirm() userInfo :: ", this.userInfo);
+        this.$router.push({ name: "main" });
+      }
+    },
+    movePage() {
+      this.$router.push({ name: "join" });
+    },
+  },
 };
 </script>
 

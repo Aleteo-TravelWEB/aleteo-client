@@ -17,7 +17,7 @@
             <div class="col-10">
               <input
                 type="text"
-                v-model="userName"
+                v-model="user.userName"
                 class="form-control"
                 name="userName"
                 id="signin-name"
@@ -29,7 +29,7 @@
             <div class="col-10">
               <input
                 type="text"
-                v-model="userId"
+                v-model="user.userId"
                 class="form-control"
                 name="userId"
                 id="joinin-id"
@@ -46,7 +46,7 @@
             <div class="col-10">
               <input
                 type="password"
-                v-model="userPwd"
+                v-model="user.userPwd"
                 class="form-control"
                 name="userPwd"
                 id="signin-password"
@@ -58,7 +58,7 @@
             <div class="col-10">
               <input
                 type="password"
-                v-model="pwdcheck"
+                v-model="pwdCheck"
                 class="form-control"
                 name="pwdcheck"
                 id="signin-pwdcheck"
@@ -70,7 +70,7 @@
             <div class="col-10 d-flex">
               <input
                 type="text"
-                v-model="emailId"
+                v-model="user.emailId"
                 class="form-control col-5"
                 name="emailId"
                 id="signin-emailId"
@@ -111,19 +111,21 @@
 </template>
 
 <script>
+
 export default {
   name: 'UserJoin',
   components: {},
   data() {
     return {
-      message: '',
-      userId: "",
-      userPwd: "",
-      pwdcheck: "",
+      user: {
+        userName: null,
+        userId: null,
+        userPwd: null,
+        emailId: null,
+      },
+      pwdCheck: null,
     };
   },
-  created() {},
-  methods: {},
 };
 </script>
 
