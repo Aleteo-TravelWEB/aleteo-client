@@ -25,6 +25,7 @@ export default new Vuex.Store({
     attractions: [],
     attraction: null,
     positions: [],
+    UserId: "ssafy"
   },
   getters: {
   },
