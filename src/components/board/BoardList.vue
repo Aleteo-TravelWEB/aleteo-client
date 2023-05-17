@@ -25,7 +25,7 @@
             @row-clicked="viewBoard"
           >
             <template #cell(index)="data">
-                {{ boards.length - data.index }}
+              {{ boards.length - data.index - (currentPage - 1) * perpage }}
             </template>
             <template #cell(title)="data">
               <router-link :to="{ name: 'boardview', params: { id: data.item.id } }">
