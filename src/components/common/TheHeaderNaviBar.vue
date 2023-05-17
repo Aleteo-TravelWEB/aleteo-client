@@ -3,7 +3,7 @@
     <b-navbar toggleable="lg" type="dark" variant="custom-color4" class="navbar">
       <b-navbar-brand href="/">
         <img src="@/assets/logo.png" class="d-inline-block align-center" alt="logo" />
-        Aleto
+        Aleteo
       </b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -15,16 +15,33 @@
           <b-nav-item href="/notice">공지사항</b-nav-item>
           <b-nav-item href="/board">게시판</b-nav-item>
         </b-navbar-nav>
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
+        <!-- after login -->
+        <b-navbar-nav class="ml-auto" v-if="userInfo">
+          <b-nav-item class="align-self-center">
+            <b-avatar variant="light"></b-avatar> {{ userInfo.userName }}님 환영합니다.
+          </b-nav-item>
+          <b-nav-item class="align-self-center">
+            <router-link :to="{ name: 'mypage' }" class="link align-self-center">내정보보기</router-link>
+          </b-nav-item>
+          <b-nav-item class="align-self-center link" @click.prevent="onClickLogout">로그아웃</b-nav-item>
+        </b-navbar-nav>
+        <!-- before login -->
+        <b-navbar-nav class="ml-auto" v-else>
           <b-nav-item-dropdown right>
-            <!-- Using 'button-content' slot -->
             <template #button-content>
               <em>User</em>
               <b-icon icon="person"></b-icon>
             </template>
-            <b-dropdown-item href="/user/login">로그인</b-dropdown-item>
-            <b-dropdown-item href="/user/join">회원가입</b-dropdown-item>
+            <b-dropdown-item href="#">
+              <router-link :to="{ name: 'login' }" class="link">
+                <b-icon icon="key"></b-icon> 로그인
+              </router-link>
+            </b-dropdown-item>
+            <b-dropdown-item href="#">
+              <router-link :to="{ name: 'join' }" class="link">
+                <b-icon icon="patch-plus-fill"></b-icon> 회원가입
+              </router-link>
+            </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -34,15 +51,37 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex';
+
+const userStore = "userStore";
+
 export default {
   name: "TheHeaderNaviBar",
   components: {},
   data() {
     return {};
   },
-  created() {},
-  methods: {},
+  computed: {
+    ...mapState(userStore, ["isLogin", "userInfo"]),
+    ...mapGetters(["checkUserInfo"]),
+  },
+  methods: {
+    ...mapActions(userStore, ["userLogout"]),
+    onClickLogout() {
+      console.log(this.userInfo.userId);
+      this.userLogout(this.userInfo.userId);
+      sessionStorage.removeItem("access-token"); // 저장된 토큰 없애기
+      sessionStorage.removeItem("refresh-token");
+      if (this.$route.path != "/") this.$router.push({ name: "main" });
+    }
+  },
+  created() { },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.link {
+  color: #707070;
+  text-decoration: none;
+}
+</style>

@@ -31,6 +31,7 @@ const userStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.isLogin = true;
       state.userInfo = userInfo;
+      console.log("userInfo: " + state.userInfo);
     },
   },
   actions: {
@@ -38,11 +39,10 @@ const userStore = {
       await login(
         user,
         ({ data }) => {
-          console.log(data);
           if (data.message === "success") {
             let accessToken = data["access-token"];
             let refreshToken = data["refresh-token"];
-            console.log("login success token created!!!! >> ", accessToken, refreshToken);
+            // console.log("login success token created!!!! >> ", accessToken, refreshToken);
             commit("SET_IS_LOGIN", true);
             commit("SET_IS_LOGIN_ERROR", false);
             commit("SET_IS_VALID_TOKEN", true);
@@ -61,10 +61,11 @@ const userStore = {
     },
     async getUserInfo({ commit, dispatch }, token) {
       let decodeToken = jwtDecode(token);
-      // console.log("2. getUserInfo() decodeToken :: ", decodeToken);
+      console.log("2. getUserInfo() decodeToken :: ", decodeToken);
       await findById(
         decodeToken.userId,
         ({ data }) => {
+          console.log(data);
           if (data.message === "success") {
             commit("SET_USER_INFO", data.userInfo);
             // console.log("3. getUserInfo data >> ", data);
