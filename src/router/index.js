@@ -7,7 +7,7 @@ import AppBoard from "@/views/AppBoard";
 import AppPlan from "@/views/AppPlan";
 import AppHotPlace from "@/views/AppHotPlace";
 import AppNotice from "@/views/AppNotice";
-import AppQna from "@/views/AppQna";
+import AppUser from "@/views/AppUser";
 
 Vue.use(VueRouter);
 
@@ -74,9 +74,22 @@ const routes = [
     ],
   },
   {
-    path: "/qna",
-    name: "qna",
-    component: AppQna
+    path: "/user",
+    name: "user",
+    component: AppUser,
+    redirect: "/user/login",
+    children: [
+      {
+        path: "login",
+        name: "userlogin",
+        component: () => import("@/components/user/UserLogin"),
+      },
+      {
+        path: "join",
+        name: "userjoin",
+        component: () => import("@/components/user/UserJoin"),
+      },
+    ]
   }
 ];
 
