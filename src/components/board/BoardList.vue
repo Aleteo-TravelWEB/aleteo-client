@@ -24,6 +24,9 @@
             :fields="fields"
             @row-clicked="viewBoard"
           >
+            <template #cell(index)="data">
+                {{ boards.length - data.index }}
+            </template>
             <template #cell(title)="data">
               <router-link :to="{ name: 'boardview', params: { id: data.item.id } }">
                 {{ data.item.title }}
@@ -59,7 +62,8 @@ export default {
       currentPage: 1,
       perpage: 10,
       fields: [
-        { key: "id", label: "글번호", tdClass: "tdClass" },
+        // { key: "id", label: "글번호", tdClass: "tdClass" },
+        { key: "index", label: "NO", tdClass: "tdClass" },
         { key: "title", label: "제목", tdClass: "tdClass" },
         { key: "userName", label: "작성자", tdClass: "tdClass" },
         { key: "hit", label: "조회수", tdClass: "tdClass" },
