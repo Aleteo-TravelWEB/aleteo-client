@@ -43,6 +43,7 @@ export default {
       const script = document.createElement("script");
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAOMAP_KEY}`;
       script.onload = () => {
+        this.CLEAR_POSITION_LIST();
         window.kakao.maps.load(this.loadMap);
       }
 

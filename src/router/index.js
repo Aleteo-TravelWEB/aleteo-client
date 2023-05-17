@@ -17,10 +17,10 @@ const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/checkUserInfo"];
   const checkToken = store.getters["userStore/checkToken"];
   let token = sessionStorage.getItem("access-token");
-  console.log("로그인 처리 전", checkUserInfo, token);
+  // console.log("로그인 처리 전", checkUserInfo, token);
 
   if (checkUserInfo != null && token) {
-    console.log("토큰 유효성 체크하러 가자!!!!");
+    // console.log("토큰 유효성 체크");
     await store.dispatch("userStore/getUserInfo", token);
   }
   if (!checkToken || checkUserInfo === null) {
@@ -52,21 +52,25 @@ const routes = [
       {
         path: "view/:id",
         name: "boardview",
+        beforeEnter: onlyAuthUser,
         component: () => import("@/components/board/BoardView"),
       },
       {
         path: "write",
         name: "boardwrite",
+        beforeEnter: onlyAuthUser,
         component: () => import("@/components/board/BoardWrite"),
       },
       {
         path: "modify",
         name: "boardmodify",
+        beforeEnter: onlyAuthUser,
         component: () => import("@/components/board/BoardModify"),
       },
       {
         path: "delete",
         name: "deleteboard",
+        beforeEnter: onlyAuthUser,
         component: () => import("@/components/board/BoardDelete"),
       },
     ],

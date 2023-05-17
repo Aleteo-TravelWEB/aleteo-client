@@ -61,11 +61,11 @@ const userStore = {
     },
     async getUserInfo({ commit, dispatch }, token) {
       let decodeToken = jwtDecode(token);
-      console.log("2. getUserInfo() decodeToken :: ", decodeToken);
+      // console.log("2. getUserInfo() decodeToken :: ", decodeToken);
       await findById(
         decodeToken.userId,
         ({ data }) => {
-          console.log(data);
+          // console.log(data);
           if (data.message === "success") {
             commit("SET_USER_INFO", data.userInfo);
             // console.log("3. getUserInfo data >> ", data);
@@ -81,13 +81,13 @@ const userStore = {
       );
     },
     async tokenRegeneration({ commit, state }) {
-      console.log("토큰 재발급 >> 기존 토큰 정보 : {}", sessionStorage.getItem("access-token"));
+      // console.log("토큰 재발급 >> 기존 토큰 정보 : {}", sessionStorage.getItem("access-token"));
       await tokenRegeneration(
         JSON.stringify(state.userInfo),
         ({ data }) => {
           if (data.message === "success") {
             let accessToken = data["access-token"];
-            console.log("재발급 완료 >> 새로운 토큰 : {}", accessToken);
+            // console.log("재발급 완료 >> 새로운 토큰 : {}", accessToken);
             sessionStorage.setItem("access-token", accessToken);
             commit("SET_IS_VALID_TOKEN", true);
           }

@@ -68,7 +68,7 @@ export default {
   methods: {
     ...mapActions(userStore, ["userLogout"]),
     onClickLogout() {
-      console.log(this.userInfo.userId);
+      // console.log(this.userInfo.userId);
       this.userLogout(this.userInfo.userId);
       sessionStorage.removeItem("access-token"); // 저장된 토큰 없애기
       sessionStorage.removeItem("refresh-token");
