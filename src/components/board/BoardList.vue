@@ -14,7 +14,16 @@
       </b-row>
       <b-row>
         <b-col>
-          <b-table striped hover :items="boards" :fields="fields" @row-clicked="viewBoard">
+          <b-table
+            id="list"
+            striped
+            hover
+            :items="boards"
+            :per-page="perpage"
+            :current-page="currentPage"
+            :fields="fields"
+            @row-clicked="viewBoard"
+          >
             <template #cell(title)="data">
               <router-link :to="{ name: 'boardview', params: { id: data.item.id } }">
                 {{ data.item.title }}
@@ -23,6 +32,14 @@
           </b-table>
         </b-col>
       </b-row>
+      <b-pagination
+        pills
+        v-model="currentPage"
+        :total-rows="rows"
+        :per-page="perpage"
+        aria-controls="list"
+        align="center"
+      ></b-pagination>
     </b-container>
   </div>
 </template>
@@ -34,11 +51,13 @@ export default {
   name: "BoardList",
   components: {},
   props: {
-    userId: String
+    userId: String,
   },
   data() {
     return {
       boards: [],
+      currentPage: 1,
+      perpage: 10,
       fields: [
         { key: "id", label: "글번호", tdClass: "tdClass" },
         { key: "title", label: "제목", tdClass: "tdClass" },
@@ -50,12 +69,26 @@ export default {
   },
   created() {
     let param = {
-      pg: 1,
-      spp: 10,
+      pg: 1, // 현재 페이지 번호
+      spp: 10, // 페이지당 글 개수
       key: null,
       word: null,
     };
-    listBoard(param, ({ data })=> {this.boards = data; console.log(data)}, (error)=>{console.log(error)});
+    listBoard(
+      param,
+      ({ data }) => {
+        this.boards = data;
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  },
+  computed: {
+    rows() {
+      return this.boards.length;
+    },
   },
   methods: {
     moveWrite() {
@@ -71,4 +104,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scope>
+.tdClass {
+  width: 50px;
+  text-align: center;
+}
+.tdSubject {
+  width: 300px;
+  text-align: left;
+}
+</style>

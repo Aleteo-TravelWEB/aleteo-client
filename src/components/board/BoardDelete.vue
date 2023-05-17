@@ -1,13 +1,8 @@
 <template>
   <b-container class="bv-example-row mt-3">
-    <b-row>
-      <b-col>
-        <b-alert show><h3>글목록</h3></b-alert>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col><b-alert show variant="danger">삭제처리중...</b-alert></b-col>
-    </b-row>
+    <div class="d-flex justify-content-center mb-3">
+      <b-spinner label="Loading..."></b-spinner>
+    </div>
   </b-container>
 </template>
 
@@ -15,20 +10,20 @@
 import { deleteBoard } from "@/api/board";
 
 export default {
-  name: 'BoardDelete',
+  name: "BoardDelete",
   components: {},
   data() {
     return {
-      message: '',
+      message: "",
     };
   },
   created() {
     let param = this.$route.params.id;
     deleteBoard(
       param,
-      ({ data })=>{
+      ({ data }) => {
         let msg = "삭제시 문제 발생";
-        if(data === "success") {
+        if (data === "success") {
           msg = "삭제 완료!";
         }
         alert(msg);
@@ -37,7 +32,7 @@ export default {
       (error) => {
         console.log(error);
       }
-    )
+    );
   },
   methods: {},
 };

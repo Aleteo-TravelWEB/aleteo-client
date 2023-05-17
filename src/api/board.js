@@ -1,11 +1,10 @@
-import { apiInstance } from './index.js';
+import { apiInstance } from "./index.js";
 
 const api = apiInstance();
 
 // 게시판 글 목록 반환
 function listBoard(param, success, fail) {
   api.get(`/board`, { params: param }).then(success).catch(fail);
-  console.log(param);
 }
 
 // 게시글 상세 조회
@@ -27,6 +26,5 @@ function modifyBoard(board, success, fail) {
 function deleteBoard(boardId, success, fail) {
   api.delete(`/board/${boardId}`).then(success).catch(fail);
 }
-
 
 export { listBoard, viewBoard, writeBoard, modifyBoard, deleteBoard };
