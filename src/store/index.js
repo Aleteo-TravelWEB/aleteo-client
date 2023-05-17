@@ -132,7 +132,7 @@ export default new Vuex.Store({
 
         http
         .get(SERVICE_URL, { params })
-        .then(({ data }) => {
+          .then(({ data }) => {
           commit("SET_ATTRACTION_LIST", data.response.body.items.item);
           commit("SET_POSITION_LIST", data.response.body.items.item);
         })

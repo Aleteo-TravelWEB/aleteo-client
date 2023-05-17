@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     ...mapActions(["getSido", "getGugun", "getType", "getTypeList", "getAttractionList"]),
-    ...mapMutations(["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_TYPE_LIST", "CLEAR_ATTRACTION_LIST"]),
+    ...mapMutations(["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_TYPE_LIST", "CLEAR_ATTRACTION_LIST", "CLEAR_POSITION_LIST"]),
     gugunList() {
       this.CLEAR_GUGUN_LIST();
       this.gugunCode = null;

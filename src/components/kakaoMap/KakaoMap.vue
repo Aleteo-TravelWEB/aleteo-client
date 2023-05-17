@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map"></div>
+    <div id="map" class="border rounded"></div>
   </div>
 </template>
 
@@ -81,32 +81,12 @@ export default {
 
         // 마커에 클릭 이벤트 등록
         window.kakao.maps.event.addListener(marker, 'click', () => {
-          this.makeMapUrl(positions[i]);
+          // this.makeMapUrl(positions[i]);
+          this.displayCustomOverlay("", positions[i]);
         });
       }
 
       this.map.setCenter(new window.kakao.maps.LatLng(positions[0].lat, positions[0].lng));
-      this.CLEAR_POSITION_LIST();
-    },
-    // 지도 검색 url을 구하는 함수
-    makeMapUrl(marker) {
-      // const ps = new window.kakao.maps.services.Places(); // 장소 검색 객체 생성
-
-      // let callback = (result, status) => {
-      //   if (status === window.kakao.maps.services.Status.OK) {
-      //     this.displayCustomOverlay(result[0].place_url, marker);
-      //   }
-      //   else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-      //     this.displayCustomOverlay("", marker);
-      //   }
-      //   else {
-      //     alert("서버에 문제가 있습니다. 다시 시도해 주세요.");
-      //   }
-      // };
-
-      // ps.keywordSearch(marker.title, callback);
-      console.log(marker);
-      this.displayCustomOverlay("", marker);
     },
     //커스텀 오버레이 표시 함수
     displayCustomOverlay(mapUrl, marker) {
