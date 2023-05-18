@@ -84,6 +84,24 @@ const routes = [
     path: "/plan",
     name: "plan",
     component: AppPlan,
+    redirect: "plan/list",
+    children: [
+      {
+        path: "list",
+        name: "planlist",
+        component: () => import("@/components/plan/PlanList"),
+      },
+      {
+        path: "view/:planId",
+        name: "planview",
+        beforeEnter: onlyAuthUser,
+      },
+      {
+        path: "write",
+        name: "planwrite",
+        component: () => import("@/components/plan/PlanWrite"),
+      }
+    ]
   },
   {
     path: "/hotplace",
