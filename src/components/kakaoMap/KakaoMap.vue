@@ -54,7 +54,7 @@ export default {
       const container = document.getElementById("map");
       const options = {
         center: new window.kakao.maps.LatLng(37.500613, 127.036431),
-        level: 5
+        level: 8
       };
 
       this.map = new window.kakao.maps.Map(container, options);

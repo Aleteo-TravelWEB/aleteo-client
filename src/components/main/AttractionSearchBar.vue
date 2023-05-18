@@ -5,7 +5,7 @@
         <b-form-select v-model="sidoCode" :options="sidos" @change="gugunList"></b-form-select>
       </b-col>
       <b-col class="sm-4">
-        <b-form-select v-model="gugunCode" :options="guguns" @change="searchAttr"></b-form-select>
+        <b-form-select v-model="gugunCode" :options="guguns"></b-form-select>
       </b-col>
     </b-row>
     <b-row class="mt-4 mb-4 p-4 justify-content-md-center">
@@ -48,6 +48,14 @@ export default {
     this.CLEAR_ATTRACTION_LIST();
     this.getSido();
   },
+  watch: {
+    contentTypeIds(newIds) {
+      if (newIds.length == 0) {
+        this.CLEAR_POSITION_LIST();
+        window.kakao.maps.load(this.loadMap);
+      }
+    }
+  },
   methods: {
     ...mapActions(["getSido", "getGugun", "getType", "getTypeList", "getAttractionList"]),
     ...mapMutations(["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_TYPE_LIST", "CLEAR_ATTRACTION_LIST", "CLEAR_POSITION_LIST"]),
@@ -58,11 +66,13 @@ export default {
     },
     selectType(checked) {
       this.CLEAR_TYPE_LIST();
+      this.CLEAR_POSITION_LIST();
       if (checked) this.getType(this.contentTypeIds);
       if (this.sidoCode && this.gugunCode) this.getAttractionList([this.sidoCode, this.gugunCode, this.contentTypeIds]);
     },
     selectAll() {
       this.CLEAR_TYPE_LIST();
+      this.CLEAR_POSITION_LIST();
       this.contentTypeIds = [];
       let toggleValue = this.toggleOn;
       this.toggleOn = !toggleValue;
@@ -72,8 +82,14 @@ export default {
         this.getAttractionList([this.sidoCode, this.gugunCode, this.contentTypeIds]);
       }
     },
-    searchAttr() {
-      // if (this.sidoCode && this.gugunCode & this.contentTypeIds) this.getAttractionList([this.sidoCode, this.gugunCode, this.contentTypeIds]);
+    loadMap() {
+      const container = document.getElementById("map");
+      const options = {
+        center: new window.kakao.maps.LatLng(37.500613, 127.036431),
+        level: 8
+      };
+
+      this.map = new window.kakao.maps.Map(container, options);
     },
   },
 };

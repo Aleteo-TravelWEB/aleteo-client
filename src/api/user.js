@@ -21,4 +21,12 @@ async function logout(userId, success, fail) {
   await api.get(`/user/logout/${userId}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout };
+async function idCheck(userId, success, fail) {
+  await api.get(`/user/${userId}`).then(success).catch(fail);
+}
+
+async function join(user, success, fail) {
+  await api.post(`/user/join`, JSON.stringify(user)).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, idCheck, join };

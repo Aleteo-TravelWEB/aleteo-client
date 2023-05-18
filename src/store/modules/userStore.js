@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout } from "@/api/user";
+import { login, findById, tokenRegeneration, logout, idCheck, join } from "@/api/user";
 
 const userStore = {
   namespaced: true,
@@ -9,6 +9,8 @@ const userStore = {
     isLoginError: false,
     userInfo: null,
     isValidToken: false,
+    isValidId: false,
+    isJoin: false,
   },
   getters: {
     checkUserInfo: function (state) {
@@ -33,6 +35,12 @@ const userStore = {
       state.userInfo = userInfo;
       console.log("userInfo: " + state.userInfo);
     },
+    SET_IS_VALID_ID: (state, isValidId) => {
+      state.isValidId = isValidId;
+    },
+    SET_IS_JOIN: (state, isJoin) => {
+      state.isJoin = isJoin;
+    }
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -131,6 +139,37 @@ const userStore = {
             commit("SET_IS_VALID_TOKEN", false);
           } else {
             console.log("유저 정보 없음");
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+    },
+    async idConfirm({ commit }, userId) {
+      await idCheck(
+        userId,
+        ({ data }) => {
+            if (data === 0) {
+              commit("SET_IS_VALID_ID", true);
+            } else {
+              commit("SET_IS_VALID_ID", false);
+              console.log("유저 정보 없음");
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+      )
+    },
+    async userJoin({ commit }, user) {
+      await join(
+        user,
+        ({ data }) => {
+          if (data.message === "success") {
+            commit("SET_IS_JOIN", true);
+          } else {
+            commit("SET_IS_JOIN", false);
           }
         },
         (error) => {
