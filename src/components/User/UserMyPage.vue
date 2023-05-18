@@ -36,7 +36,9 @@
           <b-button variant="outline-primary" href="#" class="mr-1">
             <router-link :to="{name: 'modify'}" class="link">내정보수정</router-link>
           </b-button>
-          <b-button variant="outline-danger" href="#">회원탈퇴</b-button>
+          <b-button variant="outline-danger" href="#" @click="resignUser">
+            탈퇴하기
+          </b-button>
         </b-jumbotron>
       </b-col>
       <b-col></b-col>
@@ -45,7 +47,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 const userStore = "userStore";
 
@@ -53,9 +55,19 @@ export default {
   name: "UserMyPage",
   components: {},
   computed: {
-    ...mapState(userStore, ["userInfo"]),
+    ...mapState(userStore, ["userInfo", "isResign"]),
+  },
+  methods: {
+    ...mapActions(userStore, ["userResign"]),
+    async resignUser() {
+      if(confirm("정말 탈퇴하시겠습니까?")) {
+        await this.userResign(this.userInfo.userId);
+        sessionStorage.removeItem("access-token"); // 저장된 토큰 없애기
+        sessionStorage.removeItem("refresh-token");
+        if (this.$route.path != "/") this.$router.push({ name: "main" });
+      }
+    }
   }
-
 }
 </script>
 

@@ -33,7 +33,7 @@
                   />
                   <span class="col-2 d-flex justify-content-center align-items-center">@</span>
                   
-                  <b-form-select class="col-6" v-model="user.emailDomain" :options="domains"></b-form-select>
+                  <b-form-select v-model="user.emailDomain" :options="domains"></b-form-select>
                 </div>
                 </b-col>
             </b-row>

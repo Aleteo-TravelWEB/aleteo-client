@@ -33,4 +33,8 @@ async function modify(user, success, fail) {
   await api.put(`/user/info/`, JSON.stringify(user)).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, idCheck, join, modify };
+async function resign(userId, success, fail) {
+  await api.get(`/user/resign/${userId}`).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign };

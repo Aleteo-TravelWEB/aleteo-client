@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout, idCheck, join, modify } from "@/api/user";
+import { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign } from "@/api/user";
 
 const userStore = {
   namespaced: true,
@@ -44,7 +44,7 @@ const userStore = {
     },
     SET_IS_MODIFY: (state, isModify) => {
       state.isModify = isModify;
-    }
+    },
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -193,6 +193,21 @@ const userStore = {
         },
         (error) => {
           console.log(error);
+        }
+      )
+    },
+    async userResign({ commit }, userId) {
+      await resign(
+        userId,
+        ({ data }) => {
+          if (data.message === "success") {
+            commit("SET_IS_RESIGN", true);
+            commit("SET_IS_LOGIN", false);
+            commit("SET_USER_INFO", null);
+            commit("SET_IS_VALID_TOKEN", false);
+          } else {
+            commit("SET_IS_RESIGN", false);
+          }
         }
       )
     }

@@ -123,8 +123,9 @@ const routes = [
       {
         path: "modify",
         name: "modify",
+        beforeEnter: onlyAuthUser,
         component: () => import("@/components/user/UserModify"),
-      }
+      },
     ]
   }
 ];
