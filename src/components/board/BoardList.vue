@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div>자유 게시판</div>
     <b-container class="bv-example-row mt-3">
       <b-row>
         <b-col>
