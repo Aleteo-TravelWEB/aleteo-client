@@ -29,4 +29,8 @@ async function join(user, success, fail) {
   await api.post(`/user/join`, JSON.stringify(user)).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, idCheck, join };
+async function modify(user, success, fail) {
+  await api.put(`/user/info/`, JSON.stringify(user)).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, idCheck, join, modify };

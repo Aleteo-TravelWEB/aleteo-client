@@ -72,7 +72,6 @@
           </div>
           <div class="d-flex row justify-content-center mt-4 mb-3">
             <div class="col-10 d-flex">
-              <i class="glyphicon glyphicon-user"></i>
               <input
                 type="text"
                 v-model="user.emailId"
