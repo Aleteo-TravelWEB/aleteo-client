@@ -81,19 +81,8 @@
                 placeholder="이메일아이디"
               />
               <span class="col-2 d-flex justify-content-center align-items-center">@</span>
-              <select
-                class="form-select col-5 border rounded"
-                id="emailDomain"
-                name="emailDomain"
-                aria-label="이메일 도메인 선택"
-                v-model="user.emailDomain"
-              >
-                <option selected>선택</option>
-                <option value="ssafy.com">싸피</option>
-                <option value="google.com">구글</option>
-                <option value="naver.com">네이버</option>
-                <option value="kakao.com">카카오</option>
-              </select>
+              
+              <b-form-select class="col-6" v-model="user.emailDomain" :options="domains"></b-form-select>
             </div>
           </div>
           <div class="row d-flex justify-content-center my-4">
@@ -133,6 +122,13 @@ export default {
         emailDomain: null,
       },
       pwdCheck: null,
+      domains: [
+        {value: null, text: "선택"},
+        {value: "ssafy.com", text: "싸피"},
+        {value: "google.com", text: "구글"},
+        {value: "naver.com", text: "네이버"},
+        {value: "kakao.com", text: "카카오"},
+      ],
     };
   },
   computed: {
