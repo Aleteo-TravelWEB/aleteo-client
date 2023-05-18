@@ -2,7 +2,7 @@
   <div>
     <b-navbar toggleable="lg" type="dark" variant="custom-color4" class="navbar">
       <b-navbar-brand href="/">
-        <img src="@/assets/logo.png" class="d-inline-block align-center" alt="logo" />
+        <img src="@/assets/ALETEO.png" class="d-inline-block align-center logo" alt="logo" />
         Aleteo
       </b-navbar-brand>
 
@@ -83,5 +83,9 @@ export default {
 .link {
   color: #707070;
   text-decoration: none;
+}
+
+.logo {
+  width: 40px;
 }
 </style>
