@@ -102,6 +102,12 @@ const routes = [
         name: "planwrite",
         beforeEnter: onlyAuthUser,
         component: () => import("@/components/plan/PlanWrite"),
+      },
+      {
+        path: "modify/:planId",
+        name: "planmodify",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/plan/PlanModify"),
       }
     ]
   },

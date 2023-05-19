@@ -118,7 +118,8 @@
             <!-- 본인일때만 글수정, 글 삭제 버튼 보이도록 함 -->
             <div v-if="this.userInfo.userId === plan.userId">
               <button type="button" id="btn-mv-modify"
-                class="btn btn-outline-success mb-3 ms-1">글수정</button>
+                class="btn btn-outline-success mb-3 ms-1">
+                <router-link :to="{name: 'planmodify', params: { planId: this.plan.id } }">글수정</router-link></button>
               <button type="button" id="btn-delete"
                 class="btn btn-outline-danger mb-3 ms-1">글삭제</button>
             </div>
@@ -160,12 +161,12 @@ export default {
   },
   created() {
     let param = this.$route.params.planId;
-    console.log("param :: " + param);
+    // console.log("param :: " + param);
     viewPlan(
       param,
       ({ data }) => {
-        console.log("plan view data :: ");
-        console.log(data);
+        // console.log("plan view data :: ");
+        // console.log(data);
         this.plan = data.plan;
         this.fastPlaces = data.fastPlaces;
         this.places = data.places;
@@ -207,8 +208,8 @@ export default {
       var len = positions.length;
 
       for (let i = 0; i < len; i++) {
-        console.log("positions :: ");
-				console.log(positions[i]);
+        // console.log("positions :: ");
+				// console.log(positions[i]);
         var imageSize = new window.kakao.maps.Size(30, 35); // 마커 이미지의 이미지 크기
         var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
 
@@ -278,7 +279,7 @@ export default {
     },
     // 지도에 선 그리는 메소드
 		drawLine(position, index) {
-			console.log(position);
+			// console.log(position);
 			var clickPosition = new window.kakao.maps.LatLng(position.lat, position.lng);
 
 			if (index === 0) {
@@ -306,7 +307,6 @@ export default {
 
 				this.displayCircleDot(clickPosition, distance);
 			}
-			console.log("check");
 		},
 		displayCircleDot(position, distance) {
 			var circleOverlay = new window.kakao.maps.CustomOverlay({
