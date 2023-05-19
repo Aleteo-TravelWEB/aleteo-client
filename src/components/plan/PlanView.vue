@@ -202,7 +202,11 @@ export default {
 
       const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
 
-      for (let i = 0; i < positions.length; i++) {
+      var evalLat = null;
+      var evalLng = null;
+      var len = positions.length;
+
+      for (let i = 0; i < len; i++) {
         console.log("positions :: ");
 				console.log(positions[i]);
         var imageSize = new window.kakao.maps.Size(30, 35); // 마커 이미지의 이미지 크기
@@ -214,6 +218,9 @@ export default {
           title: positions[i].place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
           image: markerImage, // 마커 이미지
         });
+
+        evalLat += positions[i].lat;
+        evalLng += positions[i].lng;
 
         // 마커가 지도 위에 표시되도록 설정
         marker.setMap(this.map);
@@ -227,7 +234,7 @@ export default {
         this.drawLine(positions[i], i);
       }
 
-      this.map.setCenter(new window.kakao.maps.LatLng(positions[0].lat, positions[0].lng));
+      this.map.setCenter(new window.kakao.maps.LatLng((evalLat/len), (evalLng/len)));
     },
     //커스텀 오버레이 표시 함수
     displayCustomOverlay(marker) {

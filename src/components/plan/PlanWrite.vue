@@ -122,6 +122,7 @@ export default {
 			circleOverlays: [],
 			addVal: null,
 			places: [],
+      isAddFlag: false, // 검색한 여행지 추가 후 타이틀을 선택했는지 판단하는 flag
     };
   },
 	mounted() {
@@ -167,6 +168,7 @@ export default {
       // if (this.positions.length > 0) this.loadMaker(this.positions);
     },
 		searchPlace() {
+      this.isAddFlag = false;
 			const keyword = this.search.keyword;
 			if (keyword === null || keyword.length === 0) {
 				return;
@@ -190,17 +192,41 @@ export default {
 		showPlace(rs) {
 			// console.log(rs)
 
+      // 여행지를 추가한 후에 다시 타이틀을 클릭한 거라면 해당 마크 보여주기
+      if (this.isAddFlag) {
+        const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
+
+        var imageSize = new window.kakao.maps.Size(30, 35); // 마커 이미지의 이미지 크기
+        var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
+
+        // 마커 생성
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(rs.y, rs.x), // 마커를 표시할 위치
+          title: rs.place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
+          image: markerImage, // 마커 이미지
+        });
+        // 마커가 지도 위에 표시되도록 설정
+        marker.setMap(this.map);
+
+				this.markers.push(marker);
+
+        // 마커에 클릭 이벤트 등록
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          this.displayCustomOverlay(rs);
+        });
+      } 
+
       this.map.setCenter(new window.kakao.maps.LatLng(rs.y, rs.x));
-			this.map.setLevel(5);
+      this.map.setLevel(5);
 
-			// 열려져 있던 오버레이 다 닫기
-			this.overlays.forEach(overlay => {
-				// console.log(overlay)
-				overlay.setMap(null)
-			})
-			this.overlays = [];
+      // 열려져 있던 오버레이 다 닫기
+      this.overlays.forEach(overlay => {
+        // console.log(overlay)
+        overlay.setMap(null)
+      })
+      this.overlays = [];
 
-			this.displayCustomOverlay(rs);
+      this.displayCustomOverlay(rs);
 		},
     // 지정한 위치에 마커 불러오기
     loadMaker(positions) {
@@ -353,6 +379,7 @@ export default {
 			this.dots.push({ circle: circleOverlay, distance: distanceOverlay});
 		},
 		addPlan(data) {
+      this.isAddFlag = true;
 			this.drawLine(data);
 			// console.log("data: " + data.id);
 
