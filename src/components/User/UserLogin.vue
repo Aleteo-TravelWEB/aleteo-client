@@ -2,13 +2,7 @@
   <div class="signin">
     <div class="sign-container">
       <div class="signin">
-        <form
-          id="signin-form"
-          method="POST"
-          action="${root}/user/signin"
-          role="search"
-        >
-
+        <form id="signin-form" method="POST" action="${root}/user/signin" role="search">
           <div class="row d-flex justify-content-center mt-4 ms-2">
             <h2>로그인</h2>
           </div>
@@ -50,9 +44,16 @@
           </div>
           <div class="row justify-content-center">
             <div class="col-4 me-2">
-              <a href="${root}/user/password" id="find-password"
-                >비밀번호 찾기</a
-              >
+              <a href="${root}/user/password" id="find-password">비밀번호 찾기</a>
+            </div>
+          </div>
+          <div
+            id="login-result-div"
+            class="row d-flex justify-content-center my-4"
+            v-if="isLoginConfirm"
+          >
+            <div :class="{ 'shake-effect': isShaking }" style="color: crimson">
+              아이디 또는 비밀번호를 확인해주세요.
             </div>
           </div>
           <div class="row d-flex justify-content-center my-4">
@@ -63,6 +64,7 @@
                 id="signin-btn"
                 class="btn submit-btn"
                 style="width: 100%"
+                :class="{ 'shake-effect': isShaking }"
               >
                 로그인
               </button>
@@ -75,12 +77,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions } from "vuex";
 
 const userStore = "userStore";
 
 export default {
-  name: 'UserLogin',
+  name: "UserLogin",
   components: {},
   data() {
     return {
@@ -88,7 +90,9 @@ export default {
       user: {
         userId: null,
         userPwd: null,
-      }
+      },
+      isLoginConfirm: false,
+      isShaking: false,
     };
   },
   computed: {
@@ -101,9 +105,17 @@ export default {
       let token = sessionStorage.getItem("access-token");
       // console.log("1. confirm() token >> " + token);
       if (this.isLogin) {
+        this.isLoginConfirm = false;
         await this.getUserInfo(token);
         console.log("4. confirm() userInfo :: ", this.userInfo);
         this.$router.push({ name: "main" });
+      } else {
+        this.isLoginConfirm = true;
+        this.isShaking = true;
+
+        setTimeout(() => {
+          this.isShaking = false;
+        }, 1000);
       }
     },
     movePage() {
@@ -141,5 +153,27 @@ export default {
   /* background-color: white; */
   background-color: #8fa5b8;
   color: white;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake-effect {
+  animation: shake 0.5s;
 }
 </style>
