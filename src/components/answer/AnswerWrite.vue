@@ -10,13 +10,15 @@
 
 <script>
 import { writeAnswer } from "@/api/answer";
+import { mapState } from "vuex";
+
+const userStore = "userStore";
 
 export default {
   name: "AnswerWrite",
   data() {
     return {
       answer: {
-        id: 0,
         content: "",
         userId: "",
         boardId: "",
@@ -27,19 +29,21 @@ export default {
     console.log(this.$route.params.id);
     console.log(this.$route);
   },
+  computed: {
+    ...mapState(userStore, ["userInfo"]),
+  },
   methods: {
     submit(event) {
       event.preventDefault();
 
-      let err = true;
-      let msg = "";
-
-      err &&
-        !this.article.content &&
-        ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
-
-      if (!err) alert(msg);
-      else this.writeAnswer();
+      console.log(this.answer.content);
+      if(!this.answer.content){
+        alert("내용을 입력해주세요")
+      }
+      else{
+        this.writeAnswer();
+      }
+      this.moveList();
     },
     writeAnswer() {
       let param = {
@@ -47,6 +51,7 @@ export default {
         boardId: this.$route.params.id,
         userId: this.userInfo.userId,
       };
+      console.log(param);
       writeAnswer(
         param,
         ({ data }) => {
@@ -61,6 +66,9 @@ export default {
         }
       );
     },
+    moveList() {
+      this.$router.go();
+    }
   },
 };
 </script>
