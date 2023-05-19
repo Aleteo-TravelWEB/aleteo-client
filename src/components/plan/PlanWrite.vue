@@ -47,20 +47,20 @@
 						<div class="divider mb-3"></div>
 						<div id="plan-detail" class = "d-flex flex-column align-items-center rounded mx-auto">
               <label for="name" ><strong>계획 이름</strong></label>
-              <input type="text" name="title" id="title" placeholder="계획 이름" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%;">
+              <input type="text" name="title" id="title" v-model="plan.title" placeholder="계획 이름" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%;">
               <br>
               <div class="plan-detail-date d-flex flex-row justify-content-between mb-3" style="width: 70%;">
                 <label for="start_datepicker" ><strong>출발일</strong></label>
-                <input type="date" name="startDate" id="start_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle">
+                <input type="date" name="startDate" v-model="plan.startDate" id="start_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle">
                 <label for="end_datepicker"><strong>도착일</strong></label>
-                <input type="date" name="endDate" id="end_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle">
+                <input type="date" name="endDate" v-model="plan.endDate" id="end_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle">
               </div>
               <label for="description"><strong>상세 계획</strong></label>
-              <textarea name="description" id="description" placeholder="상세 계획을 적어보자!" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%; height: 10em;"></textarea>
+              <textarea name="description" v-model="plan.description" id="description" placeholder="상세 계획을 적어보자!" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%; height: 10em;"></textarea>
               <br>
 							<button
 								class="place-add z-3 border rounded btn btn-primary shadow p-2"
-								id="plan-save-btn" style="top: 5px; left: 120px;" type="button"><strong>여행 계획 저장</strong></button>
+								id="plan-save-btn" style="top: 5px; left: 120px;" type="button" @click="registPlan"><strong>여행 계획 저장</strong></button>
             </div>
           </div>
 				</form>
@@ -71,8 +71,11 @@
 </div>
 </template>
 
-<script>
-import { mapMutations } from 'vuex';
+<script>  
+import { mapActions, mapMutations } from 'vuex';
+
+const planStore = "planStore";
+const attractionStore = "attractionStore";
 
 export default {
   name: 'PlanWrite',
@@ -80,6 +83,17 @@ export default {
   },
   data() {
     return {
+			plan: {
+				id: null,
+				title: null,
+				description: null,
+				createdAt: null,
+				updatedAt: null,
+				startDate: null,
+				endDate: null,
+				userId: null,
+				hit: null,
+			},
 			mapOption: {
 				center: {
 					lat: 37.500613, 
@@ -102,6 +116,7 @@ export default {
 			dots: [],
 			circleOverlays: [],
 			addVal: null,
+			places: [],
     };
   },
 	mounted() {
@@ -122,7 +137,8 @@ export default {
 		}
 	},
   methods: {
-		...mapMutations(["CLEAR_POSITION_LIST"]),
+		...mapMutations(attractionStore, ["CLEAR_POSITION_LIST"]),
+		...mapActions(planStore, ["planRegist"]),
 		// api 불러오기
     loadScript() {
       const script = document.createElement("script");
@@ -167,19 +183,19 @@ export default {
 			this.map.setLevel(8);
 		},
 		showPlace(rs) {
-			console.log(rs)
+			// console.log(rs)
 
       this.map.setCenter(new window.kakao.maps.LatLng(rs.y, rs.x));
 			this.map.setLevel(5);
 
 			// 열려져 있던 오버레이 다 닫기
 			this.overlays.forEach(overlay => {
-				console.log(overlay)
+				// console.log(overlay)
 				overlay.setMap(null)
 			})
 			this.overlays = [];
 
-			this.displayCustomOverlay("", rs);
+			this.displayCustomOverlay(rs);
 		},
     // 지정한 위치에 마커 불러오기
     loadMaker(positions) {
@@ -210,14 +226,14 @@ export default {
         // 마커에 클릭 이벤트 등록
         window.kakao.maps.event.addListener(marker, 'click', () => {
           // this.makeMapUrl(positions[i]);
-          this.displayCustomOverlay("", positions[i]);
+          this.displayCustomOverlay(positions[i]);
         });
       }
 
       this.map.setCenter(new window.kakao.maps.LatLng(positions[0].y, positions[0].x));
     },
     //커스텀 오버레이 표시 함수
-    displayCustomOverlay(mapUrl, marker) {
+    displayCustomOverlay(marker) {
       let image = "";
       if (marker.image !== "") {
         image = marker.image;
@@ -242,12 +258,7 @@ export default {
 						<div class="jibun ellipsis">(전) ${marker.phone}</div>
 						<div class="mt-1">`;
 
-      if (mapUrl !== "") {
-        content += `<a href="${mapUrl}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-geo-alt me-1"></i>지도검색</a>`;
-      }
-
-      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>   						
-								<a href="#" id="add-btn" class="add-custom">추가</a>
+      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>  
 						</div>
 					</div>
 				</div>
@@ -267,23 +278,23 @@ export default {
     // 커스텀 오버레이를 닫는 함수
     closeOverlay() {
 			this.overlays.forEach(overlay => {
-				console.log(overlay)
+				// console.log(overlay)
 				overlay.setMap(null)
 				})
 			this.overlays = [];
     },
 		// 지도에 선 그리는 메소드
 		drawLine(position) {
-			console.log("drawLine: " + position.target.value);
-			var clickPosition = position;
+			console.log(position);
+			var clickPosition = new window.kakao.maps.LatLng(position.y, position.x);
 
 			if (!this.drawingFlag) {
 				this.drawingFlag = true;
 				// deleteClickLine();
 				// deleteDistance();
-				// deleteCircleDot();
+				// deleteCircleDot();  
 
-				this.clickLine = new window.kakao.maps.Polylin({
+				this.clickLine = new window.kakao.maps.Polyline({
 					map: this.map,
 					path: [clickPosition],
 					strokeWeight: 3,
@@ -291,7 +302,7 @@ export default {
 					strokeOpacity: 1,
 					strokeStyle: "solid"
 				});
-
+				
 				this.lines.push(this.clickLine);
 
 				this.displayCircleDot(clickPosition, 0);
@@ -305,6 +316,7 @@ export default {
 				var distance = Math.round(this.clickLine.getLength());
 				this.displayCircleDot(clickPosition, distance);
 			}
+			console.log("check");
 		},
 		deleteClickLine() {
 			if (this.clickLine) {
@@ -337,11 +349,18 @@ export default {
 			this.dots.push({ circle: circleOverlay, distance: distanceOverlay});
 		},
 		addPlan(data) {
-			console.log(data);
+			this.drawLine(data);
+			console.log("data: " + data.id);
 
 			let planContent = document.querySelector("#plan-content");
 
-			let makeDiv = `<div id='${data.id}' class='rounded content-custom' sytle="background-color: gray; width: 100%; height: 100px;">
+			for (let i = 0; i < this.places.length; i++) {
+				if (this.places[i].placeId === data.id) {
+					return;
+				}
+			}
+
+			let makeDiv = `<div id='${data.id}' class="border rounded border-5" sytle="margin-right: 2px; border-color: cadetblue; border: thick; width: 100%; height: 100px;">
 												<div class='text-center p-2'>
 														<div class="place-title">${data.place_name}</div>
 														<div>${data.address_name}</div>
@@ -350,7 +369,14 @@ export default {
 												</div>`;
 		
 			planContent.innerHTML += makeDiv;
-
+			const placeData = {
+					placeId: data.id,
+					name: data.place_name,
+					address: data.address_name,
+					lat: data.y,
+					lng: data.x,
+			};
+			this.places.push(placeData);
 
 			// 선택된 애를 제외하고 마크 삭제
 			let lat = (data.y * 1).toFixed(13);
@@ -362,8 +388,7 @@ export default {
 					marker.getPosition().getLat().toFixed(13) === lat &&
 					marker.getPosition().getLng().toFixed(13) === lng
 					) {
-						console.log("pass");
-						console.log("data.place_name : " + data.place_name);
+						// console.log("data.place_name : " + data.place_name);
 						this.planMarkers.push(marker);
 				} else {
 					let planFlag = false; 
@@ -382,6 +407,14 @@ export default {
 					}
 				}
 			});
+		},
+		async registPlan(){
+			console.log("places: " + this.places);
+			await this.planRegist([this.plan, this.places]);
+			if (this.isRegist) {
+				console.log("regist plan :: " + this.isRegist);
+				this.$router.push({ name: "planlist" });
+			}
 		},
 	},
 };
@@ -434,12 +467,6 @@ export default {
 .btn-custom {
 	width: 20px;
 	height: 20px;
-}
-
-.content-custom {
-	margin-right: 2px;
-	border-color: cadetblue;
-	border: thick;
 }
 
 </style>
