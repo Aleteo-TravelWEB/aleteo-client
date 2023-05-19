@@ -1,16 +1,15 @@
 <template>
   <div>
     <h3>Hot place</h3>
-    <hotplace-list></hotplace-list>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HotplaceList from "@/components/hotplace/HotplaceList.vue";
 
 export default {
   name: "AppHotplace",
-  components: {HotplaceList},
+  components: {},
   data() {
     return {
       message: "",

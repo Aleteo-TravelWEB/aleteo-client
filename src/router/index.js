@@ -116,6 +116,11 @@ const routes = [
         name: "hotplacelist",
         component: () => import("@/components/hotplace/HotplaceList"),
       },
+      {
+        path: "write",
+        name: "hotplacewrite",
+        component: () => import("@/components/hotplace/HotplaceWrite"),
+      }
     ],
   },
   {
