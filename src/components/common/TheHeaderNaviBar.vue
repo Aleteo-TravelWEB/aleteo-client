@@ -1,6 +1,6 @@
 <template>
-  <div class="shadow">
-    <b-navbar toggleable="lg" type="dark" variant="custom-color4" class="navbar">
+  <div>
+    <b-navbar toggleable="lg" type="dark" variant="custom-color4" class="navbar shadow">
       <b-navbar-brand href="/">
         <img src="@/assets/ALETEO.png" class="d-inline-block align-center logo" alt="logo" />
         Aleteo

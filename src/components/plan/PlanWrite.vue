@@ -74,6 +74,7 @@
 <script>  
 import { mapActions, mapMutations, mapState } from 'vuex';
 
+const userStore = "userStore";
 const planStore = "planStore";
 const attractionStore = "attractionStore";
 
@@ -83,6 +84,7 @@ export default {
   },
   computed: {
     ...mapState(planStore, ["isRegist"]),
+    ...mapState(userStore, ["userInfo"]),
   },
   data() {
     return {
@@ -288,7 +290,7 @@ export default {
     },
 		// 지도에 선 그리는 메소드
 		drawLine(position) {
-			console.log(position);
+			// console.log(position);
 			var clickPosition = new window.kakao.maps.LatLng(position.y, position.x);
 
 			if (!this.drawingFlag) {
@@ -319,7 +321,6 @@ export default {
 				var distance = Math.round(this.clickLine.getLength());
 				this.displayCircleDot(clickPosition, distance);
 			}
-			console.log("check");
 		},
 		deleteClickLine() {
 			if (this.clickLine) {
@@ -353,7 +354,7 @@ export default {
 		},
 		addPlan(data) {
 			this.drawLine(data);
-			console.log("data: " + data.id);
+			// console.log("data: " + data.id);
 
 			let planContent = document.querySelector("#plan-content");
 
@@ -412,10 +413,11 @@ export default {
 			});
 		},
 		async registPlan(){
-			console.log("places: " + this.places);
+			// console.log("places: " + this.places);
+      this.plan.userId = this.userInfo.userId;
 			await this.planRegist([this.plan, this.places]);
 			if (this.isRegist) {
-				console.log("regist plan :: " + this.isRegist);
+				// console.log("regist plan :: " + this.isRegist);
 				this.$router.push({ name: "planlist" });
 			}
 		},

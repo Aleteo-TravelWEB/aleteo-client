@@ -112,7 +112,9 @@
         <div class="">
           <div class="d-flex justify-content-end">
             <button type="button" id="btn-list"
-              class="btn submit-btn mb-3">여행 목록</button>
+              class="btn submit-btn mb-3">
+              <router-link :to="{ name: 'planlist' }">여행 목록</router-link>
+            </button>
             <!-- 본인일때만 글수정, 글 삭제 버튼 보이도록 함 -->
             <div v-if="this.userInfo.userId === plan.userId">
               <button type="button" id="btn-mv-modify"
@@ -167,6 +169,8 @@ export default {
         this.plan = data.plan;
         this.fastPlaces = data.fastPlaces;
         this.places = data.places;
+
+        this.loadMarker(this.places);
       },
       (error) => {
         console.log(error);
@@ -193,7 +197,6 @@ export default {
       this.map = new window.kakao.maps.Map(container, options);
 
       this.loadMarker(this.places);
-
     },
     loadMarker(positions) {
 
