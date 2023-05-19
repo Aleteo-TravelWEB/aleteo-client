@@ -8,6 +8,7 @@ const planStore = {
   },
   mutations: {
     SET_IS_REGIST: (state, isRegist) => {
+      console.log("isRegist :: " + isRegist);
       state.isRegist = isRegist;
     },
   },

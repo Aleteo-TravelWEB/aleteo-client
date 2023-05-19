@@ -13,7 +13,7 @@
     <b-row>
       <b-col>
         <b-table striped hover :items="plans" :fields="fields" @row-clicked="viewPlan">
-          <template #cell(index)="data">{{data.index}}</template>
+          <template #cell(index)="data">{{ plans.length - data.index }}</template>
         </b-table>
       </b-col>
     </b-row>

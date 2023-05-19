@@ -46,18 +46,18 @@
 						</div>
 						<div class="divider mb-3"></div>
 						<div id="plan-detail" class = "d-flex flex-column align-items-center rounded mx-auto">
-              <label for="name" ><strong>계획 이름</strong></label>
-              <input type="text" name="title" id="title" v-model="plan.title" placeholder="계획 이름" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%;">
-              <br>
-              <div class="plan-detail-date d-flex flex-row justify-content-between mb-3" style="width: 70%;">
-                <label for="start_datepicker" ><strong>출발일</strong></label>
-                <input type="date" name="startDate" v-model="plan.startDate" id="start_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle">
-                <label for="end_datepicker"><strong>도착일</strong></label>
-                <input type="date" name="endDate" v-model="plan.endDate" id="end_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle">
-              </div>
-              <label for="description"><strong>상세 계획</strong></label>
-              <textarea name="description" v-model="plan.description" id="description" placeholder="상세 계획을 적어보자!" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%; height: 10em;"></textarea>
-              <br>
+						<label for="name" ><strong>계획 이름</strong></label>
+						<input type="text" name="title" id="title" v-model="plan.title" placeholder="계획 이름" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%;">
+						<br>
+						<div class="plan-detail-date d-flex flex-row justify-content-between mb-3" style="width: 70%;">
+							<label for="start_datepicker" ><strong>출발일</strong></label>
+							<input type="date" name="startDate" v-model="plan.startDate" id="start_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle">
+							<label for="end_datepicker"><strong>도착일</strong></label>
+							<input type="date" name="endDate" v-model="plan.endDate" id="end_datepicker" placeholder="년도-월-일" style="width: 8em; height: 1.8em;" class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle">
+						</div>
+						<label for="description"><strong>상세 계획</strong></label>
+						<textarea name="description" v-model="plan.description" id="description" placeholder="상세 계획을 적어보자!" class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle" style="width: 70%; height: 10em;"></textarea>
+            <br>
 							<button
 								class="place-add z-3 border rounded btn btn-primary shadow p-2"
 								id="plan-save-btn" style="top: 5px; left: 120px;" type="button" @click="registPlan"><strong>여행 계획 저장</strong></button>
@@ -72,7 +72,7 @@
 </template>
 
 <script>  
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 const planStore = "planStore";
 const attractionStore = "attractionStore";
@@ -80,6 +80,9 @@ const attractionStore = "attractionStore";
 export default {
   name: 'PlanWrite',
   components: {
+  },
+  computed: {
+    ...mapState(planStore, ["isRegist"]),
   },
   data() {
     return {
