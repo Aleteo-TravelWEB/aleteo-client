@@ -27,6 +27,8 @@
 import { mapState, mapActions, mapMutations } from "vuex";
 import KakaoMapVue from '@/components/kakaoMap/KakaoMap.vue';
 
+const attractionStore = "attractionStore";
+
 export default {
   name: "AttractionSearchBar",
   components: {
@@ -41,7 +43,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["sidos", "guguns", "types", "checkedTypes", "attractions"]),
+    ...mapState(attractionStore, ["sidos", "guguns", "types", "checkedTypes", "attractions"]),
   },
   created() {
     this.CLEAR_SIDO_LIST();
@@ -57,8 +59,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getSido", "getGugun", "getType", "getTypeList", "getAttractionList"]),
-    ...mapMutations(["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_TYPE_LIST", "CLEAR_ATTRACTION_LIST", "CLEAR_POSITION_LIST"]),
+    ...mapActions(attractionStore, ["getSido", "getGugun", "getType", "getTypeList", "getAttractionList"]),
+    ...mapMutations(attractionStore, ["CLEAR_SIDO_LIST", "CLEAR_GUGUN_LIST", "CLEAR_TYPE_LIST", "CLEAR_ATTRACTION_LIST", "CLEAR_POSITION_LIST"]),
     gugunList() {
       this.CLEAR_GUGUN_LIST();
       this.gugunCode = null;

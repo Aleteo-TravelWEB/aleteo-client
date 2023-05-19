@@ -7,6 +7,8 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
+const attractionStore = "attractionStore";
+
 export default {
   name: "KakaoMapVue",
   components: {},
@@ -24,7 +26,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["positions"])
+    ...mapState(attractionStore, ["positions"])
   },
   watch: {
     positions: {
@@ -37,7 +39,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["CLEAR_POSITION_LIST"]),
+    ...mapMutations(attractionStore, ["CLEAR_POSITION_LIST"]),
     // api 불러오기
     loadScript() {
       const script = document.createElement("script");
