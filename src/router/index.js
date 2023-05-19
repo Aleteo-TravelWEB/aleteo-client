@@ -95,10 +95,12 @@ const routes = [
         path: "view/:planId",
         name: "planview",
         beforeEnter: onlyAuthUser,
+        component: () => import("@/components/plan/PlanView"),
       },
       {
         path: "write",
         name: "planwrite",
+        beforeEnter: onlyAuthUser,
         component: () => import("@/components/plan/PlanWrite"),
       }
     ]

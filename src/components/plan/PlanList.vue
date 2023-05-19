@@ -12,7 +12,9 @@
     </b-row>
     <b-row>
       <b-col>
-        <b-table striped hover :items="plans" :fields="fields" @row-clicked="viewPlan"> </b-table>
+        <b-table striped hover :items="plans" :fields="fields" @row-clicked="viewPlan">
+          <template #cell(index)="data">{{data.index}}</template>
+        </b-table>
       </b-col>
     </b-row>
 </b-container>
