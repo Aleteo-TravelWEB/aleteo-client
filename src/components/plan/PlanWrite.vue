@@ -1,28 +1,35 @@
 <template>
-<b-container>
-  <div>
-		<form class="d-flex my-3" onsubmit="return false;" role="search">
-			<input id="search-keyword" class="form-control me-2" type="search"
-				placeholder="검색어" aria-label="검색어" />
-			<button id="btn-search" class="btn submit-btn" type="button"
-				style="width: 10em">검색</button>
-		</form>
-	</div>
-	<div class="">
-		<section class="position-relative">
-			<div class="position-absolute d-flex flex-row translate-middle-x z-3 buttons mb-2 mx-auto p-2" style="right: 0px;">
-				<button
-					class="z-3 btn delete-btn shadow p-2 me-2"
-					id="plan-delete-btn" type="button" style="width: 4em; height: 2.5em; display: none;">초기화</button>
-				<button
-					class="place-add z-3 btn submit-btn shadow p-2"
-					id="plan-add-btn" type="button" style="display: none; width: 4em; height: 2.5em;">추가</button>
+<div>
+	<div class="container">
+	<div class="map-area">
+		<div class="searchbox rounded">
+			<!-- <form class="d-flex my-3" onsubmit="return false;" role="search"> -->
+			<div class="d-flex flex-row justify-content-center">
+				<input id="search-keyword" class="col-7 form-control m-2" type="text"
+					placeholder="검색어" aria-label="검색어" v-model="search.keyword" @keyup.enter="searchPlace" />
+				<button id="btn-search" class="border btn submit-btn col-3 m-2" type="button"
+					@click="searchPlace">검색</button>
 			</div>
-			<!-- map이 들어갈 위치 -->
-			<!-- kakao map start -->
-      <kakao-map-vue class="shadow"></kakao-map-vue>
-			<!-- kakao map end -->
-		</section>
+			<!-- </form> -->
+			<div class="results">
+				<div class="place d-flex justify-content-between" v-for="rs in search.results" :key = "rs.id" @click="showPlace(rs)">
+					<!-- <img :src="rs." :alt=""> -->
+					<div class="col-8">
+						<Strong>{{ rs.place_name }}</Strong>
+						<div class="addr">{{ rs.address_name }}</div>
+					</div>
+					<div>
+						<b-icon class="col-3" icon="plus-square-fill" variant="primary" @click="addPlan(rs)"></b-icon>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- map이 들어갈 위치 -->
+	<!-- kakao map start -->
+	<div id="map" class="shadow rounded"></div>
+	<!-- kakao map end -->
+	<div>
 		<div class="divider mb-5"></div>
 		<aside>
 			<!-- 여행 계획 들어가는 영역 -->
@@ -60,26 +67,379 @@
 			</div>
 		</aside>
 	</div>
-</b-container>
+	</div>
+</div>
 </template>
 
 <script>
-import KakaoMapVue from '@/components/kakaoMap/KakaoMap.vue';
-// import KakaoMapVue from '@/components/plan/item/PlanKakaoMap.vue';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'PlanWrite',
   components: {
-    KakaoMapVue,
   },
   data() {
     return {
-      message: '',
+			mapOption: {
+				center: {
+					lat: 37.500613, 
+					lng: 127.036431,
+				},
+				level: 8,
+			},
+			search: {
+				keyword: null,
+				pgn: null,
+				results: [],
+			},
+			map: null,
+			markers: [], // 마커 객체 담는 배열
+			planMarkers: [], // 계획에 포함된 마커 객체 담는 배열
+			overlays: [], // 오버레이 담는 배열
+			drawingFlag: false,
+			lines: [],
+			clickLine: null,
+			dots: [],
+			circleOverlays: [],
+			addVal: null,
     };
   },
-  created() {},
-  methods: {},
+	mounted() {
+		if (window.kakao && window.kakao.maps) {
+			this.loadMap();
+		} else {
+			this.loadScript();
+		} 
+	},
+	watch: {
+		'search.results': {
+			handler() {
+				if (this.search.results.length > 0) {
+					this.loadMaker(this.search.results);
+				}
+			},
+			deep: true,
+		}
+	},
+  methods: {
+		...mapMutations(["CLEAR_POSITION_LIST"]),
+		// api 불러오기
+    loadScript() {
+      const script = document.createElement("script");
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAOMAP_KEY}&libraries=services`;
+      script.onload = () => {
+        this.CLEAR_POSITION_LIST();
+        window.kakao.maps.load(this.loadMap);
+      }
+
+      document.head.appendChild(script);
+    },
+    // 맵 출력하기
+    loadMap() {
+      const container = document.getElementById("map");
+      const options = {
+        center: new window.kakao.maps.LatLng(37.500613, 127.036431),
+        level: 8
+      };
+
+      this.map = new window.kakao.maps.Map(container, options);
+      // if (this.positions.length > 0) this.loadMaker(this.positions);
+    },
+		searchPlace() {
+			const keyword = this.search.keyword;
+			if (keyword === null || keyword.length === 0) {
+				return;
+			}
+			// 결과값 초기화
+			this.search.keyword = null;
+			this.search.pgn = null;
+			this.search.results = [];
+
+			const ps = new window.kakao.maps.services.Places(); 
+			
+			// 키워드로 장소를 검색합니다
+			ps.keywordSearch(keyword,(data, status, pgn) => {
+				this.search.keyword = keyword;
+				this.search.pgn = pgn;
+				this.search.results = data;
+			}); 
+
+			this.map.setLevel(8);
+		},
+		showPlace(rs) {
+			console.log(rs)
+
+      this.map.setCenter(new window.kakao.maps.LatLng(rs.y, rs.x));
+			this.map.setLevel(5);
+
+			// 열려져 있던 오버레이 다 닫기
+			this.overlays.forEach(overlay => {
+				console.log(overlay)
+				overlay.setMap(null)
+			})
+			this.overlays = [];
+
+			this.displayCustomOverlay("", rs);
+		},
+    // 지정한 위치에 마커 불러오기
+    loadMaker(positions) {
+
+      const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
+
+			// 이전에 추가된 마커들 제거
+			this.markers.forEach(marker => marker.setMap(null))
+			this.markers = [];
+
+      for (let i = 0; i < positions.length; i++) {
+				// console.log(positions[i]);
+        var imageSize = new window.kakao.maps.Size(30, 35); // 마커 이미지의 이미지 크기
+        var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
+
+        // 마커 생성
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(positions[i].y, positions[i].x), // 마커를 표시할 위치
+          title: positions[i].place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
+          image: markerImage, // 마커 이미지
+        });
+
+        // 마커가 지도 위에 표시되도록 설정
+        marker.setMap(this.map);
+
+				this.markers.push(marker);
+
+        // 마커에 클릭 이벤트 등록
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          // this.makeMapUrl(positions[i]);
+          this.displayCustomOverlay("", positions[i]);
+        });
+      }
+
+      this.map.setCenter(new window.kakao.maps.LatLng(positions[0].y, positions[0].x));
+    },
+    //커스텀 오버레이 표시 함수
+    displayCustomOverlay(mapUrl, marker) {
+      let image = "";
+      if (marker.image !== "") {
+        image = marker.image;
+      }
+      else {
+        image = require("@/assets/img/noimage.png");
+      }
+
+      let content = `
+		<div class="wrap">
+			<div class="info">
+				<div class="title">
+					${marker.place_name}
+					<div class="close" @click="closeOverlay()" title="닫기"></div>
+				</div>
+				<div class="body">
+					<div class="img">
+						<img src="${image}" width="73" height="70">
+					</div>
+					<div class="desc">
+						<div class="ellipsis mb-1">${marker.address_name}</div>
+						<div class="jibun ellipsis">(전) ${marker.phone}</div>
+						<div class="mt-1">`;
+
+      if (mapUrl !== "") {
+        content += `<a href="${mapUrl}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-geo-alt me-1"></i>지도검색</a>`;
+      }
+
+      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>   						
+								<a href="#" id="add-btn" class="add-custom">추가</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+
+      var overlay = new window.kakao.maps.CustomOverlay({
+        content: content,
+        position: new window.kakao.maps.LatLng(marker.y, marker.x)
+      });
+
+      overlay.setMap(this.map);
+
+			this.overlays.push(overlay);
+    },
+    // 커스텀 오버레이를 닫는 함수
+    closeOverlay() {
+			this.overlays.forEach(overlay => {
+				console.log(overlay)
+				overlay.setMap(null)
+				})
+			this.overlays = [];
+    },
+		// 지도에 선 그리는 메소드
+		drawLine(position) {
+			console.log("drawLine: " + position.target.value);
+			var clickPosition = position;
+
+			if (!this.drawingFlag) {
+				this.drawingFlag = true;
+				// deleteClickLine();
+				// deleteDistance();
+				// deleteCircleDot();
+
+				this.clickLine = new window.kakao.maps.Polylin({
+					map: this.map,
+					path: [clickPosition],
+					strokeWeight: 3,
+					strokeColor: "#db4040",
+					strokeOpacity: 1,
+					strokeStyle: "solid"
+				});
+
+				this.lines.push(this.clickLine);
+
+				this.displayCircleDot(clickPosition, 0);
+			} else {
+				var path = this.clickLine.getPath();
+
+				path.push(clickPosition);
+
+				this.clickLine.setPath(path);
+
+				var distance = Math.round(this.clickLine.getLength());
+				this.displayCircleDot(clickPosition, distance);
+			}
+		},
+		deleteClickLine() {
+			if (this.clickLine) {
+				this.clickLine.setMap(null);
+				this.clickLine = null;
+			}
+		},
+		displayCircleDot(position, distance) {
+			var circleOverlay = new window.kakao.maps.CustomOverlay({
+				content: '<span class="dot"></span>',
+				position: position,
+				zIndex: 1,
+			});
+
+			this.circleOverlays.push(circleOverlay);
+
+			circleOverlay.setMap(this.map);
+
+			if (distance > 0) {
+				var distanceOverlay = new window.kakao.maps.CustomOverlay({
+					content:
+						'<div class="dotOverlay">거리 <span class="number">' + distance + "</span>m</div>",
+					position: position,
+					yAnchor: 1,
+					zIndex: 2,
+				});
+
+				distanceOverlay.setMap(this.map);
+			}
+			this.dots.push({ circle: circleOverlay, distance: distanceOverlay});
+		},
+		addPlan(data) {
+			console.log(data);
+
+			let planContent = document.querySelector("#plan-content");
+
+			let makeDiv = `<div id='${data.id}' class='rounded content-custom' sytle="background-color: gray; width: 100%; height: 100px;">
+												<div class='text-center p-2'>
+														<div class="place-title">${data.place_name}</div>
+														<div>${data.address_name}</div>
+														<div class="lat" style="display: none;">${data.y}</div>
+														<div class="lng" style="display: none;">${data.x}</div>
+												</div>`;
+		
+			planContent.innerHTML += makeDiv;
+
+
+			// 선택된 애를 제외하고 마크 삭제
+			let lat = (data.y * 1).toFixed(13);
+			let lng = (data.x * 1).toFixed(13);
+
+			this.markers.forEach(marker => {
+				if (
+					marker.getTitle() === data.place_name &&
+					marker.getPosition().getLat().toFixed(13) === lat &&
+					marker.getPosition().getLng().toFixed(13) === lng
+					) {
+						console.log("pass");
+						console.log("data.place_name : " + data.place_name);
+						this.planMarkers.push(marker);
+				} else {
+					let planFlag = false; 
+					for (let i = 0; i < this.planMarkers.length; i++) {
+						if (
+							this.planMarkers[i].getTitle() === marker.getTitle() &&
+							this.planMarkers[i].getPosition().getLat().toFixed(13) === marker.getPosition().getLat().toFixed(13) &&
+							this.planMarkers[i].getPosition().getLng().toFixed(13) === marker.getPosition().getLng().toFixed(13)
+							) {
+								planFlag = true;
+								break;
+							}
+					}
+					if (!planFlag) {
+						marker.setMap(null);
+					}
+				}
+			});
+		},
+	},
 };
 </script>
 
-<style scoped></style>
+<style lang="scss">
+
+.map-area {
+	display: flex;
+	position: relative;
+	margin-top: 13px;
+	.searchbox {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 600px;
+		z-index: 10000;
+		background-color: #ffffffaa;
+		width: 300px;
+		display: flex;
+		flex-direction: column;
+		.results{
+			flex: 1 1 auto;
+			overflow-y: auto;
+			.place {
+				padding: 8px;
+				cursor: pointer;
+				
+				&:hover {
+					background-color: aliceblue;
+				}
+				h4 {
+					margin: 0;
+				}
+			}
+		}
+	}
+}
+
+.add-custom {
+	z-index: 10000;
+}
+
+#map {
+	height: 600px;
+}
+</style>
+
+<style>
+.btn-custom {
+	width: 20px;
+	height: 20px;
+}
+
+.content-custom {
+	margin-right: 2px;
+	border-color: cadetblue;
+	border: thick;
+}
+
+</style>
