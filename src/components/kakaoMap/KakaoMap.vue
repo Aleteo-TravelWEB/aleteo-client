@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from "vuex";
 
 const attractionStore = "attractionStore";
 
@@ -14,8 +14,9 @@ export default {
   components: {},
   data() {
     return {
-      map: null
-    }
+      map: null,
+      overlays: [],
+    };
   },
   mounted() {
     // api 스크립트 소스 불러오기 및 지도 출력
@@ -26,7 +27,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(attractionStore, ["positions"])
+    ...mapState(attractionStore, ["positions"]),
   },
   watch: {
     positions: {
@@ -36,7 +37,7 @@ export default {
         }
       },
       deep: true,
-    }
+    },
   },
   methods: {
     ...mapMutations(attractionStore, ["CLEAR_POSITION_LIST"]),
@@ -47,7 +48,7 @@ export default {
       script.onload = () => {
         this.CLEAR_POSITION_LIST();
         window.kakao.maps.load(this.loadMap);
-      }
+      };
 
       document.head.appendChild(script);
     },
@@ -56,7 +57,7 @@ export default {
       const container = document.getElementById("map");
       const options = {
         center: new window.kakao.maps.LatLng(37.500613, 127.036431),
-        level: 8
+        level: 8,
       };
 
       this.map = new window.kakao.maps.Map(container, options);
@@ -83,8 +84,11 @@ export default {
         marker.setMap(this.map);
 
         // 마커에 클릭 이벤트 등록
-        window.kakao.maps.event.addListener(marker, 'click', () => {
-          // this.makeMapUrl(positions[i]);
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          // 지금까지 열려있는 오버레이 다 닫기
+          this.overlays.forEach((overlay) => {
+            overlay.setMap(null);
+          });
           this.displayCustomOverlay("", positions[i]);
         });
       }
@@ -97,8 +101,7 @@ export default {
       let image = "";
       if (marker.image !== "") {
         image = marker.image;
-      }
-      else {
+      } else {
         image = require("@/assets/img/noimage.png");
       }
 
@@ -132,16 +135,18 @@ export default {
 
       var overlay = new window.kakao.maps.CustomOverlay({
         content: content,
-        position: new window.kakao.maps.LatLng(marker.lat, marker.lng)
+        position: new window.kakao.maps.LatLng(marker.lat, marker.lng),
       });
 
       overlay.setMap(this.map);
+
+      this.overlays.push(overlay);
     },
     // 커스텀 오버레이를 닫는 함수
     closeOverlay(btn) {
       btn.parentNode.parentNode.parentNode.remove();
       // overlay.setMap(null);
-    }
+    },
   },
 };
 </script>
@@ -152,18 +157,96 @@ export default {
   height: 400px;
 }
 
-.wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
-.wrap * {padding: 0;margin: 0;}
-.wrap .info {width: 286px;height: 120px;border-radius: 6px; border: 1px solid #ccc; border-bottom: 2px solid #ddd;background-color:#fff;}
-.wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
-.info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-radius: 6px 6px 0px 0px; border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
-.info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
-.info .close:hover {cursor: pointer;}
-.info .body {position: relative;overflow: hidden;}
-.info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
-.desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
-.desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
-.info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
-.info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
-.info .link {color: #5085BB;}
+.wrap {
+  position: absolute;
+  left: 0;
+  bottom: 40px;
+  width: 288px;
+  height: 132px;
+  margin-left: -144px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+  line-height: 1.5;
+}
+.wrap * {
+  padding: 0;
+  margin: 0;
+}
+.wrap .info {
+  width: 286px;
+  height: 120px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ddd;
+  background-color: #fff;
+}
+.wrap .info:nth-child(1) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
+.info .title {
+  padding: 5px 0 0 10px;
+  height: 30px;
+  background: #eee;
+  border-radius: 6px 6px 0px 0px;
+  border-bottom: 1px solid #ddd;
+  font-size: 18px;
+  font-weight: bold;
+}
+.info .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #888;
+  width: 17px;
+  height: 17px;
+  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
+}
+.info .close:hover {
+  cursor: pointer;
+}
+.info .body {
+  position: relative;
+  overflow: hidden;
+}
+.info .desc {
+  position: relative;
+  margin: 13px 0 0 90px;
+  height: 75px;
+}
+.desc .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.desc .jibun {
+  font-size: 11px;
+  color: #888;
+  margin-top: -2px;
+}
+.info .img {
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 73px;
+  height: 71px;
+  border: 1px solid #ddd;
+  color: #888;
+  overflow: hidden;
+}
+.info:after {
+  content: "";
+  position: absolute;
+  margin-left: -12px;
+  left: 50%;
+  bottom: 0;
+  width: 22px;
+  height: 12px;
+  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+}
+.info .link {
+  color: #5085bb;
+}
 </style>
