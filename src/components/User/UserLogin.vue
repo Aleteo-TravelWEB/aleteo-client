@@ -39,6 +39,7 @@
                 name="userPwd"
                 id="signin-password"
                 placeholder="비밀번호"
+                @keyup.enter="confirm"
               />
             </div>
           </div>
