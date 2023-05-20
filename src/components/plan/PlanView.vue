@@ -183,7 +183,12 @@
                 >
                   글수정
                 </button>
-                <button type="button" id="btn-delete" class="btn btn-outline-danger mb-3 ms-1">
+                <button
+                  type="button"
+                  id="btn-delete"
+                  class="btn btn-outline-danger mb-3 ms-1"
+                  @click="moveDelete()"
+                >
                   글삭제
                 </button>
               </div>
@@ -196,7 +201,7 @@
 </template>
 
 <script>
-import { viewPlan } from "@/api/plan";
+import { viewPlan, deletePlan } from "@/api/plan";
 import { mapState } from "vuex";
 
 const userStore = "userStore";
@@ -393,6 +398,25 @@ export default {
     },
     moveModify() {
       this.$router.push({ name: "planmodify", params: { planId: this.plan.id } });
+    },
+    moveDelete() {
+      if (!confirm("정말 삭제하시겠습니까?")) {
+        return;
+      }
+      deletePlan(
+        this.plan.id,
+        ({ data }) => {
+          1;
+          if (data.message === "success") {
+            this.$router.push({ name: "planlist" });
+          } else {
+            alert("삭제 실패!!!!");
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
 };

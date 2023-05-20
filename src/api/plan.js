@@ -24,4 +24,21 @@ function viewPlan(planId, success, fail) {
   api.get(`/plan/${planId}`).then(success).catch(fail);
 }
 
-export { listPlan, regist, viewPlan };
+// 여행 계획 수정
+async function modify([plan, places], success, fail) {
+  const data = {
+    planDto: plan,
+    placeDtoList: places
+  };
+
+  // console.log(data);
+  console.log(data);
+  await api.put(`/plan`, data).then(success).catch(fail);
+}
+
+// 여행 계획 삭제
+function deletePlan(planId, success, fail) {
+  api.delete(`/plan/${planId}`).then(success).catch(fail);
+}
+
+export { listPlan, regist, viewPlan, modify, deletePlan };

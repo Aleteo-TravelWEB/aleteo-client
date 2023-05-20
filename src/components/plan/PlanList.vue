@@ -1,5 +1,5 @@
 <template>
-<b-container class="bv-example-row mt-3">
+  <b-container class="bv-example-row mt-3">
     <b-row>
       <b-col>
         <b-alert show><h3>여행 계획</h3></b-alert>
@@ -17,14 +17,14 @@
         </b-table>
       </b-col>
     </b-row>
-</b-container>
+  </b-container>
 </template>
 
 <script>
 import { listPlan } from "@/api/plan";
 
 export default {
-  name: 'PlanList',
+  name: "PlanList",
   components: {},
   data() {
     return {
@@ -35,7 +35,7 @@ export default {
         { key: "userId", label: "작성자", tdClass: "tdClass" },
         { key: "createdAt", label: "작성일", tdClass: "tdClass" },
         { key: "hit", label: "조회수", tdClass: "tdClass" },
-      ]
+      ],
     };
   },
   created() {
@@ -63,9 +63,9 @@ export default {
     viewPlan(plan) {
       this.$router.push({
         name: "planview",
-        params: { planId: plan.id},
-      })
-    }
+        params: { planId: plan.id },
+      });
+    },
   },
 };
 </script>

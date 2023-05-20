@@ -67,9 +67,20 @@
                 <div>
                   <div
                     id="plan-content"
-                    class="rounded bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
+                    class="rounded border rounded border-5 bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
                     style="width: 100%; height: 10em"
-                  ></div>
+                  >
+                    <div v-for="(place, index) in places" :key="index">
+                      <div :id="place.palceId">
+                        <div class="text-center p-2">
+                          <div class="place-title">{{ place.name }}</div>
+                          <div>{{ place.address }}</div>
+                          <div class="lat" style="display: none">{{ place.lat }}</div>
+                          <div class="lng" style="display: none">{{ place.lng }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="divider mb-3"></div>
                 <div id="plan-detail" class="d-flex flex-column align-items-center rounded mx-auto">
@@ -124,9 +135,9 @@
                     id="plan-save-btn"
                     style="top: 5px; left: 120px"
                     type="button"
-                    @click="registPlan"
+                    @click="modifyPlan"
                   >
-                    <strong>여행 계획 저장</strong>
+                    <strong>여행 계획 수정</strong>
                   </button>
                 </div>
               </div>
@@ -149,29 +160,8 @@ export default {
   name: "PlanModify",
   components: {},
   computed: {
-    ...mapState(planStore, ["isRegist"]),
+    ...mapState(planStore, ["isModify"]),
     ...mapState(userStore, ["userInfo"]),
-  },
-  created() {
-    let param = this.$route.params.planId;
-    // console.log("param :: " + param);
-    viewPlan(
-      param,
-      ({ data }) => {
-        console.log("data :: ");
-        console.log(data);
-        this.plan = data.plan;
-        this.places = data.places;
-
-        this.loadMaker(this.places);
-
-        console.log("plan :: ");
-        console.log(this.plan);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
   },
   data() {
     return {
@@ -203,6 +193,32 @@ export default {
       isAddFlag: false, // 검색한 여행지 추가 후 타이틀을 선택했는지 판단하는 flag
     };
   },
+  created() {
+    if (window.kakao && window.kakao.maps) {
+      this.loadMap();
+    } else {
+      this.loadScript();
+    }
+    let param = this.$route.params.planId;
+    console.log("param :: " + param);
+    viewPlan(
+      param,
+      ({ data }) => {
+        console.log("data :: ");
+        console.log(data);
+        this.plan = data.plan;
+        this.places = data.places;
+
+        console.log("places :: ");
+        console.log(this.places);
+
+        this.loadMaker(this.places, true);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  },
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.loadMap();
@@ -214,14 +230,14 @@ export default {
     "search.results": {
       handler() {
         if (this.search.results.length > 0) {
-          this.loadMaker(this.search.results);
+          this.loadMaker(this.search.results, false);
         }
       },
       deep: true,
     },
   },
   methods: {
-    ...mapActions(planStore, ["planRegist"]),
+    ...mapActions(planStore, ["planModify"]),
     // api 불러오기
     loadScript() {
       const script = document.createElement("script");
@@ -304,7 +320,7 @@ export default {
       this.displayCustomOverlay(rs);
     },
     // 지정한 위치에 마커 불러오기
-    loadMaker(positions) {
+    loadMaker(positions, isFirstLoad) {
       console.log("positions :: ");
       console.log(positions);
 
@@ -315,16 +331,32 @@ export default {
       this.markers = [];
 
       for (let i = 0; i < positions.length; i++) {
-        console.log(1);
         var imageSize = new window.kakao.maps.Size(30, 35); // 마커 이미지의 이미지 크기
         var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
 
+        var x = null;
+        var y = null;
+        var place_name = null;
+
+        if (isFirstLoad) {
+          x = positions[i].lng;
+          y = positions[i].lat;
+          place_name = positions[i].name;
+        } else {
+          x = positions[i].x;
+          y = positions[i].y;
+          place_name = positions[i].place_name;
+        }
+
+        console.log(" x y :: " + x + ", " + y);
         // 마커 생성
         const marker = new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(positions[i].y, positions[i].x), // 마커를 표시할 위치
-          title: positions[i].place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
+          position: new window.kakao.maps.LatLng(y, x), // 마커를 표시할 위치
+          title: place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
           image: markerImage, // 마커 이미지
         });
+        // console.log("marker :: ");
+        // console.log(marker);
 
         // 마커가 지도 위에 표시되도록 설정
         marker.setMap(this.map);
@@ -365,7 +397,7 @@ export default {
 						<div class="jibun ellipsis">(전) ${marker.phone}</div>
 						<div class="mt-1">`;
 
-      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>  
+      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
 						</div>
 					</div>
 				</div>
@@ -517,11 +549,15 @@ export default {
         }
       });
     },
-    async registPlan() {
+    async modifyPlan() {
       // console.log("places: " + this.places);
+      if (!confirm("수정 하시겠습니까?")) {
+        return;
+      }
+
       this.plan.userId = this.userInfo.userId;
-      await this.planRegist([this.plan, this.places]);
-      if (this.isRegist) {
+      await this.planModify([this.plan, this.places]);
+      if (this.isModify) {
         // console.log("regist plan :: " + this.isRegist);
         this.$router.push({ name: "planlist" });
       }
