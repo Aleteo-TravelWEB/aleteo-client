@@ -206,14 +206,16 @@ export default {
         results: [],
       },
       map: null,
+      // 마커
       markers: [], // 마커 객체 담는 배열
       planMarkers: [], // 계획에 포함된 마커 객체 담는 배열
+      // 오버레이
       overlays: [], // 오버레이 담는 배열
+      // 선그리기
       drawingFlag: false,
-      lines: [],
       clickLine: null,
+      clickLines: [],
       dots: [],
-      circleOverlays: [],
       addVal: null,
       places: [],
       isAddFlag: false, // 검색한 여행지 추가 후 타이틀을 선택했는지 판단하는 flag
@@ -239,6 +241,7 @@ export default {
   methods: {
     ...mapMutations(attractionStore, ["CLEAR_POSITION_LIST"]),
     ...mapActions(planStore, ["planRegist"]),
+    ////////////////////// 지도 불러오기 start //////////////////////
     // api 불러오기
     loadScript() {
       const script = document.createElement("script");
@@ -261,6 +264,10 @@ export default {
       this.map = new window.kakao.maps.Map(container, options);
       // if (this.positions.length > 0) this.loadMaker(this.positions);
     },
+    ////////////////////// 지도 불러오기 end //////////////////////
+
+    ////////////////////// 검색하기 start //////////////////////
+    // 장소 검색하는 메소드
     searchPlace() {
       this.isAddFlag = false;
       const keyword = this.search.keyword;
@@ -283,9 +290,9 @@ export default {
 
       this.map.setLevel(8);
     },
+    // 검색한 관광지를 지도에 띄우는 메소드
     showPlace(rs) {
-      console.log(" rs  :: ");
-      console.log(rs.id);
+      // rs : 관광지 정보
 
       // 여행지를 추가한 후에 다시 타이틀을 클릭한 거라면 해당 마크 보여주기
       if (this.isAddFlag) {
@@ -326,6 +333,9 @@ export default {
 
       this.displayCustomOverlay(rs);
     },
+    ////////////////////// 검색하기 end //////////////////////
+
+    ////////////////////// 마커 그리기 start //////////////////////
     // 지정한 위치에 마커 불러오기
     loadMaker(positions) {
       const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
@@ -363,6 +373,47 @@ export default {
 
       this.map.setCenter(new window.kakao.maps.LatLng(positions[0].y, positions[0].x));
     },
+    // 마커 삭제하기
+    deleteMarker(lat, lng, data) {
+      this.markers.forEach((marker) => {
+        if (
+          marker.getPosition().getLat().toFixed(13) === lat &&
+          marker.getPosition().getLng().toFixed(13) === lng
+        ) {
+          // console.log("data.place_name : " + data.place_name);
+          if (this.planMarkers) {
+            const markerData = {
+              marker: marker,
+              placeId: data.id,
+            };
+            this.planMarkers.push(markerData);
+            // console.log(this.planMarkers);
+          }
+        } else {
+          // 검색했을 때 뜨는 마커들 삭제 : flag = false
+          let planFlag = false;
+
+          for (let i = 0; i < this.planMarkers.length; i++) {
+            if (
+              this.planMarkers[i].marker.getTitle() === marker.getTitle() &&
+              this.planMarkers[i].marker.getPosition().getLat().toFixed(13) ===
+                marker.getPosition().getLat().toFixed(13) &&
+              this.planMarkers[i].marker.getPosition().getLng().toFixed(13) ===
+                marker.getPosition().getLng().toFixed(13)
+            ) {
+              planFlag = true;
+              break;
+            }
+          }
+          if (!planFlag) {
+            marker.setMap(null);
+          }
+        }
+      });
+    },
+    ////////////////////// 마커 그리기 end //////////////////////
+
+    ////////////////////// 커스텀 오버레이 start //////////////////////
     //커스텀 오버레이 표시 함수
     displayCustomOverlay(marker) {
       let image = "";
@@ -412,10 +463,18 @@ export default {
       });
       this.overlays = [];
     },
+    ////////////////////// 커스텀 오버레이 end //////////////////////
+
+    ////////////////////// 선 그리기 start //////////////////////
     // 지도에 선 그리는 메소드
-    drawLine(position) {
-      // console.log(position);
-      var clickPosition = new window.kakao.maps.LatLng(position.y, position.x);
+    drawLine(position, flag) {
+      // flag: true(관광지 정보 그대로 받아들일 때 : data(x,y)), false(this.places 타입  (lat, lng))
+      var clickPosition = null;
+      if (!flag) {
+        clickPosition = new window.kakao.maps.LatLng(position.y, position.x);
+      } else {
+        clickPosition = new window.kakao.maps.LatLng(position.lat, position.lng);
+      }
 
       if (!this.drawingFlag) {
         this.drawingFlag = true;
@@ -428,10 +487,6 @@ export default {
           strokeOpacity: 1,
           strokeStyle: "solid",
         });
-
-        this.lines.push(this.clickLine);
-
-        this.displayCircleDot(clickPosition, 0);
       } else {
         var path = this.clickLine.getPath();
 
@@ -440,36 +495,22 @@ export default {
         this.clickLine.setPath(path);
 
         var distance = Math.round(this.clickLine.getLength());
-        this.displayCircleDot(clickPosition, distance);
+        console.log("distance : " + distance);
       }
     },
-    displayCircleDot(position, distance) {
-      var circleOverlay = new window.kakao.maps.CustomOverlay({
-        content: '<span class="dot"></span>',
-        position: position,
-        zIndex: 1,
-      });
-
-      this.circleOverlays.push(circleOverlay);
-
-      circleOverlay.setMap(this.map);
-
-      if (distance > 0) {
-        var distanceOverlay = new window.kakao.maps.CustomOverlay({
-          content:
-            '<div class="dotOverlay">거리 <span class="number">' + distance + "</span>m</div>",
-          position: position,
-          yAnchor: 1,
-          zIndex: 2,
-        });
-
-        distanceOverlay.setMap(this.map);
+    // 선 삭제하기
+    deleteLine() {
+      if (this.clickLine) {
+        this.clickLine.setMap(null);
+        this.clickLine = null;
       }
-      this.dots.push({ circle: circleOverlay, distance: distanceOverlay });
     },
+    ////////////////////// 선 그리기 end //////////////////////
+
+    ////////////////////// 관광지를 여행계획에 넣기 start //////////////////////
     addPlace(data) {
       this.isAddFlag = true;
-      this.drawLine(data);
+      this.drawLine(data, false);
 
       for (let i = 0; i < this.places.length; i++) {
         if (this.places[i].placeId === data.id) {
@@ -492,65 +533,33 @@ export default {
 
       this.deleteMarker(lat, lng, data);
     },
-    deleteMarker(lat, lng, data) {
-      this.markers.forEach((marker) => {
-        if (
-          marker.getPosition().getLat().toFixed(13) === lat &&
-          marker.getPosition().getLng().toFixed(13) === lng
-        ) {
-          // console.log("data.place_name : " + data.place_name);
-          const markerData = {
-            marker: marker,
-            placeId: data.id,
-          };
-          this.planMarkers.push(markerData);
-          console.log(this.planMarekrs);
-        } else {
-          // 검색했을 때 뜨는 마커들 삭제 : flag = false
-          let planFlag = false;
-
-          for (let i = 0; i < this.planMarkers.length; i++) {
-            console.log("planMarker marker :: ");
-            console.log(this.planMarker);
-            if (
-              this.planMarkers[i].marker.getTitle() === marker.getTitle() &&
-              this.planMarkers[i].marker.getPosition().getLat().toFixed(13) ===
-                marker.getPosition().getLat().toFixed(13) &&
-              this.planMarkers[i].marker.getPosition().getLng().toFixed(13) ===
-                marker.getPosition().marker.getLng().toFixed(13)
-            ) {
-              planFlag = true;
-              break;
-            }
-          }
-          if (!planFlag) {
-            marker.setMap(null);
-          }
-        }
-      });
-    },
     // 추가된 관광지 삭제
     deletePlace(placeId) {
       this.places = this.places.filter((place) => place.placeId !== placeId);
-      // console.log("places :: ");
-      // console.log(this.places);
-      // 마크 삭제
+
+      // 마커 삭제
       let lat = (this.places.lat * 1).toFixed(13);
       let lng = (this.places.lng * 1).toFixed(13);
 
-      console.log("placeId :: " + placeId);
-      console.log("marker");
-
-      console.log(this.planMarkers.length);
-
-      for (let i = 0; i < this.planMarkers.length; i++) {
-        if (this.planMarkers[i].placeId === placeId) {
-          console.log("hello");
-        }
-      }
+      this.planMarkers = this.planMarkers.filter((marker) => marker.placeId !== placeId);
 
       this.deleteMarker(lat, lng, this.places);
+
+      // 그려진 선 삭제
+      this.deleteLine();
+
+      this.drawingFlag = false;
+
+      // 선 다시 그리기
+      console.log("drawing :: ");
+      this.places.forEach((place) => {
+        console.log(place);
+        this.drawLine(place, true);
+      });
     },
+    ////////////////////// 관광지를 여행계획에 넣기 end //////////////////////
+
+    // 여행 계획 등록하기
     async registPlan() {
       // console.log("places: " + this.places);
       this.plan.userId = this.userInfo.userId;
