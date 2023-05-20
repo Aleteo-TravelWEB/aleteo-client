@@ -18,7 +18,6 @@ async function writeHotplace([hotplace, image], success, fail) {
   formData.append("title", hotplace.title);
   formData.append("joinDate", hotplace.joinDate);
   formData.append("description", hotplace.description);
-  formData.append("desc", hotplace.desc);
   formData.append("tag1", hotplace.tag1);
   formData.append("tag2", hotplace.tag2);
   formData.append("latitude", hotplace.latitude);
