@@ -216,12 +216,15 @@ export default {
       places: [],
       map: null,
       clickLine: [],
+      overlays: [],
     };
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
+      console.log("loadMap :: ");
       this.loadMap();
     } else {
+      console.log("loadMap :: ");
       this.loadScript();
     }
   },
@@ -299,7 +302,9 @@ export default {
         marker.setMap(this.map);
 
         window.kakao.maps.event.addListener(marker, "click", () => {
-          // this.makeMapUrl(positions[i]);
+          this.overlays.forEach((overlay) => {
+            overlay.setMap(null);
+          });
           this.displayCustomOverlay(positions[i]);
         });
 
@@ -347,6 +352,8 @@ export default {
       });
 
       overlay.setMap(this.map);
+
+      this.overlays.push(overlay);
     },
     // 지도에 선 그리는 메소드
     drawLine(position, index) {
@@ -362,8 +369,6 @@ export default {
           strokeOpacity: 1,
           strokeStyle: "solid",
         });
-
-        this.displayCircleDot(clickPosition, 0);
       } else {
         var path = this.clickLine.getPath();
 
@@ -372,33 +377,8 @@ export default {
         this.clickLine.setPath(path);
 
         var distance = Math.round(this.clickLine.getLength());
-
-        this.displayCircleDot(clickPosition, distance);
+        console.log(distance);
       }
-    },
-    displayCircleDot(position, distance) {
-      var circleOverlay = new window.kakao.maps.CustomOverlay({
-        content: '<span class="dot"></span>',
-        position: position,
-        zIndex: 1,
-      });
-
-      circleOverlay.setMap(this.map);
-
-      if (distance > 0) {
-        var distanceOverlay = new window.kakao.maps.CustomOverlay({
-          content:
-            '<div class="dotOverlay border">거리 <span class="number">' +
-            distance +
-            "</span>m</div>",
-          position: position,
-          yAnchor: 1,
-          zIndex: 2,
-        });
-
-        distanceOverlay.setMap(this.map);
-      }
-      // this.dots.push({ circle: circleOverlay, distance: distanceOverlay});
     },
     moveModify() {
       this.$router.push({ name: "planmodify", params: { planId: this.plan.id } });

@@ -50,7 +50,7 @@
       </div>
       <!-- map이 들어갈 위치 -->
       <!-- kakao map start -->
-      <div id="map" class="shadow rounded"></div>
+      <div id="map" ref="map" class="shadow rounded"></div>
       <!-- kakao map end -->
       <div>
         <div class="divider mb-5"></div>
@@ -193,13 +193,6 @@ export default {
         userId: null,
         hit: null,
       },
-      mapOption: {
-        center: {
-          lat: 37.500613,
-          lng: 127.036431,
-        },
-        level: 8,
-      },
       search: {
         keyword: null,
         pgn: null,
@@ -255,7 +248,7 @@ export default {
     },
     // 맵 출력하기
     loadMap() {
-      const container = document.getElementById("map");
+      const container = this.$refs.map;
       const options = {
         center: new window.kakao.maps.LatLng(37.500613, 127.036431),
         level: 8,
@@ -380,7 +373,6 @@ export default {
           marker.getPosition().getLat().toFixed(13) === lat &&
           marker.getPosition().getLng().toFixed(13) === lng
         ) {
-          // console.log("data.place_name : " + data.place_name);
           if (this.planMarkers) {
             const markerData = {
               marker: marker,
@@ -518,6 +510,8 @@ export default {
         }
       }
 
+      console.log("data :: ");
+      console.log(data);
       const placeData = {
         placeId: data.id,
         name: data.place_name,
@@ -553,7 +547,6 @@ export default {
       // 선 다시 그리기
       console.log("drawing :: ");
       this.places.forEach((place) => {
-        console.log(place);
         this.drawLine(place, true);
       });
     },
@@ -562,6 +555,9 @@ export default {
     // 여행 계획 등록하기
     async registPlan() {
       // console.log("places: " + this.places);
+      if (!confirm("등록 하시겠습니까?")) {
+        return;
+      }
       this.plan.userId = this.userInfo.userId;
       await this.planRegist([this.plan, this.places]);
       if (this.isRegist) {
