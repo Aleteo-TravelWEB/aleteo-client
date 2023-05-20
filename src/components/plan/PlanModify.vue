@@ -397,23 +397,21 @@ export default {
           marker.getPosition().getLat().toFixed(13) === lat &&
           marker.getPosition().getLng().toFixed(13) === lng
         ) {
-          // console.log("data.place_name : " + data.place_name);
           if (this.planMarkers) {
             const markerData = {
               marker: marker,
               placeId: data.id,
             };
             this.planMarkers.push(markerData);
+            // console.log(this.planMarkers);
           }
         } else {
           // 검색했을 때 뜨는 마커들 삭제 : flag = false
           let planFlag = false;
 
           for (let i = 0; i < this.planMarkers.length; i++) {
-            console.log("chekckck");
-            console.log(this.planMarkers[i].marker.getPosition().getLat().toFixed(13));
-            console.log(this.planMarkers[i].marker.getPosition().getLng().toFixed(13));
             if (
+              this.planMarkers[i].marker.getTitle() === marker.getTitle() &&
               this.planMarkers[i].marker.getPosition().getLat().toFixed(13) ===
                 marker.getPosition().getLat().toFixed(13) &&
               this.planMarkers[i].marker.getPosition().getLng().toFixed(13) ===
@@ -605,7 +603,6 @@ export default {
       // 선 다시 그리기
       console.log("drawing :: ");
       this.places.forEach((place) => {
-        console.log(place);
         this.drawLine(place, true);
       });
     },

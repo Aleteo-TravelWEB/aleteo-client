@@ -230,8 +230,7 @@ export default {
     },
     sendHotplace(param, img) {
       writeHotplace(
-        param,
-        img,
+        [param, img],
         ({ data }) => {
           let msg = "등록 처리시 문제가 발생 했습니다.";
           if (data === "success") {

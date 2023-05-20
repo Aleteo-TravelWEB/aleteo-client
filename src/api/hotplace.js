@@ -12,23 +12,26 @@ function viewHotplace(hotplaceId, success, fail) {
 }
 
 // Hotplace 글 작성
-async function writeHotplace(hotplace, image, success, fail) {
-  console.log(hotplace);
-  console.log(image);
+async function writeHotplace([hotplace, image], success, fail) {
 
   const formData = new FormData();
-  formData.append("file", image);
+  formData.append("userId", hotplace.userId);
+  formData.append("title", hotplace.title);
+  formData.append("joinDate", hotplace.joinDate);
+  formData.append("desc", hotplace.desc);
+  formData.append("tag1", hotplace.tag1);
+  formData.append("tag2", hotplace.tag2);
+  formData.append("latitude", hotplace.latitude);
+  formData.append("longitude", hotplace.longitude);
+  formData.append("mapUrl", hotplace.mapUrl);
+  formData.append("image", image);
+
 
   await api
     .post(`/hotplace`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      transformRequest: [
-        function () {
-          return formData;
-        },
-      ],
     })
     .then(success)
     .catch(fail);
