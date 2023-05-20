@@ -27,7 +27,7 @@
           <div class="container">
             <div class="d-flex flex-row justify-content-center">
               <!-- kakao map 보여주기 -->
-              <div id="map" class="shoadow rounded col-8" style="width: 600px"></div>
+              <div ref="map" class="shoadow rounded col-8" style="width: 600px"></div>
               <!-- kakao map 영역 끝 -->
               <div class="plan-box container col-md-4" style="height: 25em">
                 <div class="row">
@@ -258,15 +258,19 @@ export default {
       document.head.appendChild(script);
     },
     loadMap() {
-      const container = document.getElementById("map");
-      const options = {
-        center: new window.kakao.maps.LatLng(37.500613, 127.036431),
-        level: 5,
-      };
+      console.log(window.kakao);
+      if (window.kakao != undefined) {
+        // const container = document.getElementById("map");
+        const container = this.$refs.map;
+        const options = {
+          center: new window.kakao.maps.LatLng(37.500613, 127.036431),
+          level: 5,
+        };
 
-      this.map = new window.kakao.maps.Map(container, options);
+        this.map = new window.kakao.maps.Map(container, options);
 
-      this.loadMarker(this.places);
+        this.loadMarker(this.places);
+      }
     },
     loadMarker(positions) {
       const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
@@ -329,7 +333,7 @@ export default {
 						<div class="ellipsis mb-1">${marker.address}</div>
 						<div class="mt-1">`;
 
-      content += `<a href="https://map.kakao.com/link/to/${marker.name},${marker.lat},${marker.lng}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>  
+      content += `<a href="https://map.kakao.com/link/to/${marker.name},${marker.lat},${marker.lng}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
 						</div>
 					</div>
 				</div>

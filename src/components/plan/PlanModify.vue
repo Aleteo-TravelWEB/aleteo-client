@@ -50,7 +50,7 @@
       </div>
       <!-- map이 들어갈 위치 -->
       <!-- kakao map start -->
-      <div id="map" class="shadow rounded"></div>
+      <div ref="map" class="shadow rounded" style="width: 100px; height: 100px"></div>
       <!-- kakao map end -->
       <div>
         <div class="divider mb-5"></div>
@@ -194,11 +194,6 @@ export default {
     };
   },
   created() {
-    if (window.kakao && window.kakao.maps) {
-      this.loadMap();
-    } else {
-      this.loadScript();
-    }
     let param = this.$route.params.planId;
     console.log("param :: " + param);
     viewPlan(
@@ -221,8 +216,10 @@ export default {
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
+      console.log("loadMap :: ");
       this.loadMap();
     } else {
+      console.log("loadScript :: ");
       this.loadScript();
     }
   },
@@ -250,7 +247,9 @@ export default {
     },
     // 맵 출력하기
     loadMap() {
-      const container = document.getElementById("map");
+      console.log(window.kakao);
+      // const container = document.getElementById("map");
+      const container = this.$refs.map;
       const options = {
         center: new window.kakao.maps.LatLng(37.500613, 127.036431),
         level: 8,
