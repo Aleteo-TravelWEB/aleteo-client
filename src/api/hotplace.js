@@ -13,11 +13,11 @@ function viewHotplace(hotplaceId, success, fail) {
 
 // Hotplace 글 작성
 async function writeHotplace([hotplace, image], success, fail) {
-
   const formData = new FormData();
   formData.append("userId", hotplace.userId);
   formData.append("title", hotplace.title);
   formData.append("joinDate", hotplace.joinDate);
+  formData.append("description", hotplace.description);
   formData.append("desc", hotplace.desc);
   formData.append("tag1", hotplace.tag1);
   formData.append("tag2", hotplace.tag2);
@@ -25,7 +25,6 @@ async function writeHotplace([hotplace, image], success, fail) {
   formData.append("longitude", hotplace.longitude);
   formData.append("mapUrl", hotplace.mapUrl);
   formData.append("image", image);
-
 
   await api
     .post(`/hotplace`, formData, {
