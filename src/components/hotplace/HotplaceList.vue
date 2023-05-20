@@ -12,7 +12,7 @@
           class="mb-2"
         >
           <b-card-text> #{{ hotplace.tag1 }} #{{ hotplace.tag2 }} </b-card-text>
-          <b-button href="#" variant="primary">더 보기</b-button>
+          <b-button @click="showdetail(hotplace)" variant="primary">더 보기</b-button>
         </b-card>
       </b-col>
     </b-row>
@@ -23,11 +23,22 @@
       align="center"
       class="mt-4"
     />
+    <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
+      <h3>사진 보여줄 예정</h3>
+      <h4>#{{ hotplace.tag1 }} #{{ hotplace.tag2 }}</h4>
+      <hr />
+      <div>{{ hotplace.description }}</div>
+      <a :href="hotplace.mapUrl" target="_blank">위치 확인하기</a>
+      <div>지도상에서 위치보여주기?</div>
+    </b-modal>
   </b-container>
 </template>
 
 <script>
 import { listHotplace } from "@/api/hotplace";
+import { mapState } from "vuex";
+
+const userStore = "userStore";
 
 export default {
   name: "HotplaceList",
@@ -37,6 +48,18 @@ export default {
       hotplaces: [],
       currentPage: 1,
       perPage: 9,
+      hotplace: {
+        userId: null,
+        image: null,
+        title: null,
+        description: null,
+        tag1: null,
+        tag2: null,
+        latitude: null, // 위도 => y
+        longitude: null, // 경도 => x
+        mapUrl: null,
+      },
+      showDetailModal: false,
     };
   },
   created() {
@@ -50,6 +73,7 @@ export default {
     );
   },
   computed: {
+    ...mapState(userStore, ["userInfo"]),
     pagination() {
       const startIndex = (this.currentPage - 1) * this.perPage;
       const endIndex = startIndex + this.perPage;
@@ -63,17 +87,22 @@ export default {
         name: "hotplacewrite",
       });
     },
-  },
-  convertImageToBase64(imageFile) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  },
-  makerealUrl(imageFile) {
-    console.log(this.convertImageToBase64(imageFile));
+    convertImageToBase64(imageFile) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    },
+    makerealUrl(imageFile) {
+      console.log(this.convertImageToBase64(imageFile));
+    },
+    showdetail(hotplace) {
+      this.hotplace = hotplace;
+      this.showDetailModal = true;
+      console.log(hotplace);
+    },
   },
 };
 </script>
