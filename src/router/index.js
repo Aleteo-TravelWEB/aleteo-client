@@ -108,8 +108,8 @@ const routes = [
         name: "planmodify",
         beforeEnter: onlyAuthUser,
         component: () => import("@/components/plan/PlanModify"),
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/hotplace",
@@ -125,8 +125,9 @@ const routes = [
       {
         path: "write",
         name: "hotplacewrite",
+        beforeEnter: onlyAuthUser,
         component: () => import("@/components/hotplace/HotplaceWrite"),
-      }
+      },
     ],
   },
   {
@@ -157,8 +158,8 @@ const routes = [
         beforeEnter: onlyAuthUser,
         component: () => import("@/components/user/UserModify"),
       },
-    ]
-  }
+    ],
+  },
 ];
 
 const router = new VueRouter({
