@@ -41,7 +41,7 @@
                   class="col-3"
                   icon="plus-square-fill"
                   variant="primary"
-                  @click="addPlan(rs)"
+                  @click="addPlace(rs)"
                 ></b-icon>
               </div>
             </div>
@@ -69,7 +69,22 @@
                     id="plan-content"
                     class="rounded bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
                     style="width: 100%; height: 10em"
-                  ></div>
+                  >
+                    <div v-for="(place, index) in places" :key="index" class="border rounded">
+                      <b-row align-h="end">
+                        <b-icon
+                          class="col-3"
+                          icon="dash-square-fill"
+                          variant="danger"
+                          @click="deletePlace(place.placeId)"
+                        ></b-icon>
+                      </b-row>
+                      <div class="text-center p-2">
+                        <div class="place-title">{{ place.name }}</div>
+                        <div>{{ place.address }}</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="divider mb-3"></div>
                 <div id="plan-detail" class="d-flex flex-column align-items-center rounded mx-auto">
@@ -152,6 +167,19 @@ export default {
     ...mapState(planStore, ["isRegist"]),
     ...mapState(userStore, ["userInfo"]),
   },
+  /*
+    [마커 데이터 정보]
+    address_name
+    category_group_code
+    category_group_name
+    category_name
+    distance
+    id
+    phone
+    place_name
+    place_url
+    road_address_name
+*/
   data() {
     return {
       plan: {
@@ -256,7 +284,8 @@ export default {
       this.map.setLevel(8);
     },
     showPlace(rs) {
-      // console.log(rs)
+      console.log(" rs  :: ");
+      console.log(rs.id);
 
       // 여행지를 추가한 후에 다시 타이틀을 클릭한 거라면 해당 마크 보여주기
       if (this.isAddFlag) {
@@ -268,7 +297,7 @@ export default {
         // 마커 생성
         const marker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(rs.y, rs.x), // 마커를 표시할 위치
-          title: rs.place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
+          title: rs.id, // a마커의 타이틀, 마커의 장소 id 넣기
           image: markerImage, // 마커 이미지
         });
         // 마커가 지도 위에 표시되도록 설정
@@ -313,7 +342,7 @@ export default {
         // 마커 생성
         const marker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(positions[i].y, positions[i].x), // 마커를 표시할 위치
-          title: positions[i].place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
+          title: positions[i].id, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
           image: markerImage, // 마커 이미지
         });
 
@@ -356,10 +385,9 @@ export default {
 					</div>
 					<div class="desc">
 						<div class="ellipsis mb-1">${marker.address_name}</div>
-						<div class="jibun ellipsis">(전) ${marker.phone}</div>
 						<div class="mt-1">`;
 
-      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>  
+      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
 						</div>
 					</div>
 				</div>
@@ -391,9 +419,6 @@ export default {
 
       if (!this.drawingFlag) {
         this.drawingFlag = true;
-        // deleteClickLine();
-        // deleteDistance();
-        // deleteCircleDot();
 
         this.clickLine = new window.kakao.maps.Polyline({
           map: this.map,
@@ -416,12 +441,6 @@ export default {
 
         var distance = Math.round(this.clickLine.getLength());
         this.displayCircleDot(clickPosition, distance);
-      }
-    },
-    deleteClickLine() {
-      if (this.clickLine) {
-        this.clickLine.setMap(null);
-        this.clickLine = null;
       }
     },
     displayCircleDot(position, distance) {
@@ -448,12 +467,9 @@ export default {
       }
       this.dots.push({ circle: circleOverlay, distance: distanceOverlay });
     },
-    addPlan(data) {
+    addPlace(data) {
       this.isAddFlag = true;
       this.drawLine(data);
-      // console.log("data: " + data.id);
-
-      let planContent = document.querySelector("#plan-content");
 
       for (let i = 0; i < this.places.length; i++) {
         if (this.places[i].placeId === data.id) {
@@ -461,15 +477,6 @@ export default {
         }
       }
 
-      let makeDiv = `<div id='${data.id}' class="border rounded border-5" sytle="margin-right: 2px; border-color: cadetblue; border: thick; width: 100%; height: 100px;">
-												<div class='text-center p-2'>
-														<div class="place-title">${data.place_name}</div>
-														<div>${data.address_name}</div>
-														<div class="lat" style="display: none;">${data.y}</div>
-														<div class="lng" style="display: none;">${data.x}</div>
-												</div>`;
-
-      planContent.innerHTML += makeDiv;
       const placeData = {
         placeId: data.id,
         name: data.place_name,
@@ -483,23 +490,34 @@ export default {
       let lat = (data.y * 1).toFixed(13);
       let lng = (data.x * 1).toFixed(13);
 
+      this.deleteMarker(lat, lng, data);
+    },
+    deleteMarker(lat, lng, data) {
       this.markers.forEach((marker) => {
         if (
-          marker.getTitle() === data.place_name &&
           marker.getPosition().getLat().toFixed(13) === lat &&
           marker.getPosition().getLng().toFixed(13) === lng
         ) {
           // console.log("data.place_name : " + data.place_name);
-          this.planMarkers.push(marker);
+          const markerData = {
+            marker: marker,
+            placeId: data.id,
+          };
+          this.planMarkers.push(markerData);
+          console.log(this.planMarekrs);
         } else {
+          // 검색했을 때 뜨는 마커들 삭제 : flag = false
           let planFlag = false;
+
           for (let i = 0; i < this.planMarkers.length; i++) {
+            console.log("planMarker marker :: ");
+            console.log(this.planMarker);
             if (
-              this.planMarkers[i].getTitle() === marker.getTitle() &&
-              this.planMarkers[i].getPosition().getLat().toFixed(13) ===
+              this.planMarkers[i].marker.getTitle() === marker.getTitle() &&
+              this.planMarkers[i].marker.getPosition().getLat().toFixed(13) ===
                 marker.getPosition().getLat().toFixed(13) &&
-              this.planMarkers[i].getPosition().getLng().toFixed(13) ===
-                marker.getPosition().getLng().toFixed(13)
+              this.planMarkers[i].marker.getPosition().getLng().toFixed(13) ===
+                marker.getPosition().marker.getLng().toFixed(13)
             ) {
               planFlag = true;
               break;
@@ -510,6 +528,28 @@ export default {
           }
         }
       });
+    },
+    // 추가된 관광지 삭제
+    deletePlace(placeId) {
+      this.places = this.places.filter((place) => place.placeId !== placeId);
+      // console.log("places :: ");
+      // console.log(this.places);
+      // 마크 삭제
+      let lat = (this.places.lat * 1).toFixed(13);
+      let lng = (this.places.lng * 1).toFixed(13);
+
+      console.log("placeId :: " + placeId);
+      console.log("marker");
+
+      console.log(this.planMarkers.length);
+
+      for (let i = 0; i < this.planMarkers.length; i++) {
+        if (this.planMarkers[i].placeId === placeId) {
+          console.log("hello");
+        }
+      }
+
+      this.deleteMarker(lat, lng, this.places);
     },
     async registPlan() {
       // console.log("places: " + this.places);
