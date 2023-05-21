@@ -37,4 +37,8 @@ async function resign(userId, success, fail) {
   await api.get(`/user/resign/${userId}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign };
+async function sendPwdMail(findUser, success, fail) {
+  await api.post(`/user/find`, findUser).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail };

@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign } from "@/api/user";
+import { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail } from "@/api/user";
 
 const userStore = {
   namespaced: true,
@@ -12,6 +12,7 @@ const userStore = {
     isValidId: false,
     isJoin: false,
     isModify: false,
+    isSendPwdMail: false,
   },
   getters: {
     checkUserInfo: function (state) {
@@ -45,6 +46,9 @@ const userStore = {
     SET_IS_MODIFY: (state, isModify) => {
       state.isModify = isModify;
     },
+    SET_IS_SEND_PWD_MAIL: (state, isSendPwdMail) => {
+      state.isSendPwdMail = isSendPwdMail;
+    }
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -154,16 +158,16 @@ const userStore = {
       await idCheck(
         userId,
         ({ data }) => {
-            if (data === 0) {
-              commit("SET_IS_VALID_ID", true);
-            } else {
-              commit("SET_IS_VALID_ID", false);
-              console.log("유저 정보 없음");
-            }
-          },
-          (error) => {
-            console.log(error);
+          if (data === 0) {
+            commit("SET_IS_VALID_ID", true);
+          } else {
+            commit("SET_IS_VALID_ID", false);
+            console.log("유저 정보 없음");
           }
+        },
+        (error) => {
+          console.log(error);
+        }
       )
     },
     async userJoin({ commit }, user) {
@@ -207,6 +211,19 @@ const userStore = {
             commit("SET_IS_VALID_TOKEN", false);
           } else {
             commit("SET_IS_RESIGN", false);
+          }
+        }
+      )
+    },
+    // 비밀번호 찾기
+    async sendUserPwdMail({ commit }, findUser) {
+      await sendPwdMail(
+        findUser,
+        ({ data }) => {
+          if (data.message === "success") {
+            commit("SET_IS_SEND_PWD_MAIL", true);
+          } else {
+            commit("SET_IS_SEND_PWD_MAIL", false);
           }
         }
       )

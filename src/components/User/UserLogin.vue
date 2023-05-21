@@ -45,7 +45,7 @@
           </div>
           <div class="row justify-content-center">
             <div class="col-4 me-2">
-              <a href="${root}/user/password" id="find-password">비밀번호 찾기</a>
+              <div id="find-password" @click="moveFindPwd()">비밀번호 찾기</div>
             </div>
           </div>
           <div
@@ -74,6 +74,53 @@
         </form>
       </div>
     </div>
+    <!-- 모달 창 start -->
+    <div v-if="showModal" class="modal">
+      <div class="modal-content container">
+        <span class="close" @click="closeModal()">닫기</span>
+        <h4 class="text-secondary">비밀번호 찾기</h4>
+        <div class="mt-2 mb-2 row">
+          <div class="d-flex justify-content-around col-12">
+            <label for="#find-user-id" class="px-2 d-flex align-items-center col-2">아이디</label>
+            <input
+              type="text"
+              class="form-control col-8"
+              id="find-user-id"
+              placeholder="아이디를 입력해주세요"
+              v-model="findUser.userId"
+            />
+          </div>
+        </div>
+        <div class="mt-2 mb-2 row">
+          <div class="d-flex col-12 justify-content-around row">
+            <p class="px-2 d-flex align-items-center col-2">이메일</p>
+            <div id="find-email" class="d-flex align-items-center justify-content-center">
+              <input
+                type="text"
+                class="form-control col-6"
+                id="find-user-id"
+                v-model="findUser.emailId"
+              />
+              <span class="col-2 d-flex justify-content-center align-items-center">@</span>
+              <b-form-select
+                :options="domains"
+                class="col-6"
+                v-model="findUser.emailDomain"
+              ></b-form-select>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-2" v-if="isShowPwdResult">
+          <div :class="{ 'shke-effect': isShakingModal }" style="color: crimson">
+            아이디 또는 이메일을 확인해주세요.
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+          <b-button variant="outline-primary" class="mx-4" @click="findPwd()">전송</b-button>
+        </div>
+      </div>
+    </div>
+    <!-- 모달 창 end -->
   </div>
 </template>
 
@@ -94,13 +141,28 @@ export default {
       },
       isLoginConfirm: false,
       isShaking: false,
+      isShakingModal: false,
+      showModal: false, // 모달 창
+      domains: [
+        { value: null, text: "선택" },
+        { value: "ssafy.com", text: "싸피" },
+        { value: "google.com", text: "구글" },
+        { value: "naver.com", text: "네이버" },
+        { value: "kakao.com", text: "카카오" },
+      ],
+      findUser: {
+        userId: null,
+        emailId: null,
+        emailDomain: null,
+      },
+      isShowPwdResult: false,
     };
   },
   computed: {
-    ...mapState(userStore, ["isLogin", "isLoginError", "userInfo"]),
+    ...mapState(userStore, ["isLogin", "isLoginError", "userInfo", "isSendPwdMail"]),
   },
   methods: {
-    ...mapActions(userStore, ["userConfirm", "getUserInfo"]),
+    ...mapActions(userStore, ["userConfirm", "getUserInfo", "sendUserPwdMail"]),
     async confirm() {
       await this.userConfirm(this.user);
       let token = sessionStorage.getItem("access-token");
@@ -122,6 +184,28 @@ export default {
     movePage() {
       this.$router.push({ name: "join" });
     },
+    ////////////////// 비밀번호 찾기 start //////////////////
+    async findPwd() {
+      console.log("findUser :: ");
+      console.log(this.findUser);
+      await this.sendUserPwdMail(this.findUser);
+      if (this.isSendPwdMail) {
+        alert("메일 전송이 완료되었습니다.");
+        this.showModal = false;
+      } else {
+        this.isShowPwdResult = true;
+        this.isShakingModal = true;
+      }
+    },
+    moveFindPwd() {
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.findUser = [];
+      this.isShakingModal = false;
+    },
+    ////////////////// 비밀번호 찾기 end //////////////////
   },
 };
 </script>
@@ -176,5 +260,27 @@ export default {
 
 .shake-effect {
   animation: shake 0.5s;
+}
+
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 15px;
+  width: 70%;
+  max-width: 600px;
 }
 </style>
