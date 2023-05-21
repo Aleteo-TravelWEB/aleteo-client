@@ -27,7 +27,8 @@
       class="mt-4"
     />
     <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
-      <h3>사진 보여줄 예정</h3>
+      <!-- <img :src="this.displayImage(hotplace.imageUrl)" alt="" /> -->
+      <hr />
       <h4>#{{ hotplace.tag1 }} #{{ hotplace.tag2 }}</h4>
       <hr />
       <div>{{ hotplace.description }}</div>
@@ -61,6 +62,7 @@ export default {
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
         mapUrl: null,
+        imageUrl: null,
       },
       showDetailModal: false,
     };
@@ -69,6 +71,9 @@ export default {
     listHotplace(
       ({ data }) => {
         this.hotplaces = data;
+        for (let i = 0; i < data.length; i++) {
+          console.log(data[i].imageUrl);
+        }
       },
       (error) => {
         console.log(error);
@@ -90,6 +95,9 @@ export default {
         name: "hotplacewrite",
       });
     },
+    // displayImage(imageUrl) {
+    //   thisURL.createObjectURL(imageUrl);
+    // },
     convertImageToBase64(imageFile) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();

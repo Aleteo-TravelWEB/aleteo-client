@@ -26,7 +26,7 @@
       class="mt-4"
     />
     <b-modal id="deatil" v-model="showModifyModal" :title="this.hotplace.title">
-      <h3>사진 보여줄 예정</h3>
+      <img :src="hotplace.imageUrl" alt="" />
       태그 1 :
       <input type="text" :placeholder="hotplace.tag1" v-model="hotplace.tag1" class="modal-input" />
       태그 2 :
@@ -39,7 +39,7 @@
         v-model="hotplace.description"
         class="modal-input"
       />
-      사진 : <input type="file" @change="hotplaceimg" />
+      사진 변경 : <input type="file" @change="hotplaceimg" />
       <template #modal-footer>
         <b-button variant="secondary" @click="handleCancel">취소</b-button>
         <b-button variant="primary" @click="updatehotplace(hotplace)">수정</b-button>
@@ -73,10 +73,12 @@ export default {
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
         mapUrl: null,
+        imageUrl: "",
       },
       showModifyModal: false,
       img: null,
       imageChanged: false,
+      imageUrl: "",
     };
   },
   created() {
@@ -128,7 +130,7 @@ export default {
         );
       } else {
         modifyHotplace1(
-          [hotplace, this.img],
+          [hotplace, this.img, this.imageUrl],
           ({ data }) => {
             let msg = "수정 시 문제 발생";
             if (data.message === "success") {
@@ -141,11 +143,21 @@ export default {
           }
         );
       }
+      this.moveList();
     },
     hotplaceimg(event) {
       this.img = event.target.files[0];
       console.log(this.img);
       this.imageChanged = true;
+      if (this.img) {
+        this.fileToBlob(this.img)
+          .then((blob) => {
+            console.log(blob);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
     deletehotplace(hotplace) {
       let param = hotplace.num;
@@ -163,6 +175,17 @@ export default {
         }
       );
       this.moveList();
+    },
+    fileToBlob(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const blob = new Blob([reader.result], { type: file.type });
+          return blob;
+        };
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
     },
     moveList() {
       this.showModifyModal = false;

@@ -12,10 +12,12 @@ function viewHotplace(hotplaceId, success, fail) {
 }
 
 // Hotplace 글 작성
-function writeHotplace([hotplace, image], success, fail) {
+function writeHotplace([hotplace, image, blob], success, fail) {
   const formData = new FormData();
+  console.log("-----------------");
   console.log(hotplace);
   console.log(image);
+  console.log(blob);
   formData.append("userId", hotplace.userId);
   formData.append("title", hotplace.title);
   formData.append("joinDate", hotplace.joinDate);
@@ -26,6 +28,7 @@ function writeHotplace([hotplace, image], success, fail) {
   formData.append("longitude", hotplace.longitude);
   formData.append("mapUrl", hotplace.mapUrl);
   formData.append("image", image);
+  formData.append("imageUrl", blob);
 
   api
     .post(`/hotplace`, formData, {
@@ -37,8 +40,9 @@ function writeHotplace([hotplace, image], success, fail) {
     .catch(fail);
 }
 // Hotplace 글 수정
-async function modifyHotplace1([hotplace, image], success, fail) {
+async function modifyHotplace1([hotplace, image, imageUrl], success, fail) {
   const formData = new FormData();
+  console.log(imageUrl);
   formData.append("userId", hotplace.userId);
   formData.append("title", hotplace.title);
   formData.append("num", hotplace.num);
@@ -50,6 +54,7 @@ async function modifyHotplace1([hotplace, image], success, fail) {
   formData.append("longitude", hotplace.longitude);
   formData.append("mapUrl", hotplace.mapUrl);
   formData.append("image", image);
+  formData.append("imageUrl", imageUrl);
 
   await api
     .put(`/hotplace`, formData, {

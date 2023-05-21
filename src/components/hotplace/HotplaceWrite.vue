@@ -92,6 +92,7 @@ export default {
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
         mapUrl: null,
+        imageUrl: "",
       },
       markers: [], // 마커 담을 객체 배열
       search: {
@@ -102,7 +103,7 @@ export default {
       showModal: false,
       img: null,
       imagechanged: false,
-      blob: null,
+      imageUrl: "",
     };
   },
   mounted() {
@@ -198,7 +199,6 @@ export default {
       paginationEl.appendChild(fragment);
     },
     moveMap(place) {
-      console.log("click!!");
       const center = new window.kakao.maps.LatLng(place.y, place.x);
       this.map.setCenter(center);
     },
@@ -219,7 +219,7 @@ export default {
       } else if (!this.imagechanged) {
         alert("사진을 등록해주세요");
       } else {
-        this.sendHotplace(this.hotplace, this.img);
+        this.sendHotplace(this.hotplace, this.img, this.imageUrl);
       }
     },
     closeModal() {
@@ -232,13 +232,20 @@ export default {
     hotplaceimg(event) {
       this.img = event.target.files[0];
       this.imagechanged = true;
-      console.log(this.img);
-      this.blob = new Blob([this.img], { type: this.img.type });
-      console.log(this.blob);
+      if (this.img) {
+        this.fileToBlob(this.img)
+          .then((blob) => {
+            console.log(blob);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
-    sendHotplace(param, img) {
+    sendHotplace(param, img, imageurl) {
+      console.log(imageurl);
       writeHotplace(
-        [param, img],
+        [param, img, imageurl],
         ({ data }) => {
           let msg = "등록 처리시 문제가 발생 했습니다.";
           console.log(data);
@@ -252,6 +259,17 @@ export default {
         }
       );
       this.closeModal();
+    },
+    fileToBlob(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const blob = new Blob([reader.result], { type: file.type });
+          return blob;
+        };
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
     },
   },
 };
