@@ -45,7 +45,7 @@
           </div>
           <div class="row justify-content-center">
             <div class="col-4 me-2">
-              <div id="find-password" @click="moveFindPwd()">비밀번호 찾기</div>
+              <div id="find-password" class="hover-div" @click="moveFindPwd()">비밀번호 찾기</div>
             </div>
           </div>
           <div
@@ -75,48 +75,58 @@
       </div>
     </div>
     <!-- 모달 창 start -->
-    <div v-if="showModal" class="modal">
+    <div v-if="showModal" class="modal shadow">
       <div class="modal-content container">
-        <span class="close" @click="closeModal()">닫기</span>
-        <h4 class="text-secondary">비밀번호 찾기</h4>
-        <div class="mt-2 mb-2 row">
-          <div class="d-flex justify-content-around col-12">
-            <label for="#find-user-id" class="px-2 d-flex align-items-center col-2">아이디</label>
-            <input
-              type="text"
-              class="form-control col-8"
-              id="find-user-id"
-              placeholder="아이디를 입력해주세요"
-              v-model="findUser.userId"
-            />
-          </div>
+        <div class="hover-div d-flex flex-end mb-3" @click="closeModal()">
+          <b-icon icon="x-circle-fill" variant="danger"></b-icon>
         </div>
-        <div class="mt-2 mb-2 row">
-          <div class="d-flex col-12 justify-content-around row">
-            <p class="px-2 d-flex align-items-center col-2">이메일</p>
-            <div id="find-email" class="d-flex align-items-center justify-content-center">
+        <h4 class="text-secondary mb-3">
+          <b-icon icon="key-fill"></b-icon> <strong>비밀번호 찾기</strong>
+        </h4>
+        <div class="container">
+          <div class="mt-2 mb-2 d-flex justify-content-center col-12">
+            <b-input-group class="px-2 d-flex justify-content-center">
+              <b-input-group-prepend is-text>
+                <b-icon icon="person-fill"></b-icon>
+              </b-input-group-prepend>
               <input
                 type="text"
-                class="form-control col-6"
+                class="form-control col-12"
+                id="find-user-id"
+                placeholder="아이디를 입력해주세요"
+                v-model="findUser.userId"
+              />
+            </b-input-group>
+          </div>
+          <div class="mt-4"></div>
+          <div class="mt-2 mb-2 d-flex justify-content-center col-12">
+            <b-input-group class="px-2 d-flex justify-content-center">
+              <b-input-group-prepend is-text>
+                <b-icon icon="envelope"></b-icon>
+              </b-input-group-prepend>
+              <input
+                type="text"
+                class="form-control col-5"
                 id="find-user-id"
                 v-model="findUser.emailId"
+                placeholder="이메일"
               />
-              <span class="col-2 d-flex justify-content-center align-items-center">@</span>
+              <span class="border col-1 d-flex justify-content-center align-items-center">@</span>
               <b-form-select
                 :options="domains"
-                class="col-6"
+                class="col-5"
                 v-model="findUser.emailDomain"
               ></b-form-select>
-            </div>
+            </b-input-group>
           </div>
         </div>
-        <div class="d-flex justify-content-end mt-2" v-if="isShowPwdResult">
-          <div :class="{ 'shke-effect': isShakingModal }" style="color: crimson">
+        <div class="d-flex justify-content-center mt-2" v-if="isShowPwdResult">
+          <div :class="{ 'shake-effect': isShakingModal }" style="color: crimson">
             아이디 또는 이메일을 확인해주세요.
           </div>
         </div>
         <div class="d-flex justify-content-end mt-2">
-          <b-button variant="outline-primary" class="mx-4" @click="findPwd()">전송</b-button>
+          <b-button variant="outline-primary" class="mx-5" @click="findPwd()">전송</b-button>
         </div>
       </div>
     </div>
@@ -195,6 +205,10 @@ export default {
       } else {
         this.isShowPwdResult = true;
         this.isShakingModal = true;
+
+        setTimeout(() => {
+          this.isShakingModal = false;
+        }, 1000);
       }
     },
     moveFindPwd() {
@@ -282,5 +296,13 @@ export default {
   border-radius: 15px;
   width: 70%;
   max-width: 600px;
+}
+
+.hover-div {
+  cursor: pointer;
+}
+
+.hover-div:hover {
+  color: #3f72af;
 }
 </style>
