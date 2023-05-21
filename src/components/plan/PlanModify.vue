@@ -197,12 +197,8 @@ export default {
     viewPlan(
       param,
       ({ data }) => {
-        console.log("data :: ");
-        console.log(data);
         this.plan = data.plan;
         this.places = data.places;
-        console.log("check ::: ");
-        console.log(this.places);
         this.loadMap();
       },
       (error) => {

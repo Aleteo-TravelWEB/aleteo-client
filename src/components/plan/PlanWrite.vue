@@ -12,13 +12,13 @@
               placeholder="검색어"
               aria-label="검색어"
               v-model="search.keyword"
-              @keyup.enter="searchPlace"
+              @keyup.enter="searchPlace()"
             />
             <button
               id="btn-search"
               class="border btn submit-btn col-3 m-2"
               type="button"
-              @click="searchPlace"
+              @click="searchPlace()"
             >
               검색
             </button>
@@ -31,7 +31,7 @@
               :key="rs.id"
               @click="showPlace(rs)"
             >
-              <!-- <img :src="rs." :alt=""> -->
+              <img :src="rs.imageUrl" :alt="rs.place_name" style="width: 4em; height: 4em" />
               <div class="col-8">
                 <Strong>{{ rs.place_name }}</Strong>
                 <div class="addr">{{ rs.address_name }}</div>
@@ -155,6 +155,10 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+// import { attrImageInstance } from "@/api/index";
+import axios from "axios";
+
+// const http = attrImageInstance();
 
 const userStore = "userStore";
 const planStore = "planStore";
@@ -212,6 +216,7 @@ export default {
       addVal: null,
       places: [],
       isAddFlag: false, // 검색한 여행지 추가 후 타이틀을 선택했는지 판단하는 flag
+      attrImage: null, // 관광지 이미지 정보
     };
   },
   mounted() {
@@ -275,11 +280,21 @@ export default {
       const ps = new window.kakao.maps.services.Places();
 
       // 키워드로 장소를 검색합니다
-      ps.keywordSearch(keyword, (data, status, pgn) => {
+      ps.keywordSearch(keyword, async (data, status, pgn) => {
         this.search.keyword = keyword;
         this.search.pgn = pgn;
         this.search.results = data;
+        // console.log(data);
+        // console.log("check");
+        for (let i = 0; i < this.search.results.length; i++) {
+          // console.log("place_name:: " + this.search.results[i].place_name);
+          await this.getImg(this.search.results[i].place_name);
+          this.search.results[i].imageUrl = this.attrImage;
+        }
       });
+
+      // console.log("EE");
+      // console.log(this.search.results);
 
       this.map.setLevel(8);
     },
@@ -407,13 +422,11 @@ export default {
 
     ////////////////////// 커스텀 오버레이 start //////////////////////
     //커스텀 오버레이 표시 함수
-    displayCustomOverlay(marker) {
-      let image = "";
-      if (marker.image !== "") {
-        image = marker.image;
-      } else {
-        image = require("@/assets/img/noimage.png");
-      }
+    async displayCustomOverlay(marker) {
+      // 관광지 이미지 정보 불러오기
+      var image = this.attrImage;
+      await this.getImg(marker.place_name);
+      image = this.attrImage;
 
       let content = `
 		<div class="wrap">
@@ -510,16 +523,18 @@ export default {
         }
       }
 
-      console.log("data :: ");
-      console.log(data);
       const placeData = {
         placeId: data.id,
         name: data.place_name,
         address: data.address_name,
         lat: data.y,
         lng: data.x,
+        imageUrl: data.imageUrl,
       };
       this.places.push(placeData);
+
+      console.log(" data :: ");
+      console.log(placeData);
 
       // 선택된 애를 제외하고 마크 삭제
       let lat = (data.y * 1).toFixed(13);
@@ -551,6 +566,48 @@ export default {
       });
     },
     ////////////////////// 관광지를 여행계획에 넣기 end //////////////////////
+
+    ////////////////////// 관광지 이미지 가져오기 start //////////////////////
+    async getImg(title) {
+      console.log(title);
+      // getAttrImg(
+      //   title,
+      //   ({ data }) => {
+      //     console.log("image data :: ");
+      //     console.log(data);
+      //     if (data.response === "undefined") {
+      //       console.log(data.response);
+      //       this.attrImage = require("@/assets/img/noimage.png");
+      //     } else {
+      //       console.log(data.response.body.items.item.galWebImageUrl);
+      //       this.attrImage = data.response.body.items.item.galWebImageUrl;
+      //     }
+      //   },
+      //   (error) => {
+      //     this.attrImage = require("@/assets/img/noimage.png");
+      //     console.log(error);
+      //   }
+      // );
+      const encode = encodeURI(title);
+      // const SERVICE_KEY = process.env.VUE_APP_TRIP_API_KEY;
+      // `${SERVICE_KEY}&keyword=${encode}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&arrange=A&_type=json`
+      await axios
+        .get(
+          `https://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=wRLehfal1iPUgU5lXebqFzRhzIiCoN%2B%2FiJxmXuf2GQy4b6eK9SxyBpjfC6%2FnQuwQbakh6HgE%2BNpykN%2B691jFUw%3D%3D&keyword=${encode}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&arrange=A&_type=json`
+        )
+        .then(({ data }) => {
+          console.log(data);
+          if (data.response.body.items !== "") {
+            this.attrImage = data.response.body.items.item[0].galWebImageUrl;
+          } else {
+            this.attrImage = require("@/assets/img/noimage.png");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    ////////////////////// 관광지 이미지 가져오기 end //////////////////////
 
     // 여행 계획 등록하기
     async registPlan() {

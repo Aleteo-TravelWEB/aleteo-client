@@ -11,16 +11,15 @@ function apiInstance() {
   return instance;
 }
 
-// // house deal API axios instance
-// function houseInstance() {
-//   const instance = axios.create({
-//     baseURL: process.env.VUE_APP_HOUSE_DEAL_URL,
-//     headers: {
-//       "Content-Type": "application/json;charset=utf-8",
-//     },
-//   });
-//   return instance;
-// }
+// attraction image api axios instance
+function attrImageInstance() {
+  const instance = axios.create({
+    baseURL: "https://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  });
+  return instance;
+}
 
-// export { apiInstance, houseInstance };
-export { apiInstance };
+export { apiInstance, attrImageInstance };

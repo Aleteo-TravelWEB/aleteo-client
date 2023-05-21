@@ -1,6 +1,7 @@
-import { apiInstance } from "./index.js";
+import { apiInstance, attrImageInstance } from "@/api/index";
 
 const api = apiInstance();
+const imgApi = attrImageInstance();
 
 // 여행 계획 글 목록 반환
 function listPlan(param, success, fail) {
@@ -41,4 +42,13 @@ function deletePlan(planId, success, fail) {
   api.delete(`/plan/${planId}`).then(success).catch(fail);
 }
 
-export { listPlan, regist, viewPlan, modify, deletePlan };
+// 관광지 이미지 정보 가져오기
+// {serviceKey}&keyword=서울%20야경%20축제&_type=json"
+function getAttrImg(title, success, fail) {
+  const SERVICE_KEY = process.env.VUE_APP_TRIP_API_KEY;
+  const encode = encodeURI(title);
+  console.log("encode :: " + encode);
+  imgApi.get(`${SERVICE_KEY}&keyword=${encode}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&arrange=A&_type=json`).then(success).catch(fail);
+}
+
+export { listPlan, regist, viewPlan, modify, deletePlan, getAttrImg };

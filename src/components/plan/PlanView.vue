@@ -1,30 +1,31 @@
 <template>
-  <div>
+  <div class="container p-3">
     <div class="row justify-content-center">
-      <div class="col-lg-8 col-md-10 col-sm-12">
+      <!-- <div class="col-lg-8 col-md-10 col-sm-12">
         <h2 class="my-3 py-3 shadow-sm bg-light text-center">My Plan</h2>
-      </div>
+      </div> -->
       <div class="col-lg-8 col-md-10 col-sm-12">
-        <div class="row my-2">
-          <h2 class="text-secondary px-5">{{ plan.title }}</h2>
+        <div class="row my-2 mt-3">
+          <h2 class="text-secondary px-3">{{ plan.title }}</h2>
         </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="clearfix align-content-center">
-              <img
-                class="avatar me-2 float-md-start bg-light p-2"
-                src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
-              />
-              <p>
-                <span class="fw-bold">{{ plan.userId }}</span> <br />
-                <span class="text-secondary fw-light">
-                  {{ plan.createdAt }} 조회 : {{ plan.hit }}
-                </span>
-              </p>
+        <div class="row mb-3 mt-3">
+          <div class="col-12 col-md-8">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center">
+                <img
+                  class="avatar me-2 float-md-start bg-light p-2"
+                  src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+                />
+                <div class="fw-bold">{{ plan.userId }}</div>
+              </div>
+              <br />
+              <div class="text-secondary fw-light">
+                {{ plan.createdAt }} <strong>조회</strong> {{ plan.hit }}
+              </div>
             </div>
           </div>
           <div class="divider mb-3"></div>
-          <div class="container">
+          <div class="container mt-3">
             <div class="d-flex flex-row justify-content-center">
               <!-- kakao map 보여주기 -->
               <div ref="map" class="shoadow rounded col-8" style="width: 600px"></div>
@@ -94,13 +95,12 @@
               </div>
             </div>
           </div>
-          <div class="divider mb-4"></div>
-          <div>
+          <div class="mt-5 mb-3 px-3">
             <h2>추천 경로</h2>
           </div>
           <div class="d-flex flex-row">
             <div class="d-flex flex-row" v-for="(fastPlace, index) in fastPlaces" :key="index">
-              <div class="border border-4 rounded me-1 p-2">
+              <div class="mx-1 p-2 reco-custom d-flex align-items-center shadow">
                 <div class="travel-info">
                   <strong class="fast_place_name">{{ fastPlace.name }}</strong>
                   <p class="fast_address">{{ fastPlace.address }}</p>
@@ -117,14 +117,15 @@
               </div>
             </div>
           </div>
-          <div class="divider mb-3"></div>
-          <div class="align-middle">
+          <div class="mt-5 mb-3 px-3">
             <h2>타임 라인</h2>
+          </div>
+          <div>
             <div v-for="(place, index) in places" :key="index">
               <div v-if="index % 2 == 0">
                 <div class="mb-2 container row" style="margin: 100 auto">
                   <div
-                    class="col-md-8 p-3 travel-box d-flex flex-row align-content-center border border-4 rounded"
+                    class="col-md-8 mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow"
                     style="width: 50%; margin: 0 auto"
                   >
                     <img
@@ -147,7 +148,7 @@
                 <div class="mb-2 row">
                   <div style="width: 10em" class="col-md-4"></div>
                   <div
-                    class="col-md-8 p-3 travel-box d-flex flex-row align-content-center border border-4 rounded"
+                    class="col-md-8 mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow"
                     style="width: 50%; margin: 0 auto"
                   >
                     <img
@@ -167,29 +168,33 @@
               </div>
             </div>
           </div>
-          <div class="divider mt-3 mb-3"></div>
-          <div class="">
-            <div class="d-flex justify-content-end">
-              <button type="button" id="btn-list" class="btn submit-btn mb-3">
-                <router-link :to="{ name: 'planlist' }">여행 목록</router-link>
+          <div class="mb-5, mt-3 d-flex justify-content-end">
+            <div class="d-flex">
+              <button
+                type="button"
+                id="btn-list"
+                class="btn btn-outline-primary mb-3 btn-custom"
+                @click="moveList()"
+              >
+                목록
               </button>
               <!-- 본인일때만 글수정, 글 삭제 버튼 보이도록 함 -->
-              <div v-if="this.userInfo.userId === plan.userId">
+              <div v-if="userInfo.userId === plan.userId || userInfo.grade === '관리자'">
                 <button
                   type="button"
                   id="btn-mv-modify"
-                  class="btn btn-outline-success mb-3 ms-1"
+                  class="btn btn-outline-success mb-3 mx-2"
                   @click="moveModify()"
                 >
-                  글수정
+                  수정
                 </button>
                 <button
                   type="button"
                   id="btn-delete"
-                  class="btn btn-outline-danger mb-3 ms-1"
+                  class="btn btn-outline-danger mb-3"
                   @click="moveDelete()"
                 >
-                  글삭제
+                  삭제
                 </button>
               </div>
             </div>
@@ -380,6 +385,9 @@ export default {
         console.log(distance);
       }
     },
+    moveList() {
+      this.$router.push({ name: "planlist" });
+    },
     moveModify() {
       this.$router.push({ name: "planmodify", params: { planId: this.plan.id } });
     },
@@ -406,4 +414,16 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.reco-custom {
+  /* border: solid #dbe2ef 3px; */
+  border-radius: 5%;
+  height: 9em;
+}
+
+.btn-custom {
+  color: black;
+  text-decoration: none;
+  width: 4em;
+}
+</style>
