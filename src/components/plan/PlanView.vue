@@ -22,15 +22,22 @@
               <div class="text-secondary fw-light">
                 {{ plan.createdAt }} <strong>조회</strong> {{ plan.hit }}
               </div>
+              <div class="d-flex flex-end">
+                <b-icon
+                  :class="{ 'heart-effect': isHeart, 'default-effect': true }"
+                  :icon="isHeart ? 'suit-heart-fill' : 'suit-heart'"
+                  @click="pushHeart()"
+                ></b-icon>
+              </div>
             </div>
           </div>
           <div class="divider mb-3"></div>
           <div class="container mt-3">
-            <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex flex-row row justify-content-center">
               <!-- kakao map 보여주기 -->
               <div ref="map" class="shoadow rounded col-8" style="width: 600px"></div>
               <!-- kakao map 영역 끝 -->
-              <div class="plan-box container col-md-4" style="height: 25em">
+              <div class="plan-box container col-4 col-md-4" style="height: 25em">
                 <div class="row">
                   <div class="col-md-6">
                     <label for="register-id">등록자</label>
@@ -96,7 +103,13 @@
             </div>
           </div>
           <div class="mt-5 mb-3 px-3">
-            <h2>추천 경로</h2>
+            <div class="d-flex align-items-center">
+              <b-icon
+                class="mx-2 d-flex align-items-center fast-path-custom"
+                icon="check2-square"
+              />
+              <h2>추천 경로</h2>
+            </div>
           </div>
           <div class="d-flex flex-row">
             <div class="d-flex flex-row" v-for="(fastPlace, index) in fastPlaces" :key="index">
@@ -186,7 +199,7 @@
                   class="btn btn-outline-success mb-3 mx-2"
                   @click="moveModify()"
                 >
-                  수정
+                  <b-icon icon="pencil-square" /> 수정
                 </button>
                 <button
                   type="button"
@@ -208,6 +221,7 @@
 <script>
 import { viewPlan, deletePlan } from "@/api/plan";
 import { mapState } from "vuex";
+import http from "@/api/http";
 
 const userStore = "userStore";
 
@@ -222,6 +236,7 @@ export default {
       map: null,
       clickLine: [],
       overlays: [],
+      isHeart: false,
     };
   },
   mounted() {
@@ -254,6 +269,17 @@ export default {
         console.log(error);
       }
     );
+
+    http
+      .get(`/plan/good/${this.userInfo.userId}/${param}`)
+      .then(({ data }) => {
+        if (data.message === "success") {
+          this.isHeart = true;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   methods: {
     loadScript() {
@@ -410,6 +436,46 @@ export default {
         }
       );
     },
+    /////////// 좋아요 start ///////////
+    pushHeart() {
+      if (this.isHeart) {
+        this.isHeart = false;
+        console.log("좋아요에 제거");
+        http
+          .delete(`/plan/good/${this.userInfo.userId}/${this.plan.id}`)
+          .then(({ data }) => {
+            if (data.message === "success") {
+              // alert("좋아요 삭제 성공!");
+            } else {
+              console.log("좋아요 삭제 실패..");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        this.isHeart = true;
+        console.log("좋아요에 추가");
+        // 좋아요에 추가
+        const goodPlan = {
+          userId: this.userInfo.userId,
+          planId: this.plan.id,
+        };
+        http
+          .post(`/plan/good`, goodPlan)
+          .then(({ data }) => {
+            if (data.message === "success") {
+              // alert("좋아요 등록!");
+            } else {
+              console.log("좋아요 등록 실패ㅜ");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    /////////// 좋아요 end ///////////
   },
 };
 </script>
@@ -425,5 +491,26 @@ export default {
   color: black;
   text-decoration: none;
   width: 4em;
+}
+
+@keyframes heart {
+  0% {
+    transform: scale(1);
+  }
+  17.5% {
+    transform: scale(0.5);
+  }
+}
+
+.default-effect {
+  cursor: pointer;
+}
+
+.heart-effect {
+  cursor: pointer;
+  will-change: transform;
+  transform-origin: 50% 50%;
+  animation: heart 0.5s;
+  color: crimson;
 }
 </style>
