@@ -2,6 +2,9 @@
   <b-container>
     <div>핫플레이스 어쩌고 저쩌구</div>
     <button @click="movetoRegist" id="registbutton" class="styled-button">등록하러 가기</button>
+    <button @click="movetoMyHotplace" id="registbutton" class="styled-button">
+      나만의 핫플레이스
+    </button>
     <b-row>
       <b-col cols="4" v-for="hotplace in pagination" :key="hotplace.id">
         <b-card
@@ -28,7 +31,7 @@
       <h4>#{{ hotplace.tag1 }} #{{ hotplace.tag2 }}</h4>
       <hr />
       <div>{{ hotplace.description }}</div>
-      <a :href="hotplace.mapUrl" target="_blank">위치 확인하기</a>
+      <a :href="hotplace.mapUrl" target="_blank">지도상에서 확인하기</a>
       <div>지도상에서 위치보여주기?</div>
     </b-modal>
   </b-container>
@@ -102,6 +105,9 @@ export default {
       this.hotplace = hotplace;
       this.showDetailModal = true;
       console.log(hotplace);
+    },
+    movetoMyHotplace() {
+      this.$router.push({ name: "hotplacemodify" });
     },
   },
 };

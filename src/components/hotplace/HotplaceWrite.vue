@@ -49,13 +49,13 @@
         <p>모달 내용을 여기에 작성하세요.</p>
         내용 :<input
           type="text"
-          placehodler="이 장소에 대해 설명해주세요~~"
+          placeholder="이 장소에 대해 설명해주세요~~"
           v-model="hotplace.description"
           class="modal-input"
           id="description"
         />
-        태그 1:<input type="text" placehodler="태그1" v-model="hotplace.tag1" class="modal-input" />
-        태그 2:<input type="text" placehodler="태그2" v-model="hotplace.tag2" class="modal-input" />
+        태그 1:<input type="text" placeholder="태그1" v-model="hotplace.tag1" class="modal-input" />
+        태그 2:<input type="text" placeholder="태그2" v-model="hotplace.tag2" class="modal-input" />
         사진 : <input type="file" @change="hotplaceimg" />
         <button type="button" @click="write" class="search-button">등록</button>
         <button type="button" @click="closeModal" class="search-button">취소</button>
@@ -101,6 +101,8 @@ export default {
       },
       showModal: false,
       img: null,
+      imagechanged: false,
+      blob: null,
     };
   },
   mounted() {
@@ -214,19 +216,25 @@ export default {
       console.log(this.hotplace);
       if (!this.hotplace.description) {
         alert("내용을 입력해주세요");
+      } else if (!this.imagechanged) {
+        alert("사진을 등록해주세요");
       } else {
         this.sendHotplace(this.hotplace, this.img);
       }
     },
     closeModal() {
       this.showModal = false;
+      this.imagechanged = false;
       this.hotplace.description = null;
       this.hotplace.tag1 = null;
       this.hotplace.tag2 = null;
     },
     hotplaceimg(event) {
       this.img = event.target.files[0];
+      this.imagechanged = true;
       console.log(this.img);
+      this.blob = new Blob([this.img], { type: this.img.type });
+      console.log(this.blob);
     },
     sendHotplace(param, img) {
       writeHotplace(

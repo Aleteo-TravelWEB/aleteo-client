@@ -128,6 +128,12 @@ const routes = [
         beforeEnter: onlyAuthUser,
         component: () => import("@/components/hotplace/HotplaceWrite"),
       },
+      {
+        path: "modify",
+        name: "hotplacemodify",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/hotplace/HotplaceModify"),
+      },
     ],
   },
   {
