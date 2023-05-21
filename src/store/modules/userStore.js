@@ -35,7 +35,7 @@ const userStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.isLogin = true;
       state.userInfo = userInfo;
-      console.log("userInfo: " + state.userInfo);
+      // console.log("userInfo: " + state.userInfo);
     },
     SET_IS_VALID_ID: (state, isValidId) => {
       state.isValidId = isValidId;

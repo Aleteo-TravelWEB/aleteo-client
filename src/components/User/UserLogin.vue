@@ -180,7 +180,7 @@ export default {
       if (this.isLogin) {
         this.isLoginConfirm = false;
         await this.getUserInfo(token);
-        console.log("4. confirm() userInfo :: ", this.userInfo);
+        // console.log("4. confirm() userInfo :: ", this.userInfo);
         this.$router.push({ name: "main" });
       } else {
         this.isLoginConfirm = true;

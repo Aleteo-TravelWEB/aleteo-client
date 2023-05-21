@@ -289,7 +289,7 @@ export default {
         for (let i = 0; i < this.search.results.length; i++) {
           // console.log("place_name:: " + this.search.results[i].place_name);
           await this.getImg(this.search.results[i].place_name);
-          this.search.results[i].imageUrl = this.attrImage;
+          // this.search.results[i].imageUrl = this.attrImage;
         }
       });
 
@@ -529,7 +529,7 @@ export default {
         address: data.address_name,
         lat: data.y,
         lng: data.x,
-        imageUrl: data.imageUrl,
+        // imageUrl: data.imageUrl,
       };
       this.places.push(placeData);
 
