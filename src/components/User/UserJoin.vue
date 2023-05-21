@@ -2,13 +2,7 @@
   <div class="signin">
     <div class="sign-container">
       <div class="signin">
-        <form
-          id="signin-form"
-          method="POST"
-          action="${root}/user/signin"
-          role="search"
-        >
-
+        <form id="signin-form" method="POST" action="${root}/user/signin" role="search">
           <div class="row d-flex justify-content-center mt-4 ms-2">
             <h2>회원가입</h2>
           </div>
@@ -40,7 +34,7 @@
           </div>
           <div class="row d-flex justify-content-center my-4">
             <div class="col-10">
-                <div id="check-id-result"></div>
+              <div id="check-id-result"></div>
             </div>
           </div>
           <div class="row d-flex justify-content-center mt-4 mb-3">
@@ -81,8 +75,13 @@
                 placeholder="이메일아이디"
               />
               <span class="col-2 d-flex justify-content-center align-items-center">@</span>
-              
+
               <b-form-select v-model="user.emailDomain" :options="domains"></b-form-select>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-2" v-if="isShowJoin">
+            <div :class="{ 'shake-effect': isShaking }" style="color: crimson">
+              양식에 맞게 다시 제출해주세요
             </div>
           </div>
           <div class="row d-flex justify-content-center my-4">
@@ -91,7 +90,7 @@
                 type="button"
                 @click="join"
                 id="joinin-btn"
-                class="btn submit-btn"
+                :class="{ 'shake-effect': isShaking }"
                 style="width: 100%"
               >
                 회원가입
@@ -105,12 +104,12 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 
 const userStore = "userStore";
 
 export default {
-  name: 'UserJoin',
+  name: "UserJoin",
   components: {},
   data() {
     return {
@@ -123,12 +122,16 @@ export default {
       },
       pwdCheck: null,
       domains: [
-        {value: null, text: "선택"},
-        {value: "ssafy.com", text: "싸피"},
-        {value: "google.com", text: "구글"},
-        {value: "naver.com", text: "네이버"},
-        {value: "kakao.com", text: "카카오"},
+        { value: null, text: "선택" },
+        { value: "ssafy.com", text: "싸피" },
+        { value: "google.com", text: "구글" },
+        { value: "naver.com", text: "네이버" },
+        { value: "kakao.com", text: "카카오" },
       ],
+      isJoinIdPass: false, // 회원가입 할 수 있는지 확인하는 flag
+      isJoinPwdPass: false,
+      isShowJoin: false,
+      isShaking: false,
     };
   },
   computed: {
@@ -138,27 +141,38 @@ export default {
     ...mapActions(userStore, ["idConfirm", "userJoin"]),
     async confirmId() {
       let resultDiv = document.querySelector("#check-id-result");
-      if(this.user.userId === null) {
+      if (this.user.userId === null) {
         return;
       }
-      if(this.user.userId.length < 6 || this.user.userId.length > 16) {
+      if (this.user.userId.length < 6 || this.user.userId.length > 16) {
         resultDiv.setAttribute("class", "mb-3 text-danger");
         resultDiv.textContent = "아이디는 6자 이상 16자 이하 입니다.";
         // isValidId = false;
-      }
-      else {
+      } else {
         // 아이디가 유효한 아이디인지 확인
         await this.idConfirm(this.user.userId);
         if (this.isValidId) {
           resultDiv.setAttribute("class", "mb-3 text-primary");
           resultDiv.textContent = "사용할 수 있는 아이디 입니다.";
+          this.isJoinIdPass = true;
         } else {
           resultDiv.setAttribute("class", "mb-3 text-danger");
           resultDiv.textContent = "사용할 수 없는 아이디 입니다.";
+          this.isJoinIdPass = false;
         }
       }
     },
     async join() {
+      if (!this.isJoinIdPass || !this.isJoinPwdPass) {
+        this.isShowJoin = true;
+        this.isShaking = true;
+
+        setTimeout(() => {
+          this.isShaking = false;
+        }, 1000);
+        return;
+      }
+      this.isShowJoin = false;
       await this.userJoin(this.user);
       if (this.isJoin) {
         console.log(this.isJoin);
@@ -168,21 +182,24 @@ export default {
     async confirmPwd() {
       let pwdResultDiv = document.querySelector("#signin-pwdcheck");
       // console.log("userPwd : " + this.user.userPwd + ", pwdCheck: " + this.pwdCheck);
-      if (this.user.userPwd === this.pwdCheck) { // 비밀번호랑 비밀번호 확인이 같다면
+      if (this.user.userPwd === this.pwdCheck) {
+        // 비밀번호랑 비밀번호 확인이 같다면
         pwdResultDiv.setAttribute("class", "form-control");
+        this.isJoinPwdPass = true;
       } else {
         pwdResultDiv.setAttribute("class", "form-control fail-input");
+        this.isJoinPwdPass = false;
       }
     },
     addFocusStyle() {
-      const input = document.getElementById('signin-pwdcheck');
-      input.classList.add('focus');
+      const input = document.getElementById("signin-pwdcheck");
+      input.classList.add("focus");
     },
     removeFocusStyle() {
-      const input = document.getElementById('signin-pwdcheck');
-      input.classList.remove('focus');
+      const input = document.getElementById("signin-pwdcheck");
+      input.classList.remove("focus");
     },
-  }
+  },
 };
 </script>
 
@@ -223,4 +240,25 @@ export default {
   box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
 }
 
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake-effect {
+  animation: shake 0.5s;
+}
 </style>

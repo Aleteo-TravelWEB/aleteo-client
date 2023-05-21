@@ -78,7 +78,7 @@
     <div v-if="showModal" class="modal shadow">
       <div class="modal-content container">
         <div class="hover-div d-flex flex-end mb-3" @click="closeModal()">
-          <b-icon icon="x-circle-fill" variant="danger"></b-icon>
+          <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
         </div>
         <h4 class="text-secondary mb-3">
           <b-icon icon="key-fill"></b-icon> <strong>비밀번호 찾기</strong>

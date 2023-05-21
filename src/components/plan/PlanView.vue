@@ -521,14 +521,9 @@ export default {
   color: crimson;
 }
 
-.timeline-custom {
-  /* transition: all 0.2s linear; */
-}
-
 .timeline-custom:hover {
   cursor: pointer;
   background-color: #dbe2ef;
-  /* transform: scale(1.4); */
 }
 
 .modal {
