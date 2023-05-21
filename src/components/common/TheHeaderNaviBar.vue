@@ -21,9 +21,13 @@
             <b-avatar variant="light"></b-avatar> {{ userInfo.userName }}님 환영합니다.
           </b-nav-item>
           <b-nav-item class="align-self-center">
-            <router-link :to="{ name: 'mypage' }" class="link align-self-center">내정보보기</router-link>
+            <router-link :to="{ name: 'mypage' }" class="link align-self-center"
+              >마이페이지</router-link
+            >
           </b-nav-item>
-          <b-nav-item class="align-self-center link" @click.prevent="onClickLogout">로그아웃</b-nav-item>
+          <b-nav-item class="align-self-center link" @click.prevent="onClickLogout"
+            >로그아웃</b-nav-item
+          >
         </b-navbar-nav>
         <!-- before login -->
         <b-navbar-nav class="ml-auto" v-else>
@@ -51,7 +55,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from "vuex";
 
 const userStore = "userStore";
 
@@ -73,16 +77,20 @@ export default {
       sessionStorage.removeItem("access-token"); // 저장된 토큰 없애기
       sessionStorage.removeItem("refresh-token");
       if (this.$route.path != "/") this.$router.push({ name: "main" });
-    }
+    },
   },
-  created() { },
+  created() {},
 };
 </script>
 
 <style scoped>
 .link {
-  color: #707070;
+  color: #808b9d;
   text-decoration: none;
+}
+
+.link:hover {
+  color: #bec3cc;
 }
 
 .logo {

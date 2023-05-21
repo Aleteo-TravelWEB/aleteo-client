@@ -51,5 +51,9 @@ function getAttrImg(title, success, fail) {
   imgApi.get(`${SERVICE_KEY}&keyword=${encode}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&arrange=A&_type=json`).then(success).catch(fail);
 }
 
+// 좋아요한 여행 게획 불러오기
+function viewGoodPlan(userId, success, fail) {
+  api.get(`/plan/good/${userId}`).then(success).catch(fail);
+}
 
-export { listPlan, regist, viewPlan, modify, deletePlan, getAttrImg };
+export { listPlan, regist, viewPlan, modify, deletePlan, getAttrImg, viewGoodPlan };
