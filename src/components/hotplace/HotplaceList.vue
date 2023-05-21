@@ -27,7 +27,7 @@
       class="mt-4"
     />
     <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
-      <!-- <img :src="this.displayImage(hotplace.imageUrl)" alt="" /> -->
+      <img :src="hotplace.imageUrl" alt="" />
       <hr />
       <h4>#{{ hotplace.tag1 }} #{{ hotplace.tag2 }}</h4>
       <hr />
@@ -72,7 +72,7 @@ export default {
       ({ data }) => {
         this.hotplaces = data;
         for (let i = 0; i < data.length; i++) {
-          console.log(data[i].imageUrl);
+          console.log(data[i]);
         }
       },
       (error) => {
@@ -95,9 +95,6 @@ export default {
         name: "hotplacewrite",
       });
     },
-    // displayImage(imageUrl) {
-    //   thisURL.createObjectURL(imageUrl);
-    // },
     convertImageToBase64(imageFile) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
