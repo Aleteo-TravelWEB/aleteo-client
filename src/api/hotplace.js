@@ -12,12 +12,12 @@ function viewHotplace(hotplaceId, success, fail) {
 }
 
 // Hotplace 글 작성
-function writeHotplace([hotplace, image, blob], success, fail) {
+function writeHotplace([hotplace, image, imageUrl], success, fail) {
   const formData = new FormData();
   console.log("-----------------");
   console.log(hotplace);
   console.log(image);
-  console.log(blob);
+  console.log(imageUrl);
   formData.append("userId", hotplace.userId);
   formData.append("title", hotplace.title);
   formData.append("joinDate", hotplace.joinDate);
@@ -28,7 +28,7 @@ function writeHotplace([hotplace, image, blob], success, fail) {
   formData.append("longitude", hotplace.longitude);
   formData.append("mapUrl", hotplace.mapUrl);
   formData.append("image", image);
-  formData.append("imageUrl", blob);
+  formData.append("imageUrl", imageUrl);
 
   api
     .post(`/hotplace`, formData, {

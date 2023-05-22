@@ -27,7 +27,7 @@
       class="mt-4"
     />
     <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
-      <img :src="hotplace.imageUrl" alt="" />
+      <img :src="`c:/springboot/upload/hotplace/image/${hotplace.imageUrl}`" alt="" />
       <hr />
       <h4>#{{ hotplace.tag1 }} #{{ hotplace.tag2 }}</h4>
       <hr />
