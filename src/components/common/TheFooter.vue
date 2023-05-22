@@ -21,7 +21,7 @@ export default {};
 #footer {
   width: 100%;
   height: 60px;
-  border-top: 1px solid #c4c4c4;
+  border-top: 1px solid #e1e1e1;
   padding: 10px;
   color: #808080;
   font-size: 11px;

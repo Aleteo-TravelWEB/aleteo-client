@@ -10,6 +10,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
+          <b-nav-item href="/attraction">관광지</b-nav-item>
           <b-nav-item href="/plan">여행계획</b-nav-item>
           <b-nav-item href="/hotplace">핫플레이스</b-nav-item>
           <b-nav-item href="/notice">공지사항</b-nav-item>

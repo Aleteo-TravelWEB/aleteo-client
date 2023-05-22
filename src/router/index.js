@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 
 // views
 import AppMain from "@/views/AppMain";
+import AppAttraction from "@/views/AppAttraction";
 import AppBoard from "@/views/AppBoard";
 import AppPlan from "@/views/AppPlan";
 import AppHotPlace from "@/views/AppHotPlace";
@@ -37,6 +38,11 @@ const routes = [
     path: "/",
     name: "main",
     component: AppMain,
+  },
+  {
+    path: "/attraction",
+    name: "attraction",
+    component: AppAttraction,
   },
   {
     path: "/board",

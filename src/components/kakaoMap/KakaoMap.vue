@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map" class="border rounded"></div>
+    <div id="map" class="border rounded shadow"></div>
   </div>
 </template>
 
@@ -154,7 +154,7 @@ export default {
 <style>
 #map {
   width: 100%;
-  height: 400px;
+  height: 700px;
 }
 
 .wrap {

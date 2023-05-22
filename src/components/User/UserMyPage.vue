@@ -55,7 +55,7 @@
         <div class="hover-div d-flex flex-end mb-3 hover-event" @click="closePlanModal()">
           <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
         </div>
-        <b-table striped hover :items="goodPlans" :fields="fields" @row-clicked="viewPlan">
+        <b-table hover :items="goodPlans" :fields="fields" @row-clicked="viewPlan">
           <template #cell(index)="data">{{ data.index + 1 }}</template>
         </b-table>
       </div>

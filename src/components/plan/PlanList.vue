@@ -37,7 +37,7 @@
         </b-table>
       </b-col>
     </b-row>
-    <div class="mb-3">
+    <div class="mb-5">
       <b-pagination
         pills
         v-model="currentPage"

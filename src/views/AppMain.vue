@@ -1,17 +1,11 @@
 <template>
-  <div class="background">
-    <attraction-search-bar></attraction-search-bar>
-  </div>
+  <div class="background"></div>
 </template>
 
 <script>
-import AttractionSearchBar from "@/components/main/AttractionSearchBar.vue";
-
 export default {
   name: "AppMain",
-  components: {
-    AttractionSearchBar,
-  },
+  components: {},
   data() {
     return {
       message: "",

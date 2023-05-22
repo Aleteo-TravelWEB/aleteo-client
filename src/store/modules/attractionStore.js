@@ -3,8 +3,8 @@ import http from '@/api/http'
 const attractionStore = {
   namespaced: true,
   state: {
-    sidos: [{ value: null, text: "선택하세요" }],
-    guguns: [{ value: null, text: "선택하세요" }],
+    sidos: [{ value: null, text: "시/도" }],
+    guguns: [{ value: null, text: "구/군" }],
     types: [
       { id: 12, name: '관광지' },
       { id: 14, name: '문화시설' },
@@ -35,14 +35,14 @@ const attractionStore = {
       });
     },
     CLEAR_SIDO_LIST(state) {
-      state.sidos = [{ value: null, text: "선택하세요" }];
+      state.sidos = [{ value: null, text: "시/도" }];
     },
     CLEAR_ATTRACTION_LIST(state) {
       state.attractions = [];
       state.attraction = null;
     },
     CLEAR_GUGUN_LIST(state) {
-      state.guguns = [{ value: null, text: "선택하세요" }];
+      state.guguns = [{ value: null, text: "구/군" }];
     },
     CLEAR_TYPE_LIST(state) {
       state.checkedTypes = [];

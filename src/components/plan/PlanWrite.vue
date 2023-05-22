@@ -1,6 +1,9 @@
 <template>
-  <div>
+  <div class="mb-3">
     <div class="container">
+      <div class="mt-5 mb-5" style="color: black">
+        <h1 class="fourth"><span>MY </span><span>PLAN</span></h1>
+      </div>
       <div class="map-area">
         <div class="searchbox rounded">
           <!-- <form class="d-flex my-3" onsubmit="return false;" role="search"> -->
@@ -9,14 +12,15 @@
               id="search-keyword"
               class="col-7 form-control m-2"
               type="text"
-              placeholder="검색어"
+              placeholder="검색어를 입력하세요!"
               aria-label="검색어"
               v-model="search.keyword"
               @keyup.enter="searchPlace()"
             />
             <button
               id="btn-search"
-              class="border btn submit-btn col-3 m-2"
+              class="btn submit-btn col-3 m-2"
+              style="border: 1px solid #c1c1c1"
               type="button"
               @click="searchPlace()"
             >
@@ -53,101 +57,93 @@
       <div id="map" ref="map" class="shadow rounded"></div>
       <!-- kakao map end -->
       <div>
-        <div class="divider mb-5"></div>
-        <aside>
-          <!-- 여행 계획 들어가는 영역 -->
-          <div
-            class="d-flex flex-column justify-content-center mx-auto p-2"
-            style="width: 100%; height: 35em"
-          >
-            <h3 id="plan-title" class="text-center p-2"><strong>여행 계획</strong></h3>
-            <form id="plan-form" onsubmit="return false;" role="search" method="POST">
-              <input type="hidden" name="action" value="save" />
-              <div>
-                <div>
-                  <div
-                    id="plan-content"
-                    class="rounded bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
-                    style="width: 100%; height: 10em"
-                  >
-                    <div v-for="(place, index) in places" :key="index" class="border rounded">
-                      <b-row align-h="end">
-                        <b-icon
-                          class="col-3"
-                          icon="dash-square-fill"
-                          variant="danger"
-                          @click="deletePlace(place.placeId)"
-                        ></b-icon>
-                      </b-row>
-                      <div class="text-center p-2">
-                        <div class="place-title">{{ place.name }}</div>
-                        <div>{{ place.address }}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="divider mb-3"></div>
-                <div id="plan-detail" class="d-flex flex-column align-items-center rounded mx-auto">
-                  <label for="name"><strong>계획 이름</strong></label>
-                  <input
-                    type="text"
-                    name="title"
-                    id="title"
-                    v-model="plan.title"
-                    placeholder="계획 이름"
-                    class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle"
-                    style="width: 70%"
-                  />
-                  <br />
-                  <div
-                    class="plan-detail-date d-flex flex-row justify-content-between mb-3"
-                    style="width: 70%"
-                  >
-                    <label for="start_datepicker"><strong>출발일</strong></label>
-                    <input
-                      type="date"
-                      name="startDate"
-                      v-model="plan.startDate"
-                      id="start_datepicker"
-                      placeholder="년도-월-일"
-                      style="width: 8em; height: 1.8em"
-                      class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle"
-                    />
-                    <label for="end_datepicker"><strong>도착일</strong></label>
-                    <input
-                      type="date"
-                      name="endDate"
-                      v-model="plan.endDate"
-                      id="end_datepicker"
-                      placeholder="년도-월-일"
-                      style="width: 8em; height: 1.8em"
-                      class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle"
-                    />
-                  </div>
-                  <label for="description"><strong>상세 계획</strong></label>
-                  <textarea
-                    name="description"
-                    v-model="plan.description"
-                    id="description"
-                    placeholder="상세 계획을 적어보자!"
-                    class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle"
-                    style="width: 70%; height: 10em"
-                  ></textarea>
-                  <br />
-                  <button
-                    class="place-add z-3 border rounded btn btn-primary shadow p-2"
-                    id="plan-save-btn"
-                    style="top: 5px; left: 120px"
-                    type="button"
-                    @click="registPlan"
-                  >
-                    <strong>여행 계획 저장</strong>
-                  </button>
+        <!-- 여행 계획 들어가는 영역 -->
+        <div class="d-flex flex-column p-2 mt-5" style="width: 100%; height: 20em">
+          <h3 id="plan-title" class="text-center p-2"><strong>여행 계획</strong></h3>
+          <div>
+            <div
+              id="plan-content"
+              class="rounded bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
+              style="width: 100%; height: 10em"
+            >
+              <div v-for="(place, index) in places" :key="index" class="border rounded">
+                <b-row align-h="end">
+                  <b-icon
+                    class="col-3"
+                    icon="dash-square-fill"
+                    variant="danger"
+                    @click="deletePlace(place.placeId)"
+                  ></b-icon>
+                </b-row>
+                <div class="text-center p-2">
+                  <div class="place-title">{{ place.name }}</div>
+                  <div>{{ place.address }}</div>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
-        </aside>
+        </div>
+        <div id="plan-detail" class="d-flex flex-column align-items-center rounded mx-auto">
+          <label for="name"><strong>제목</strong></label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            v-model="plan.title"
+            placeholder="계획 이름"
+            class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle p-2"
+            style="width: 70%"
+          />
+          <br />
+          <div
+            class="plan-detail-date d-flex flex-row justify-content-around mb-3"
+            style="width: 70%"
+          >
+            <div>
+              <label for="start_datepicker" class="mx-4"><strong>출발일</strong></label>
+              <input
+                type="date"
+                name="startDate"
+                v-model="plan.startDate"
+                id="start_datepicker"
+                placeholder="년도-월-일"
+                style="width: 8em; height: 1.8em"
+                class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle p-2"
+              />
+            </div>
+            <div>
+              <label for="end_datepicker" class="mx-4"><strong>도착일</strong></label>
+              <input
+                type="date"
+                name="endDate"
+                v-model="plan.endDate"
+                id="end_datepicker"
+                placeholder="년도-월-일"
+                style="width: 8em; height: 1.8em"
+                class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle p-2"
+              />
+            </div>
+          </div>
+          <label for="description"><strong>상세 계획</strong></label>
+          <textarea
+            name="description"
+            v-model="plan.description"
+            id="description"
+            placeholder="상세 계획을 적어보자!"
+            class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle p-2"
+            style="width: 70%; height: 10em"
+          ></textarea>
+          <br />
+          <button
+            class="button btnFloat btnBlueGreen"
+            id="plan-save-btn"
+            style="top: 5px; left: 120px"
+            type="button"
+            @click="registPlan"
+          >
+            <strong>저장</strong>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -672,5 +668,63 @@ export default {
 .btn-custom {
   width: 20px;
   height: 20px;
+}
+.button {
+  display: block;
+  width: 100px;
+  padding: 0;
+  margin: 10px 20px 10px 0;
+  font-weight: 600;
+  text-align: center;
+  line-height: 50px;
+  color: #fff;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.btnFloat {
+  background: none;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.5);
+}
+
+.btnFloat:before {
+  content: "저장";
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.btnBlueGreen.btnFloat:before {
+  background: #5490fe;
+}
+
+.btnFloat:before {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.4);
+}
+
+.btnFloat:hover:before {
+  margin-top: -2px;
+  margin-left: 0px;
+  transform: scale(1.1, 1.1);
+  -ms-transform: scale(1.1, 1.1);
+  -webkit-transform: scale(1.1, 1.1);
+  box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.25);
+}
+h1.fourth {
+  font-weight: 700;
+}
+
+h1.fourth span {
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid whitesmoke;
+}
+
+h1.fourth span:first-child {
+  font-weight: 300;
 }
 </style>
