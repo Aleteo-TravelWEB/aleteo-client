@@ -9,6 +9,37 @@
           <hr />
           <div class="row d-flex justify-content-center mt-4 mb-3">
             <div class="col-10">
+              <input ref="image" type="file" @change="userProfile" style="display: none" />
+            </div>
+            <div class="border p-4 image-content" @click="clickInputTag()" v-if="!user.image">
+              <svg
+                class="w-8 h-8"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                style="width: 30px; height: 30px"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div v-else>
+              <b-icon
+                icon="check-circle"
+                variant="success"
+                class="image-content"
+                font-scale="5"
+                @click="clickInputTag()"
+              />
+            </div>
+          </div>
+          <div class="row d-flex justify-content-center mt-4 mb-3">
+            <div class="col-10">
               <input
                 type="text"
                 v-model="user.userName"
@@ -119,6 +150,7 @@ export default {
         userPwd: null,
         emailId: null,
         emailDomain: null,
+        image: null,
       },
       pwdCheck: null,
       domains: [
@@ -199,6 +231,14 @@ export default {
       const input = document.getElementById("signin-pwdcheck");
       input.classList.remove("focus");
     },
+    userProfile() {
+      this.user.image = this.$refs["image"].files[0];
+      console.log(this.user.image);
+    },
+    // 이미지 저장
+    clickInputTag() {
+      this.$refs["image"].click();
+    },
   },
 };
 </script>
@@ -208,9 +248,10 @@ export default {
   display: inline-block;
   width: 430px;
   text-align: left;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
   border-radius: 1rem;
   margin-top: 5rem;
+  margin-bottom: 5rem;
 }
 
 .signin {
@@ -260,5 +301,9 @@ export default {
 
 .shake-effect {
   animation: shake 0.5s;
+}
+
+.image-content {
+  cursor: pointer;
 }
 </style>

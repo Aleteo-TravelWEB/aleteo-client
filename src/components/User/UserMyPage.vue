@@ -55,9 +55,14 @@
         <div class="hover-div d-flex flex-end mb-3 hover-event" @click="closePlanModal()">
           <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
         </div>
-        <b-table hover :items="goodPlans" :fields="fields" @row-clicked="viewPlan">
-          <template #cell(index)="data">{{ data.index + 1 }}</template>
-        </b-table>
+        <div v-if="goodPlans.length !== null && goodPlans.length !== 0">
+          <b-table hover :items="goodPlans" :fields="fields" @row-clicked="viewPlan">
+            <template #cell(index)="data">{{ data.index + 1 }}</template>
+          </b-table>
+        </div>
+        <div v-else>
+          <p>아직 좋아요한 게시글이 없습니다</p>
+        </div>
       </div>
     </div>
   </b-container>
