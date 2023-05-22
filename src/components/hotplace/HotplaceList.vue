@@ -1,28 +1,26 @@
 <template>
   <b-container>
-    <div >
-    <button @click="movetoRegist" id="registbutton" class="styled-button">등록하러 가기</button>
-    <button @click="movetoMyHotplace" id="registbutton" class="styled-button">
-      나만의 핫플레이스
-    </button>
+    <div>
+      <button @click="movetoRegist" id="registbutton" class="styled-button">등록하러 가기</button>
+      <button @click="movetoMyHotplace" id="registbutton" class="styled-button">
+        나만의 핫플레이스
+      </button>
     </div>
-    <b-row>
-      <b-col cols="4" v-for="hotplace in pagination" :key="hotplace.id">
-        <b-card
-          :title="hotplace.title"
-          img-alt="Image"
-          img-top
-          style="max-width: 20rem"
-          class="mb-2"
-        >
-          <b-card-text>
-            <div v-if="hotplace.tag1 !== `null`">#{{ hotplace.tag1 }}</div>
-            <div v-if="hotplace.tag2 !== `null`">#{{ hotplace.tag2 }}</div>
-          </b-card-text>
-          <b-button @click="showdetail(hotplace)" variant="primary">더 보기</b-button>
-        </b-card>
-      </b-col>
-    </b-row>
+    <div class="grid">
+      <div class="grid_item" v-for="hotplace in pagination" :key="hotplace.id">
+        <div class="card">
+          <img class="card_img" :src="`/upload/hotplace/image/${hotplace.image}`" alt="thumnail" />
+          <div class="card_content">
+            <h4 class="card_header">{{ hotplace.title }}</h4>
+            <span class="card_text" v-if="hotplace.tag1 !== `null`">#{{ hotplace.tag1 }}</span>
+            <span class="card_text" v-if="hotplace.tag2 !== `null`">#{{ hotplace.tag2 }}</span>
+            <button class="card_btn" @click="showdetail(hotplace)">
+              더 보기<span>&rarr;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <b-pagination
       v-model="currentPage"
       :total-rows="hotplaces.length"
@@ -32,36 +30,47 @@
     />
     <!-- 모달창 -->
 
-    <b-modal id="deatil" v-model="showDetailModal" >
+    <b-modal id="deatil" v-model="showDetailModal">
       <template #modal-header>
         <!-- 커스텀 헤더 내용 추가 -->
-          <b-button size="sm" variant="outline-danger" @click="close()">close</b-button>
-          <h5 class="header-title">{{ hotplace.title }}</h5>
+        <b-button size="sm" variant="outline-danger" @click="close()">close</b-button>
+        <h5 class="header-title">{{ hotplace.title }}</h5>
       </template>
 
       <template #default>
-        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-          <img :src="`/upload/hotplace/image/${hotplace.image}`" width="400px" alt="" style="object-fit: contain;" />
-          <hr style="width: 100%; border: none; border-top: 1px solid lightgray;" />
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <img
+            :src="`/upload/hotplace/image/${hotplace.image}`"
+            width="400px"
+            alt=""
+            style="object-fit: contain"
+          />
+          <hr style="width: 100%; border: none; border-top: 1px solid lightgray" />
           <div class="d-flex justify-content-end">
             <b-icon icon="heart"></b-icon>
           </div>
-          <div style="display: flex;"> 
-            <div v-if="hotplace.tag1 !== `null`" style="margin-right: 10px;">#{{ hotplace.tag1 }}</div>
-            <div v-if="hotplace.tag2 !== `null`" style="margin-right: 10px;">#{{ hotplace.tag2 }}</div>
+          <div style="display: flex">
+            <div v-if="hotplace.tag1 !== `null`" style="margin-right: 10px">
+              #{{ hotplace.tag1 }}
+            </div>
+            <div v-if="hotplace.tag2 !== `null`" style="margin-right: 10px">
+              #{{ hotplace.tag2 }}
+            </div>
           </div>
-          <div >작성자 : {{ hotplace.userId }}</div>
-          <hr style="width: 100%; border: none; border-top: 1px solid lightgray;" />
+          <div>작성자 : {{ hotplace.userId }}</div>
+          <hr style="width: 100%; border: none; border-top: 1px solid lightgray" />
           <div>{{ hotplace.description }}</div>
+          <a :href="hotplace.mapUrl" target="_blank">지도상에서 확인하기</a>
         </div>
       </template>
-
-      <hr />
-      <div>{{ hotplace.description }}</div>
-      <a :href="hotplace.mapUrl" target="_blank">지도상에서 확인하기</a>
     </b-modal>
-
-
   </b-container>
 </template>
 
@@ -164,4 +173,73 @@ export default {
   border-radius: 4px;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+.grid_item {
+  background-color: #fff;
+  height: 30rem;
+  border-radius: 0.4rem;
+  overflow: hidden;
+  box-shadow: 0 3rem 6rem rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.grid_item:hover {
+  transform: translateY(-0.5%);
+  box-shadow: 0 4rem 8rem rgba(0, 0, 0, 0.2);
+}
+
+.card_img {
+  display: block;
+  height: 14rem;
+  object-fit: cover;
+}
+.card_content {
+  padding: 3rem 3rem;
+}
+.card_header {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #0d0d0d;
+  margin-bottom: 1.5rem;
+  height: 3rem;
+  align-items: center;
+  text-align: center;
+}
+.card_text {
+  font-size: 1.25em;
+  letter-spacing: 0.1rem;
+  line-height: 1.7;
+  color: #3d3d3d;
+  margin-bottom: 2.5rem;
+}
+.card_btn {
+  display: block;
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1rem;
+  text-align: center;
+  color: #3363ff;
+  background-color: #e6ecff;
+  border: none;
+  border-radius: 0.4rem;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.card_btn span {
+  margin-left: 1rem;
+  transition: 0.2s;
+}
+.card_btn:hover,
+.card__btn:active {
+  background-color: #dce4ff;
+}
+.card_btn:hover span,
+.card__btn:active span {
+  margin-left: 1.5rem;
+}
 </style>
