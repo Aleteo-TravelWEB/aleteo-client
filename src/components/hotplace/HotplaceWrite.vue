@@ -16,6 +16,7 @@
           />
           <button type="button" @click="searchPlaces" class="search-button">검색하기</button>
         </div>
+        <button @click="movetolist">핫플레이스 목록 바로가기</button>
         <!-- 지도 출력 영역 -->
         <!-- <div id="map" style="width: 80%; height: 400px"></div> -->
         <div id="map" class="shadow rounded"></div>
@@ -25,17 +26,19 @@
         <hr />
         <div class="results">
           <div
-            class="place"
+            class="place result-text"
             v-for="result in search.results"
             :key="result.id"
             @click="moveMap(result)"
           >
-            <h4 class="result-text">{{ result.place_name }}</h4>
+            <h4>{{ result.place_name }}</h4>
+            
             <div class="addr">
               {{ result.address_name }}
             </div>
-              <button class="search-button" @click="openModal(result)">등록하기</button>
+            <button class="search-button" @click="openModal(result)">등록하기</button>
           </div>
+
           <div>페이지 번호</div>
           <div id="pagination" class="page"></div>
         </div>
@@ -198,6 +201,8 @@ export default {
           })(i);
         }
 
+        el.style.marginRight = "5px";
+
         fragment.appendChild(el);
       }
       paginationEl.appendChild(fragment);
@@ -275,6 +280,9 @@ export default {
         reader.readAsArrayBuffer(file);
       });
     },
+    movetolist(){
+      this.$router.push( { name: "hotplacelist" });
+    },
   },
 };
 </script>
@@ -293,6 +301,7 @@ export default {
 }
 .result-text {
   border: 1px solid;
+  border-radius: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -300,7 +309,8 @@ export default {
 .page {
   border: 1px solid;
   font-size: 30px;
-  margin: 10px; /* Add margin to create spacing */
+  margin: 20px; 
+  /* Add margin to create spacing */
 }
 .modal {
   display: block;

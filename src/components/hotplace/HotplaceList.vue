@@ -1,10 +1,11 @@
 <template>
   <b-container>
-    <div>핫플레이스 어쩌고 저쩌구</div>
+    <div >
     <button @click="movetoRegist" id="registbutton" class="styled-button">등록하러 가기</button>
     <button @click="movetoMyHotplace" id="registbutton" class="styled-button">
       나만의 핫플레이스
     </button>
+    </div>
     <b-row>
       <b-col cols="4" v-for="hotplace in pagination" :key="hotplace.id">
         <b-card
@@ -14,7 +15,10 @@
           style="max-width: 20rem"
           class="mb-2"
         >
-          <b-card-text> #{{ hotplace.tag1 }} #{{ hotplace.tag2 }} </b-card-text>
+          <b-card-text>
+            <div v-if="hotplace.tag1 !== `null`">#{{ hotplace.tag1 }}</div>
+            <div v-if="hotplace.tag2 !== `null`">#{{ hotplace.tag2 }}</div>
+          </b-card-text>
           <b-button @click="showdetail(hotplace)" variant="primary">더 보기</b-button>
         </b-card>
       </b-col>
@@ -27,35 +31,37 @@
       class="mt-4"
     />
     <!-- 모달창 -->
-    <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
-      <span class="close">&times;</span>
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <img :src="`/upload/hotplace/image/${hotplace.image}`" alt="" width="400px" height="500px" style="object-fit: contain;" />
-      </div>
-      <hr />
-      <h4>#{{ hotplace.tag1 }} #{{ hotplace.tag2 }}</h4>
+
+    <b-modal id="deatil" v-model="showDetailModal" >
+      <template #modal-header>
+        <!-- 커스텀 헤더 내용 추가 -->
+          <b-button size="sm" variant="outline-danger" @click="close()">close</b-button>
+          <h5 class="header-title">{{ hotplace.title }}</h5>
+      </template>
+
+      <template #default>
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <img :src="`/upload/hotplace/image/${hotplace.image}`" width="400px" alt="" style="object-fit: contain;" />
+          <hr style="width: 100%; border: none; border-top: 1px solid lightgray;" />
+          <div class="d-flex justify-content-end">
+            <b-icon icon="heart"></b-icon>
+          </div>
+          <div style="display: flex;"> 
+            <div v-if="hotplace.tag1 !== `null`" style="margin-right: 10px;">#{{ hotplace.tag1 }}</div>
+            <div v-if="hotplace.tag2 !== `null`" style="margin-right: 10px;">#{{ hotplace.tag2 }}</div>
+          </div>
+          <div >작성자 : {{ hotplace.userId }}</div>
+          <hr style="width: 100%; border: none; border-top: 1px solid lightgray;" />
+          <div>{{ hotplace.description }}</div>
+        </div>
+      </template>
+
       <hr />
       <div>{{ hotplace.description }}</div>
       <a :href="hotplace.mapUrl" target="_blank">지도상에서 확인하기</a>
     </b-modal>
 
-    <!-- 모달창  -->
-    <!-- <div class="modal" v-if="showDetailModal"> -->
-      <!-- 모달 헤더 -->
-      <!-- <div class="modal-header modal-header-custom">
-        <h4>{{ this.hotplace.title }}</h4>
-        <button type="button" class="close" @click="closeModal">&times;</button>
-      </div> -->
-      <!-- 모달 본문 -->
-      <!-- <div class="modal-body">
-        <img :src="`/upload/hotplace/image/${hotplace.image}`"/>
-        <hr />
-        <span>#{{ hotplace.tag1 }}</span>
-        <span>#{{ hotplace.tag2 }}</span>
-        <hr />
-      </div>
-    </div> -->
-    <!-- 모달창 끝 -->
+
   </b-container>
 </template>
 
@@ -130,7 +136,7 @@ export default {
     showdetail(hotplace) {
       this.hotplace = hotplace;
       this.showDetailModal = true;
-      console.log(hotplace);
+      console.log(this.hotplace);
       console.log(this.showDetailModal);
     },
     movetoMyHotplace() {
@@ -157,4 +163,5 @@ export default {
   cursor: pointer;
   border-radius: 4px;
 }
+
 </style>
