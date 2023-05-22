@@ -22,6 +22,9 @@
 
 <script>
 import { listPlan } from "@/api/plan";
+import { mapGetters } from 'vuex';
+
+const userStore = "userStore";
 
 export default {
   name: "PlanList",
@@ -37,6 +40,9 @@ export default {
         { key: "hit", label: "조회수", tdClass: "tdClass" },
       ],
     };
+  },
+  computed: {
+    ...mapGetters(userStore, ["checkToken"]),
   },
   created() {
     let param = {

@@ -18,7 +18,7 @@ async function tokenRegeneration(user, success, fail) {
 }
 
 async function logout(userId, success, fail) {
-  await api.get(`/user/logout/${userId}`).then(success).catch(fail);
+  await api.get(`/user/logout/${userId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
 async function idCheck(userId, success, fail) {
@@ -30,15 +30,15 @@ async function join(user, success, fail) {
 }
 
 async function modify(user, success, fail) {
-  await api.put(`/user/info/`, JSON.stringify(user)).then(success).catch(fail);
+  await api.put(`/user/modify/`, JSON.stringify(user), { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
 async function resign(userId, success, fail) {
-  await api.get(`/user/resign/${userId}`).then(success).catch(fail);
+  await api.get(`/user/resign/${userId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
 async function sendPwdMail(findUser, success, fail) {
-  await api.post(`/user/find`, findUser).then(success).catch(fail);
+  await api.post(`/user/find`, findUser, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
 export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail };
