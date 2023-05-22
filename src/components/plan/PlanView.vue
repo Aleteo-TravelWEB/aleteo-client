@@ -60,10 +60,10 @@
             <h2>추천 경로</h2>
           </div>
         </div>
-        <div class="d-flex flex-ro justify-content-center">
-          <div class="d-flex flex-row" v-for="(fastPlace, index) in fastPlaces" :key="index">
+        <div class="d-flex flex-row justify-content-center flex-wrap">
+          <div class="d-flex flex-row width" v-for="(fastPlace, index) in fastPlaces" :key="index">
             <div class="mx-1 p-2 reco-custom d-flex align-items-center shadow mb-5">
-              <div class="travel-info">
+              <div>
                 <strong class="fast_place_name">{{ fastPlace.name }}</strong>
                 <p class="fast_address">{{ fastPlace.address }}</p>
                 <div class="fast_lat" style="display: none">{{ fastPlace.lat }}</div>
@@ -92,19 +92,18 @@
         <div>
           <div v-for="(place, index) in places" :key="index">
             <div v-if="index % 2 == 0">
-              <div class="mb-2 container row" style="margin: 100 auto">
+              <div class="mb-2 container" style="margin: 100 auto">
                 <div
-                  class="col-md-8 mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
-                  style="width: 50%; margin: 0 auto"
+                  class="mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
                 >
                   <img
                     src="@/assets/img/noimage.png"
                     :alt="place.name"
-                    style="width: 50%"
+                    style="width: 130px"
                     class="me-2"
                   />
                   <div class="travel-info">
-                    <h2 class="place_name"><b-icon icon="pin-map-fill" />{{ place.name }}</h2>
+                    <div class="mb-3"><b-icon icon="pin-fill" class="mx-1"/><strong class="place_name">{{ place.name }}</strong></div>
                     <p class="address">{{ place.address }}</p>
                     <div class="lat" style="display: none">{{ place.lat }}</div>
                     <div class="lng" style="display: none">{{ place.lng }}</div>
@@ -114,20 +113,19 @@
               </div>
             </div>
             <div v-else>
-              <div class="mb-2 row">
+              <div class="mb-2 row ">
                 <div style="width: 10em" class="col-md-4"></div>
                 <div
-                  class="col-md-8 mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
-                  style="width: 50%; margin: 0 auto"
+                  class="mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
                 >
                   <img
                     src="@/assets/img/noimage.png"
                     :alt="place.name"
-                    style="width: 50%"
-                    class="me-2"
+                    style="width: 130px"
+                    class="me-2 card-img"
                   />
-                  <div class="travel-info">
-                    <h2 class="place_name"><b-icon icon="pin-map-fill" />{{ place.name }}</h2>
+                  <div class="travel-info ">
+                    <div class="mb-3"><b-icon icon="pin-fill" class="mx-1"/><strong class="place_name">{{ place.name }}</strong></div>
                     <p class="address">{{ place.address }}</p>
                     <div class="lat" style="display: none">{{ place.lat }}</div>
                     <div class="lng" style="display: none">{{ place.lng }}</div>
@@ -161,12 +159,13 @@
       </div>
     </div>
     <!-- 추천 경로 모달 start -->
-    <div v-show="isReShow" class="modal shadow">
+    <div v-show="isReShow" class="modal shadow" style="display: none;">
       <div class="modal-content">
         <div class="hover-div d-flex flex-end mb-3" @click="closeRePath()">
           <b-icon icon="x-circle-fill" class="close-modal" style="color: #e86154"></b-icon>
         </div>
-        <div ref="mapModal" style="width: 100%; height: 400px"></div>
+        <div><h4 class="text-secondary mb-3">추천경로</h4></div>
+        <div ref="mapModal" style="width: 100%; height: 500px"></div>
       </div>
     </div>
   </div>
@@ -189,18 +188,21 @@ export default {
       places: [],
       map: null,
       clickLine: [],
+      modalClickLine: [],
       overlays: [],
       isHeart: false,
-      isReShow: false, // 추천 경로 모달 창 flag
+      isReShow: true, // 추천 경로 모달 창 flag
       mapModal: null,
+      points: [],
+      bounds: [],
+      modalPoints: [],
+      modalBounds: [],
     };
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
-      console.log("loadMap :: ");
       this.loadMap();
     } else {
-      console.log("loadMap :: ");
       this.loadScript();
     }
   },
@@ -213,13 +215,14 @@ export default {
     viewPlan(
       param,
       ({ data }) => {
-        // console.log("plan view data :: ");
-        // console.log(data);
         this.plan = data.plan;
+        console.log("plan data :: ");
+        console.log(data.plan);
         this.fastPlaces = data.fastPlaces;
         this.places = data.places;
 
         this.loadMarker(this.places);
+        this.loadModalMarker(this.fastPlaces);
       },
       (error) => {
         console.log(error);
@@ -270,29 +273,27 @@ export default {
         this.mapModal = new window.kakao.maps.Map(container2, options2);
 
         console.log(this.fastPlaces);
-        this.loadMarker(this.fastPlaces);
+        this.loadModalMarker(this.fastPlaces);
       }
     },
     loadMarker(positions) {
       const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
 
-      var maxLat = 0;
-      var maxLng = 0;
-      var minLat = 0;
-      var minLng = 0;
       var len = positions.length;
+      var lat = 0;
+      var lng = 0;
+      this.points = [];
+      this.bounds = [];
 
       for (let i = 0; i < len; i++) {
         if (i == 0) {
-          maxLat = positions[i].lat;
-          maxLng = positions[i].lng;
-          minLat = positions[i].lat;
-          minLng = positions[i].lng;
+          lat = positions[i].lat;
+          lng = positions[i].lng;
         }
-        // console.log("positions :: ");
-        // console.log(positions[i]);
         var imageSize = new window.kakao.maps.Size(30, 35); // 마커 이미지의 이미지 크기
         var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
+
+        this.points.push(new window.kakao.maps.LatLng(positions[i].lat, positions[i].lng));
 
         // 마커 생성
         const marker = new window.kakao.maps.Marker({
@@ -300,12 +301,6 @@ export default {
           title: positions[i].place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
           image: markerImage, // 마커 이미지
         });
-
-        if (maxLat < positions[i].lat) maxLat = positions[i].lat;
-        else minLat = positions[i].lat;
-
-        if (maxLng < positions[i].lng) maxLng = positions[i].lng;
-        else minLng = positions[i].lng;
 
         // 마커가 지도 위에 표시되도록 설정
         marker.setMap(this.map);
@@ -320,14 +315,71 @@ export default {
         // 선 생성
         this.drawLine(positions[i], i);
       }
+      this.bounds = new window.kakao.maps.LatLngBounds();
+
+      this.points.forEach(p => {
+        this.bounds.extend(p);
+      })
+
       this.map.setCenter(
-        new window.kakao.maps.LatLng((maxLat + minLat) / 2, (maxLng + minLng) / 2)
+        new window.kakao.maps.LatLng(lat, lng)
       );
-      var r = 5;
-      if ((maxLat - minLat) / 2 > (maxLng - minLng) / 2) {
-        r = Math.round(((maxLat - minLat) / 2) * 150);
-      } else r = Math.round(((maxLng - minLng) / 2) * 150);
-      this.map.setLevel(r + 3);
+
+      this.map.setBounds(this.bounds);
+    },
+    loadModalMarker(positions) {
+      const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
+
+      var len = positions.length;
+      var lat = 0;
+      var lng = 0;
+      this.modalPoints = [];
+      this.modalBounds = [];
+
+      for (let i = 0; i < len; i++) {
+        if (i == 0) {
+          lat = positions[i].lat;
+          lng = positions[i].lng;
+        }
+        var imageSize = new window.kakao.maps.Size(30, 35); // 마커 이미지의 이미지 크기
+        var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize); // 마커 이미지 생성
+
+        this.modalPoints.push(new window.kakao.maps.LatLng(positions[i].lat, positions[i].lng));
+
+        // 마커 생성
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(positions[i].lat, positions[i].lng), // 마커를 표시할 위치
+          title: positions[i].place_name, // a마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시
+          image: markerImage, // 마커 이미지
+        });
+
+        // 마커가 지도 위에 표시되도록 설정
+        marker.setMap(this.mapModal);
+
+        var iwContent = `<div style="padding:5px;">${positions[i].name}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+            iwPosition = new window.kakao.maps.LatLng(positions[i].lat+0.00035, positions[i].lng) //인포윈도우 표시 위치입니다
+
+        // 인포윈도우를 생성하고 지도에 표시합니다
+        new window.kakao.maps.InfoWindow({
+          map: this.mapModal, // 인포윈도우가 표시될 지도
+            position : iwPosition, 
+            content : iwContent,
+        });
+
+        // 선 생성
+        this.drawModalLine(positions[i], i);
+      }
+      this.modalBounds = new window.kakao.maps.LatLngBounds();
+
+      this.modalPoints.forEach(point => {
+        this.modalBounds.extend(point);
+      })
+
+      this.mapModal.setCenter(
+        new window.kakao.maps.LatLng(lat, lng)
+      );
+      
+      this.mapModal.setBounds(this.modalBounds);
     },
     //커스텀 오버레이 표시 함수
     displayCustomOverlay(marker) {
@@ -392,6 +444,30 @@ export default {
         this.clickLine.setPath(path);
 
         var distance = Math.round(this.clickLine.getLength());
+        console.log(distance);
+      }
+    },
+    drawModalLine(position, index) {
+      // console.log(position);
+      var clickPosition = new window.kakao.maps.LatLng(position.lat, position.lng);
+
+      if (index === 0) {
+        this.modalClickLine = new window.kakao.maps.Polyline({
+          map: this.mapModal,
+          path: [clickPosition],
+          strokeWeight: 3,
+          strokeColor: "#db4040",
+          strokeOpacity: 1,
+          strokeStyle: "solid",
+        });
+      } else {
+        var path = this.modalClickLine.getPath();
+
+        path.push(clickPosition);
+
+        this.modalClickLine.setPath(path);
+
+        var distance = Math.round(this.modalClickLine.getLength());
         console.log(distance);
       }
     },
@@ -521,9 +597,25 @@ export default {
   color: crimson;
 }
 
+.timeline-custom {
+  width: 400px;
+  height: 150px;
+  margin: 0 auto;
+  position: relative;
+}
+
 .timeline-custom:hover {
   cursor: pointer;
   background-color: #dbe2ef;
+}
+
+.travel-info {
+  width: 160px;
+  position: absolute;
+  right: 5px;
+  left: 200px;
+  top: 20px;
+  bottom: 10px;
 }
 
 .modal {
@@ -540,15 +632,20 @@ export default {
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
+  margin: 10% auto;
   padding: 20px;
   border: 1px solid #888;
   border-radius: 15px;
-  width: 70%;
+  width: 80%;
   max-width: 600px;
 }
 
 .close-modal:hover {
   cursor: pointer;
 }
+
+.place_name {
+  color: #3f72af;
+}
+
 </style>

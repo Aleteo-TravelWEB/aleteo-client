@@ -15,15 +15,13 @@ async function regist([plan, places], success, fail) {
     planDto: plan,
     placeDtoList: places
   };
-  console.log("regist plan >> refresh-token check")
-  console.log(sessionStorage.getItem("refresh-token"));
+  // console.log("regist plan >> refresh-token check")
+  // console.log(sessionStorage.getItem("refresh-token"));
   await api.post(`/plan`, data, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
 // 여행 계획 상세 조회
 function viewPlan(planId, success, fail) {
-  console.log("view plan >> refresh-token check");
-  console.log(sessionStorage.getItem("refresh-token"));
   api.get(`/plan/${planId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
