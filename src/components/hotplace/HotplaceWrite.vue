@@ -1,49 +1,33 @@
 <template>
-<b-container>
-  <b-row>
-    <b-col cols="12" md="8" class="mx-auto">
-    <div class="map_wrap">
-      <div class="option">
-        <div>
-          <input
-            type="text"
-            placeholder="나만의 핫플레이스"
-            class="search-input"
-            v-model="search.keyword"
-            @keyup.enter="searchPlaces"
-            id="keyword"
-            size="15"
-          />
-          <button type="button" @click="searchPlaces" class="search-button">검색하기</button>
-        </div>
-        <button @click="movetolist">핫플레이스 목록 바로가기</button>
-        <!-- 지도 출력 영역 -->
-        <!-- <div id="map" style="width: 80%; height: 400px"></div> -->
-        <div id="map" class="shadow rounded"></div>
-        <!-- 지도 출력 완료 -->
-
-        <!-- <div id="menu_wrap" class="bg_white"></div> -->
-        <hr />
-        <div class="results">
-          <div
-            class="place result-text"
-            v-for="result in search.results"
-            :key="result.id"
-            @click="moveMap(result)"
-          >
-            <h4>{{ result.place_name }}</h4>
-            
-            <div class="addr">
-              {{ result.address_name }}
-            </div>
-            <button class="search-button" @click="openModal(result)">등록하기</button>
-          </div>
-
-          <div>페이지 번호</div>
-          <div id="pagination" class="page"></div>
-        </div>
-      </div>
+  <b-container>
+    <div class="col-12 col-md-8 container">
+      <input id="search-bar" v-model="search.keyword" @keyup.enter="searchPlaces" />
+      <button class="fas fa-search btn" id="search-btn" @click="searchPlaces">검색</button>
     </div>
+
+    <button @click="movetolist">핫플레이스 목록 바로가기</button>
+    <!-- 지도 출력 영역 -->
+    <!-- <div id="map" style="width: 80%; height: 400px"></div> -->
+    <div id="map" style="height: 400px" class="shadow rounded"></div>
+    <!-- 지도 출력 완료 -->
+
+    <!-- <div id="menu_wrap" class="bg_white"></div> -->
+    <hr />
+    <article>
+      <dl>
+        <div
+          v-for="result in search.results"
+          :key="result.id"
+          @click="openModal(result)"
+          class="toregistbtn"
+        >
+          <dt @click="moveMap(result)">{{ result.place_name }}</dt>
+          <dd>{{ result.address_name }}</dd>
+        </div>
+      </dl>
+    </article>
+    <div>페이지</div>
+    <div id="pagination" class="page"></div>
 
     <!-- 등록 모달창 -->
     <!-- 모달 창 -->
@@ -66,9 +50,7 @@
         <button type="button" @click="closeModal" class="search-button">취소</button>
       </div>
     </div>
-  </b-col>
-</b-row>
-</b-container>
+  </b-container>
 </template>
 
 <script>
@@ -243,12 +225,12 @@ export default {
       this.imagechanged = true;
       if (this.img) {
         this.fileToBlob(this.img)
-        .then((blob) => {
-          console.log(blob);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+          .then((blob) => {
+            console.log(blob);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     },
     sendHotplace(param, img, imageurl) {
@@ -280,20 +262,14 @@ export default {
         reader.readAsArrayBuffer(file);
       });
     },
-    movetolist(){
-      this.$router.push( { name: "hotplacelist" });
+    movetolist() {
+      this.$router.push({ name: "hotplacelist" });
     },
   },
 };
 </script>
 
 <style scoped>
-.search-input {
-  border: 1px solid;
-  border-radius: 3px;
-  width: 200px;
-  margin-right: 10px;
-}
 .search-button {
   border: 1px solid;
   border-radius: 3px;
@@ -307,9 +283,8 @@ export default {
   align-items: center;
 }
 .page {
-  border: 1px solid;
   font-size: 30px;
-  margin: 20px; 
+  margin: 20px;
   /* Add margin to create spacing */
 }
 .modal {
@@ -352,5 +327,89 @@ export default {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+/* 목록 리스트 css */
+.toregistbtn {
+  cursor: pointer;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+article {
+  max-width: 70rem;
+  margin: 0 auto;
+  border: 0.18rem solid lightgrey;
+  padding: clamp(1rem, 2vw, 3rem);
+  border-radius: 0.5rem;
+}
+
+h1,
+dl {
+  margin: 0;
+}
+
+article > * + * {
+  margin-top: 1rem;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: 1rem;
+}
+
+dl > div {
+  background: antiquewhite;
+  padding: 1rem;
+}
+
+dl > div:nth-child(4n - 2) {
+  background: lavenderblush;
+}
+
+dl > div:nth-child(4n - 1) {
+  background: azure;
+}
+
+dl > div:nth-child(4n) {
+  background: lavender;
+}
+
+dt {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+dd {
+  margin: 0;
+}
+
+/* 검색창 css */
+#search-bar {
+  height: 40px;
+  border-radius: 40px;
+  border: 0.5px solid lightgrey;
+  width: 100%;
+  padding-right: 40px;
+  padding-left: 10px;
+}
+#search-btn {
+  height: 40px;
+  background-color: #3f72af;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  color: #f9f7f7;
+  font-size: 1rem;
+  position: absolute;
+  right: 15px;
+  border-left: 0.5px solid lightgrey;
 }
 </style>

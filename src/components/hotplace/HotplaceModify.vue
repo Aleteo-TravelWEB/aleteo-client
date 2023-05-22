@@ -2,7 +2,28 @@
   <b-container>
     <div>나만의 핫풀레이siuuuu</div>
     <button @click="movetoRegist" id="registbutton" class="styled-button">등록하러 가기</button>
-    <b-row>
+    <div class="grid">
+      <div class="grid_item" v-for="hotplace in pagination" :key="hotplace.id">
+        <template v-if="hotplace.userId === userInfo.userId">
+          <div class="card">
+            <img
+              class="card_img"
+              :src="`/upload/hotplace/image/${hotplace.image}`"
+              alt="thumnail"
+            />
+            <div class="card_content">
+              <h4 class="card_header">{{ hotplace.title }}</h4>
+              <span class="card_text" v-if="hotplace.tag1 !== `null`">#{{ hotplace.tag1 }}</span>
+              <span class="card_text" v-if="hotplace.tag2 !== `null`">#{{ hotplace.tag2 }}</span>
+              <button class="card_btn" @click="modify(hotplace)">
+                수정 및 삭제<span>&rarr;</span>
+              </button>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+    <!-- <b-row>
       <b-col cols="4" v-for="hotplace in pagination" :key="hotplace.id">
         <template v-if="hotplace.userId === userInfo.userId">
           <b-card
@@ -17,7 +38,7 @@
           </b-card>
         </template>
       </b-col>
-    </b-row>
+    </b-row> -->
     <b-pagination
       v-model="currentPage"
       :total-rows="hotplaces.length"
@@ -26,8 +47,14 @@
       class="mt-4"
     />
     <b-modal id="deatil" v-model="showModifyModal" :title="this.hotplace.title">
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <img :src="`/upload/hotplace/image/${hotplace.image}`" alt="" width="400px" height="500px" style="object-fit: contain;" />
+      <div style="display: flex; justify-content: center; align-items: center">
+        <img
+          :src="`/upload/hotplace/image/${hotplace.image}`"
+          alt=""
+          width="400px"
+          height="500px"
+          style="object-fit: contain"
+        />
       </div>
       태그 1 :
       <input type="text" :placeholder="hotplace.tag1" v-model="hotplace.tag1" class="modal-input" />
@@ -197,4 +224,74 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+.grid_item {
+  background-color: #fff;
+  height: 30rem;
+  border-radius: 0.4rem;
+  overflow: hidden;
+  box-shadow: 0 3rem 6rem rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.grid_item:hover {
+  transform: translateY(-0.5%);
+  box-shadow: 0 4rem 8rem rgba(0, 0, 0, 0.2);
+}
+
+.card_img {
+  display: block;
+  height: 14rem;
+  object-fit: cover;
+}
+.card_content {
+  padding: 3rem 3rem;
+}
+.card_header {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #0d0d0d;
+  margin-bottom: 1.5rem;
+  height: 3rem;
+  align-items: center;
+  text-align: center;
+}
+.card_text {
+  font-size: 1.25em;
+  letter-spacing: 0.1rem;
+  line-height: 1.7;
+  color: #3d3d3d;
+  margin-bottom: 2.5rem;
+}
+.card_btn {
+  display: block;
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1rem;
+  text-align: center;
+  color: #3363ff;
+  background-color: #e6ecff;
+  border: none;
+  border-radius: 0.4rem;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.card_btn span {
+  margin-left: 1rem;
+  transition: 0.2s;
+}
+.card_btn:hover,
+.card__btn:active {
+  background-color: #dce4ff;
+}
+.card_btn:hover span,
+.card__btn:active span {
+  margin-left: 1.5rem;
+}
+</style>
