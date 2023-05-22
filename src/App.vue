@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <the-header-navi-bar></the-header-navi-bar>
+    <the-footer-vue></the-footer-vue>
   </div>
 </template>
 
 <script>
+import TheFooterVue from "./components/common/TheFooter.vue";
 import TheHeaderNaviBar from "./components/common/TheHeaderNaviBar.vue";
 
 export default {
   name: "App",
   components: {
     TheHeaderNaviBar,
+    TheFooterVue,
   },
   data() {
     return {
