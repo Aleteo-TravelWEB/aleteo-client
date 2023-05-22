@@ -234,12 +234,12 @@ export default {
       this.imagechanged = true;
       if (this.img) {
         this.fileToBlob(this.img)
-          .then((blob) => {
-            console.log(blob);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        .then((blob) => {
+          console.log(blob);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       }
     },
     sendHotplace(param, img, imageurl) {
