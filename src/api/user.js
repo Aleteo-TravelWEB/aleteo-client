@@ -30,7 +30,7 @@ async function join(user, success, fail) {
 }
 
 async function modify(user, success, fail) {
-  await api.put(`/user/modify/`, JSON.stringify(user), { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
+  await api.put(`/user/modify`, JSON.stringify(user), { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
 async function resign(userId, success, fail) {
