@@ -27,7 +27,7 @@
       class="mt-4"
     />
     <!-- 모달창 -->
-    <!-- <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
+    <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
       <span class="close">&times;</span>
       <div style="display: flex; justify-content: center; align-items: center;">
         <img :src="`/upload/hotplace/image/${hotplace.image}`" alt="" width="400px" height="500px" style="object-fit: contain;" />
@@ -37,24 +37,24 @@
       <hr />
       <div>{{ hotplace.description }}</div>
       <a :href="hotplace.mapUrl" target="_blank">지도상에서 확인하기</a>
-    </b-modal> -->
+    </b-modal>
 
     <!-- 모달창  -->
-    <div class="modal" v-if="showDetailModal">
+    <!-- <div class="modal" v-if="showDetailModal"> -->
       <!-- 모달 헤더 -->
-      <div class="modal-header modal-header-custom">
+      <!-- <div class="modal-header modal-header-custom">
         <h4>{{ this.hotplace.title }}</h4>
         <button type="button" class="close" @click="closeModal">&times;</button>
-      </div>
+      </div> -->
       <!-- 모달 본문 -->
-      <div class="modal-body">
+      <!-- <div class="modal-body">
         <img :src="`/upload/hotplace/image/${hotplace.image}`"/>
         <hr />
         <span>#{{ hotplace.tag1 }}</span>
         <span>#{{ hotplace.tag2 }}</span>
         <hr />
       </div>
-    </div>
+    </div> -->
     <!-- 모달창 끝 -->
   </b-container>
 </template>
