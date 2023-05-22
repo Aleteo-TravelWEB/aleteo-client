@@ -83,6 +83,8 @@ const userStore = {
         ({ data }) => {
           // console.log(data);
           if (data.message === "success") {
+            // console.log("userData :: ");
+            // console.log(data);
             commit("SET_USER_INFO", data.userInfo);
             // console.log("3. getUserInfo data >> ", data);
           } else {

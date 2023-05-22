@@ -227,7 +227,7 @@ export default {
     );
 
     http
-      .get(`/plan/good/${this.userInfo.userId}/${param}`)
+      .get(`/plan/good/${this.userInfo.userId}/${param}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}})
       .then(({ data }) => {
         if (data.message === "success") {
           this.isHeart = true;
