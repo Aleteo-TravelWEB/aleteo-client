@@ -93,7 +93,7 @@ export default {
   },
   created() {},
   methods: {
-    ...mapActions(userStore, ["userModify"]),
+    ...mapActions(userStore, ["userModify", "getUserInfo"]),
 
     async modifyUser() {
       this.user.userName = this.userInfo.userName;
@@ -111,6 +111,8 @@ export default {
       if (this.isModify) {
         console.log("modify :: " + this.isModify);
         this.$router.push({ name: "mypage" });
+        let token = sessionStorage.getItem("access-token");
+        await this.getUserInfo(token);
       }
     },
   },
