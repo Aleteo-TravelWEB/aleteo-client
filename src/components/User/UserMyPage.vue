@@ -56,7 +56,7 @@
           <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
         </div>
         <b-table striped hover :items="goodPlans" :fields="fields" @row-clicked="viewPlan">
-          <template #cell(index)="data">{{ goodPlans.length - data.index }}</template>
+          <template #cell(index)="data">{{ data.index + 1 }}</template>
         </b-table>
       </div>
     </div>
@@ -79,8 +79,8 @@ export default {
       fields: [
         { key: "index", label: "NO", tdClass: "tdClass" },
         { key: "title", label: "제목", tdClass: "tdSubject" },
-        { key: "user_id", label: "작성자", tdClass: "tdClass" },
-        { key: "created_at", label: "작성일", tdClass: "tdClass" },
+        { key: "userId", label: "작성자", tdClass: "tdClass" },
+        { key: "createdAt", label: "작성일", tdClass: "tdClass" },
         { key: "hit", label: "조회수", tdClass: "tdClass" },
       ],
     };

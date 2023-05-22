@@ -103,7 +103,11 @@
                     class="me-2"
                   />
                   <div class="travel-info">
-                    <div class="mb-3"><b-icon icon="pin-fill" class="mx-1"/><strong class="place_name">{{ place.name }}</strong></div>
+                    <div class="mb-3">
+                      <b-icon icon="pin-fill" class="mx-1" /><strong class="place_name">{{
+                        place.name
+                      }}</strong>
+                    </div>
                     <p class="address">{{ place.address }}</p>
                     <div class="lat" style="display: none">{{ place.lat }}</div>
                     <div class="lng" style="display: none">{{ place.lng }}</div>
@@ -113,7 +117,7 @@
               </div>
             </div>
             <div v-else>
-              <div class="mb-2 row ">
+              <div class="mb-2 row">
                 <div style="width: 10em" class="col-md-4"></div>
                 <div
                   class="mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
@@ -124,8 +128,12 @@
                     style="width: 130px"
                     class="me-2 card-img"
                   />
-                  <div class="travel-info ">
-                    <div class="mb-3"><b-icon icon="pin-fill" class="mx-1"/><strong class="place_name">{{ place.name }}</strong></div>
+                  <div class="travel-info">
+                    <div class="mb-3">
+                      <b-icon icon="pin-fill" class="mx-1" /><strong class="place_name">{{
+                        place.name
+                      }}</strong>
+                    </div>
                     <p class="address">{{ place.address }}</p>
                     <div class="lat" style="display: none">{{ place.lat }}</div>
                     <div class="lng" style="display: none">{{ place.lng }}</div>
@@ -159,7 +167,7 @@
       </div>
     </div>
     <!-- 추천 경로 모달 start -->
-    <div v-show="isReShow" class="modal shadow" style="display: none;">
+    <div v-show="isReShow" class="modal shadow" style="display: none">
       <div class="modal-content">
         <div class="hover-div d-flex flex-end mb-3" @click="closeRePath()">
           <b-icon icon="x-circle-fill" class="close-modal" style="color: #e86154"></b-icon>
@@ -230,7 +238,9 @@ export default {
     );
 
     http
-      .get(`/plan/good/${this.userInfo.userId}/${param}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}})
+      .get(`/plan/good/${this.userInfo.userId}/${param}`, {
+        headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") },
+      })
       .then(({ data }) => {
         if (data.message === "success") {
           this.isHeart = true;
@@ -317,13 +327,11 @@ export default {
       }
       this.bounds = new window.kakao.maps.LatLngBounds();
 
-      this.points.forEach(p => {
+      this.points.forEach((p) => {
         this.bounds.extend(p);
-      })
+      });
 
-      this.map.setCenter(
-        new window.kakao.maps.LatLng(lat, lng)
-      );
+      this.map.setCenter(new window.kakao.maps.LatLng(lat, lng));
 
       this.map.setBounds(this.bounds);
     },
@@ -357,13 +365,13 @@ export default {
         marker.setMap(this.mapModal);
 
         var iwContent = `<div style="padding:5px;">${positions[i].name}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-            iwPosition = new window.kakao.maps.LatLng(positions[i].lat+0.00035, positions[i].lng) //인포윈도우 표시 위치입니다
+          iwPosition = new window.kakao.maps.LatLng(positions[i].lat + 0.00035, positions[i].lng); //인포윈도우 표시 위치입니다
 
         // 인포윈도우를 생성하고 지도에 표시합니다
         new window.kakao.maps.InfoWindow({
           map: this.mapModal, // 인포윈도우가 표시될 지도
-            position : iwPosition, 
-            content : iwContent,
+          position: iwPosition,
+          content: iwContent,
         });
 
         // 선 생성
@@ -371,14 +379,12 @@ export default {
       }
       this.modalBounds = new window.kakao.maps.LatLngBounds();
 
-      this.modalPoints.forEach(point => {
+      this.modalPoints.forEach((point) => {
         this.modalBounds.extend(point);
-      })
+      });
 
-      this.mapModal.setCenter(
-        new window.kakao.maps.LatLng(lat, lng)
-      );
-      
+      this.mapModal.setCenter(new window.kakao.maps.LatLng(lat, lng));
+
       this.mapModal.setBounds(this.modalBounds);
     },
     //커스텀 오버레이 표시 함수
@@ -502,7 +508,9 @@ export default {
         this.isHeart = false;
         console.log("좋아요에 제거");
         http
-          .delete(`/plan/good/${this.userInfo.userId}/${this.plan.id}`)
+          .delete(`/plan/good/${this.userInfo.userId}/${this.plan.id}`, {
+            headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") },
+          })
           .then(({ data }) => {
             if (data.message === "success") {
               // alert("좋아요 삭제 성공!");
@@ -522,7 +530,9 @@ export default {
           planId: this.plan.id,
         };
         http
-          .post(`/plan/good`, goodPlan)
+          .post(`/plan/good`, goodPlan, {
+            headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") },
+          })
           .then(({ data }) => {
             if (data.message === "success") {
               // alert("좋아요 등록!");
@@ -647,5 +657,4 @@ export default {
 .place_name {
   color: #3f72af;
 }
-
 </style>
