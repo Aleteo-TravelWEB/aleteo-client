@@ -4,11 +4,11 @@ const api = apiInstance();
 
 // Hotplace 목록 반환
 function listHotplace(success, fail) {
-  api.get(`/hotplace`).then(success).catch(fail);
+  api.get(`/hotplace/list`).then(success).catch(fail);
 }
 // Hotplace id 별로 가져오기
 function viewHotplace(hotplaceId, success, fail) {
-  api.get(`/hotplace/${hotplaceId}`).then(success).catch(fail);
+  api.get(`/hotplace/${hotplaceId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
 }
 
 // Hotplace 글 작성
@@ -34,6 +34,7 @@ function writeHotplace([hotplace, image, imageUrl], success, fail) {
     .post(`/hotplace`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") 
       },
     })
     .then(success)
@@ -60,18 +61,19 @@ async function modifyHotplace1([hotplace, image, imageUrl], success, fail) {
     .put(`/hotplace`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
+        "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") 
       },
     })
     .then(success)
     .catch(fail);
 }
 async function modifyHotplace2(hotplace, success, fail) {
-  await api.put(`/hotplace/${hotplace.num}`, JSON.stringify(hotplace)).then(success).catch(fail);
+  await api.put(`/hotplace/${hotplace.num}`, JSON.stringify(hotplace),  { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
 }
 
 // Hotplace 글 삭제
 function deleteHotplace(hotplaceId, success, fail) {
-  api.delete(`/hotplace/${hotplaceId}`).then(success).catch(fail);
+  api.delete(`/hotplace/${hotplaceId}`,  { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
 }
 
 export {
