@@ -26,15 +26,36 @@
       align="center"
       class="mt-4"
     />
-    <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
-      <img :src="`c:/springboot/upload/hotplace/image/${hotplace.imageUrl}`" alt="" />
+    <!-- 모달창 -->
+    <!-- <b-modal id="deatil" v-model="showDetailModal" :title="this.hotplace.title">
+      <span class="close">&times;</span>
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <img :src="`/upload/hotplace/image/${hotplace.image}`" alt="" width="400px" height="500px" style="object-fit: contain;" />
+      </div>
       <hr />
       <h4>#{{ hotplace.tag1 }} #{{ hotplace.tag2 }}</h4>
       <hr />
       <div>{{ hotplace.description }}</div>
       <a :href="hotplace.mapUrl" target="_blank">지도상에서 확인하기</a>
-      <div>지도상에서 위치보여주기?</div>
-    </b-modal>
+    </b-modal> -->
+
+    <!-- 모달창  -->
+    <div class="modal" v-if="showDetailModal">
+      <!-- 모달 헤더 -->
+      <div class="modal-header modal-header-custom">
+        <h4>{{ this.hotplace.title }}</h4>
+        <button type="button" class="close" @click="closeModal">&times;</button>
+      </div>
+      <!-- 모달 본문 -->
+      <div class="modal-body">
+        <img :src="`/upload/hotplace/image/${hotplace.image}`"/>
+        <hr />
+        <span>#{{ hotplace.tag1 }}</span>
+        <span>#{{ hotplace.tag2 }}</span>
+        <hr />
+      </div>
+    </div>
+    <!-- 모달창 끝 -->
   </b-container>
 </template>
 
@@ -110,9 +131,13 @@ export default {
       this.hotplace = hotplace;
       this.showDetailModal = true;
       console.log(hotplace);
+      console.log(this.showDetailModal);
     },
     movetoMyHotplace() {
       this.$router.push({ name: "hotplacemodify" });
+    },
+    closeModal() {
+      this.showDetailModal = false;
     },
   },
 };

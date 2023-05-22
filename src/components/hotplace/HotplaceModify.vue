@@ -26,7 +26,9 @@
       class="mt-4"
     />
     <b-modal id="deatil" v-model="showModifyModal" :title="this.hotplace.title">
-      <img :src="hotplace.imageUrl" alt="" />
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <img :src="`/upload/hotplace/image/${hotplace.image}`" alt="" width="400px" height="500px" style="object-fit: contain;" />
+      </div>
       태그 1 :
       <input type="text" :placeholder="hotplace.tag1" v-model="hotplace.tag1" class="modal-input" />
       태그 2 :

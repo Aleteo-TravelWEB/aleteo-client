@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div>등록하러 왔어요</div>
+<b-container>
+  <b-row>
+    <b-col cols="12" md="8" class="mx-auto">
     <div class="map_wrap">
       <div class="option">
         <div>
@@ -32,14 +33,15 @@
             <h4 class="result-text">{{ result.place_name }}</h4>
             <div class="addr">
               {{ result.address_name }}
-              <button class="search-button" @click="openModal(result)">등록하기</button>
             </div>
+              <button class="search-button" @click="openModal(result)">등록하기</button>
           </div>
           <div>페이지 번호</div>
           <div id="pagination" class="page"></div>
         </div>
       </div>
     </div>
+
     <!-- 등록 모달창 -->
     <!-- 모달 창 -->
     <div v-if="showModal" class="modal">
@@ -61,7 +63,9 @@
         <button type="button" @click="closeModal" class="search-button">취소</button>
       </div>
     </div>
-  </div>
+  </b-col>
+</b-row>
+</b-container>
 </template>
 
 <script>
