@@ -2,21 +2,21 @@
   <b-container>
     <div class="buttons mt-3 mb-4">
       <button
-          class="btn-hover color-9"
-          style="width: 150px"
-          variant="outline-prim"
-          @click="movetolist()"
-        >
-          핫플레이스 목록
-        </button>
-        <button
-          class="btn-hover color-9"
-          style="width: 150px"
-          variant="outline-prim"
-          @click="movetoMyHotplace()"
-        >
-          내 핫플레이스
-        </button>
+        class="btn-hover color-9"
+        style="width: 150px"
+        variant="outline-prim"
+        @click="movetolist()"
+      >
+        핫플레이스 목록
+      </button>
+      <button
+        class="btn-hover color-9"
+        style="width: 150px"
+        variant="outline-prim"
+        @click="movetoMyHotplace()"
+      >
+        내 핫플레이스
+      </button>
     </div>
     <div class="col-12 col-md-8 container">
       <input id="search-bar" v-model="search.keyword" @keyup.enter="searchPlaces" />
@@ -29,7 +29,7 @@
     <!-- 지도 출력 완료 -->
 
     <!-- <div id="menu_wrap" class="bg_white"></div> -->
-    <hr/>
+    <hr />
     <article class="mb-3">
       <dl>
         <div
@@ -49,35 +49,50 @@
     <!-- 등록 모달창 -->
     <!-- 모달 창 -->
     <div v-if="showModal" class="modal mb-3">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-5">
-          <div class="card">
-            <h2 class="card-title text-center">Hot Place</h2>
-            <div class="card-body py-md-4">
-              <form _lpchecked="1">
-              <div class="form-group">
-                <input type="text" class="form-control" v-model="hotplace.description" placeholder="내용...">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-5">
+            <div class="card">
+              <h2 class="card-title text-center">Hot Place</h2>
+              <div class="card-body py-md-4">
+                <form _lpchecked="1">
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="hotplace.description"
+                      placeholder="내용..."
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="hotplace.tag1"
+                      placeholder="태그 1"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="hotplace.tag2"
+                      placeholder="태그 2"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input type="file" @change="hotplaceimg" placeholder="사진" />
+                  </div>
+                  <div class="d-flex flex-row align-items-center justify-content-between">
+                    <a @click="closeModal">취소</a>
+                    <button class="btn btn-primary" @click="write">등록 하기</button>
+                  </div>
+                </form>
               </div>
-              <div class="form-group">
-                <input type="text" class="form-control" v-model="hotplace.tag1" placeholder="태그 1">
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" v-model="hotplace.tag2" placeholder="태그 2">
-              </div>
-              <div class="form-group">
-                <input type="file" @change="hotplaceimg" placeholder="사진"/>
-              </div>
-              <div class="d-flex flex-row align-items-center justify-content-between">
-                <a @click="closeModal">취소</a>
-                <button class="btn btn-primary" @click="write" >등록 하기</button>
-              </div>
-              </form>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   </b-container>
 </template>
@@ -109,7 +124,7 @@ export default {
         tag2: null,
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
-        mapUrl: null
+        mapUrl: null,
       },
       markers: [], // 마커 담을 객체 배열
       search: {
@@ -186,27 +201,27 @@ export default {
     displayMarker(data) {
       const bounds = new window.kakao.maps.LatLngBounds();
 
-        console.log(this.markers);
+      console.log(this.markers);
 
-        this.markers.forEach(marker => {
-          console.log("marker ::");
-          console.log(marker)
-          marker.setMap(null);
-        })
-        this.markers = [];
+      this.markers.forEach((marker) => {
+        console.log("marker ::");
+        console.log(marker);
+        marker.setMap(null);
+      });
+      this.markers = [];
 
-        for(let i=0;i<data.length;i++){
-          var marker = new window.kakao.maps.Marker({
-            map: this.map, // 마커를 표시할 지도
-            position: new window.kakao.maps.LatLng(data[i].y, data[i].x), // 마커를 표시할 위치
-            title: data[i].place_name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          });
+      for (let i = 0; i < data.length; i++) {
+        var marker = new window.kakao.maps.Marker({
+          map: this.map, // 마커를 표시할 지도
+          position: new window.kakao.maps.LatLng(data[i].y, data[i].x), // 마커를 표시할 위치
+          title: data[i].place_name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        });
 
-          this.markers.push(marker);
-          bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x));
-        }
+        this.markers.push(marker);
+        bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x));
+      }
 
-        this.map.setBounds(bounds);
+      this.map.setBounds(bounds);
     },
     displayPagination(pagination) {
       const paginationEl = document.getElementById("pagination");
@@ -318,7 +333,7 @@ export default {
     },
     movetoMyHotplace() {
       this.$router.push({ name: "hotplacemodify" });
-    }
+    },
   },
 };
 </script>
@@ -468,24 +483,24 @@ dd {
 }
 
 /* 등록 모달 */
-@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+@import url("https://fonts.googleapis.com/css?family=PT+Sans");
 
-h2{
+h2 {
   padding-top: 1.5rem;
 }
-a{
+a {
   color: #333;
   cursor: pointer;
 }
-a:hover{
+a:hover {
   color: #3f72af;
   text-decoration: none;
 }
-.card{
-  border: 0.40rem solid #f9f7f7;
+.card {
+  border: 0.4rem solid #f9f7f7;
   top: 10%;
 }
-.form-control{
+.form-control {
   background-color: #f9f7f7;
   padding: 20px;
   padding: 25px 15px;
@@ -498,10 +513,9 @@ a:hover{
   border: 3px solid #3f72af;
   outline: 0;
   box-shadow: none;
-
 }
 
-.btn{
+.btn {
   /* padding: 0.6rem 1.2rem; */
   background: #3f72af;
   border: 2px solid #3f72af;
@@ -509,8 +523,7 @@ a:hover{
 .btn-primary:hover {
   background-color: #3f72af;
   border-color: #3f72af;
-  transition: .3s;
-
+  transition: 0.3s;
 }
 #description {
   height: 100px;

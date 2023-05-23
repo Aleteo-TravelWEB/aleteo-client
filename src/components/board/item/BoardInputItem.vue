@@ -1,7 +1,7 @@
 <template>
   <div class="mb-1">
     <div style="text-align: left" class="d-flex justify-content-center">
-      <b-form @submit="onSubmit" @reset="onReset" style="width: 800px;">
+      <b-form @submit="onSubmit" @reset="onReset" style="width: 800px">
         <b-form-group id="title-group" label="글 제목" label-for="title" style="color: black">
           <b-form-input
             id="title"
@@ -21,18 +21,29 @@
             rows="10"
             max-rows="15"
             class="shadow"
-            style="height: 500px;"
+            style="height: 500px"
           ></b-form-textarea>
         </b-form-group>
         <b-form-group id="image-group" label="사진" label-for="images" style="color: black">
-          <b-form-file id="images" placeholder="파일 없음" v-model="board.image"></b-form-file>
+          <b-form-file
+            id="images"
+            placeholder="파일 없음"
+            @change="boardimg"
+            v-model="this.img"
+          ></b-form-file>
         </b-form-group>
 
         <div class="d-flex flex-row mt-3">
-        <button type="submit" class="m-1 btn btn-jelly" v-if="this.type === 'write'">글작성</button>
-        <bbutton type="submit" class="m-1 btn btn-jelly" v-else>글수정</bbutton>
-        <button type="reset" class="m-1 btn btn-jelly" style="background-color: #ff4141">초기화</button>
-        <button @click="onMove()" class="m-1 btn btn-jelly" style="background-color: #f7f7f7">글목록</button>
+          <button type="submit" class="m-1 btn btn-jelly" v-if="this.type === 'write'">
+            글작성
+          </button>
+          <bbutton type="submit" class="m-1 btn btn-jelly" v-else>글수정</bbutton>
+          <button type="reset" class="m-1 btn btn-jelly" style="background-color: #ff4141">
+            초기화
+          </button>
+          <button @click="onMove()" class="m-1 btn btn-jelly" style="background-color: #f7f7f7">
+            글목록
+          </button>
         </div>
       </b-form>
     </div>
@@ -45,9 +56,8 @@ import { mapState } from "vuex";
 
 const userStore = "userStore";
 
-
 export default {
-  name: 'BoardInputItem',
+  name: "BoardInputItem",
   data() {
     return {
       board: {
@@ -56,14 +66,16 @@ export default {
         content: "",
       },
       isUserid: false,
+      img: null,
+      imagechanged: false,
     };
   },
   props: {
-    type: {type: String},
-    UserId: {type: String}
+    type: { type: String },
+    UserId: { type: String },
   },
   created() {
-    if(this.type == "modify") {
+    if (this.type == "modify") {
       let param = this.$route.params.id;
       console.log(param);
       viewBoard(
@@ -83,17 +95,20 @@ export default {
   },
   methods: {
     moveList() {
-      this.$router.push({ name: "boardlist"});
+      this.$router.push({ name: "boardlist" });
     },
     onSubmit(event) {
       event.preventDefault();
-      
+
       let err = true;
-      let msg= "";
-      !this.board.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs.titile.focus());
-      err && !this.board.content && ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
-      
-      if(!err) alert(msg);
+      let msg = "";
+      !this.board.title &&
+        ((msg = "제목을 입력해주세요"), (err = false), this.$refs.titile.focus());
+      err &&
+        !this.board.content &&
+        ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
+
+      if (!err) alert(msg);
       else this.type === "write" ? this.writeBoard() : this.modifyBoard();
     },
     onReset(event) {
@@ -111,20 +126,21 @@ export default {
     writeBoard() {
       let param = {
         userId: this.userInfo.userId,
+        userName: this.userInof.userName,
         title: this.board.title,
         content: this.board.content,
       };
       writeBoard(
-        param,
-        ({ data })=> {
+        [param, this.img],
+        ({ data }) => {
           let msg = "등록 처리시 문제가 발생 했습니다.";
-          if(data === "success") {
+          if (data === "success") {
             msg = "등록 완료";
           }
           alert(msg);
           this.moveList();
         },
-        (error) =>{
+        (error) => {
           console.log(error);
         }
       );
@@ -139,23 +155,35 @@ export default {
         param,
         ({ data }) => {
           let msg = "수정 처리시 문제가 발생 했습니다.";
-          if(data === "success") {
+          if (data === "success") {
             msg = "수정 완료";
           }
           alert(msg);
           this.moveList();
         },
-        (error) =>{
+        (error) => {
           console.log(error);
         }
       );
+    },
+    boardimg(event) {
+      this.img = event.target.files[0];
+      this.imagechanged = true;
+      if (this.img) {
+        this.fileToBlob(this.img)
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     },
   },
 };
 </script>
 
 <style lang="scss">
-
 .btn {
   margin: 1rem;
   background-color: #4199ff;
