@@ -1,9 +1,9 @@
 <template>
   <b-container>
-    <div class="buttons">
+    <div class="buttons mt-3 mb-4">
       <button
           class="btn-hover color-9"
-          style="width: 200px"
+          style="width: 150px"
           variant="outline-prim"
           @click="movetolist()"
         >
@@ -11,7 +11,7 @@
         </button>
         <button
           class="btn-hover color-9"
-          style="width: 200px"
+          style="width: 150px"
           variant="outline-prim"
           @click="movetoMyHotplace()"
         >
@@ -25,12 +25,12 @@
 
     <!-- 지도 출력 영역 -->
     <!-- <div id="map" style="width: 80%; height: 400px"></div> -->
-    <div id="map" style="height: 400px" class="shadow rounded"></div>
+    <div id="map" style="height: 400px" class="mt-4 shadow rounded"></div>
     <!-- 지도 출력 완료 -->
 
     <!-- <div id="menu_wrap" class="bg_white"></div> -->
-    <hr />
-    <article>
+    <hr/>
+    <article class="mb-3">
       <dl>
         <div
           v-for="result in search.results"
@@ -43,12 +43,12 @@
         </div>
       </dl>
     </article>
-    <div>페이지</div>
+    <div class="mb-5">페이지</div>
     <div id="pagination" class="page"></div>
 
     <!-- 등록 모달창 -->
     <!-- 모달 창 -->
-    <div v-if="showModal" class="modal">
+    <div v-if="showModal" class="modal mb-3">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-5">

@@ -1,8 +1,11 @@
 <template>
   <b-container>
-    <div class="buttons">
+    <div class="mt-5 mb-4">
+      <h3 style="color: black">#Hot #Place</h3>
+    </div>
+    <div class="buttons mb-5">
       <button
-          class="btn-hover color-9"
+          class="btn-hover color-9 mx-3"
           style="width: 200px"
           variant="outline-prim"
           @click="movetoRegist()"
@@ -18,7 +21,7 @@
           내 핫플레이스
         </button>
     </div>
-    <div class="grid">
+    <div class="grid mb-5">
       <div class="grid_item" v-for="hotplace in pagination" :key="hotplace.id">
         <div class="card">
           <img class="card_img" :src="`/upload/hotplace/image/${hotplace.image}`" alt="thumnail" />
@@ -37,11 +40,12 @@
       </div>
     </div>
     <b-pagination
+      pills
       v-model="currentPage"
       :total-rows="hotplaces.length"
       :per-page="perPage"
       align="center"
-      class="mt-4"
+      class="mt-4 mb-5"
     />
     <!-- 모달창 -->
 

@@ -35,7 +35,7 @@
               :key="rs.id"
               @click="showPlace(rs)"
             >
-              <img :src="rs.imageUrl" :alt="rs.place_name" style="width: 4em; height: 4em" />
+              <!-- <img :src="rs.imageUrl" :alt="rs.place_name" style="width: 4em; height: 4em" /> -->
               <div class="col-8">
                 <Strong>{{ rs.place_name }}</Strong>
                 <div class="addr">{{ rs.address_name }}</div>
