@@ -5,9 +5,9 @@
           class="btn-hover color-9"
           style="width: 200px"
           variant="outline-prim"
-          @click="movetoRegist()"
+          @click="movetolist()"
         >
-          등록하러 가기
+          핫플레이스 목록
         </button>
         <button
           class="btn-hover color-9"
@@ -109,8 +109,7 @@ export default {
         tag2: null,
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
-        mapUrl: null,
-        imageUrl: "",
+        mapUrl: null
       },
       markers: [], // 마커 담을 객체 배열
       search: {
@@ -120,8 +119,7 @@ export default {
       },
       showModal: false,
       img: null,
-      imagechanged: false,
-      imageUrl: "",
+      imagechanged: false
     };
   },
   mounted() {
@@ -239,7 +237,7 @@ export default {
       } else if (!this.imagechanged) {
         alert("사진을 등록해주세요");
       } else {
-        this.sendHotplace(this.hotplace, this.img, this.imageUrl);
+        this.sendHotplace(this.hotplace, this.img);
       }
     },
     closeModal() {
@@ -262,10 +260,9 @@ export default {
           });
       }
     },
-    sendHotplace(param, img, imageurl) {
-      console.log(imageurl);
+    sendHotplace(param, img) {
       writeHotplace(
-        [param, img, imageurl],
+        [param, img],
         ({ data }) => {
           let msg = "등록 처리시 문제가 발생 했습니다.";
           console.log(data);

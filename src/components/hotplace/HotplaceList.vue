@@ -112,8 +112,7 @@ export default {
         tag2: null,
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
-        mapUrl: null,
-        imageUrl: null,
+        mapUrl: null
       },
       showDetailModal: false,
     };

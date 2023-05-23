@@ -113,12 +113,10 @@ export default {
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
         mapUrl: null,
-        imageUrl: "",
       },
       showModifyModal: false,
       img: null,
-      imageChanged: false,
-      imageUrl: "",
+      imageChanged: false
     };
   },
   created() {
@@ -174,7 +172,7 @@ export default {
         );
       } else {
         modifyHotplace1(
-          [hotplace, this.img, this.imageUrl],
+          [hotplace, this.img],
           ({ data }) => {
             let msg = "수정 시 문제 발생";
             if (data.message === "success") {
