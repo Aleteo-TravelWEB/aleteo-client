@@ -64,7 +64,11 @@
               class="rounded bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
               style="width: 100%; height: 10em"
             >
-              <draggable v-model="places" @change="changePlaceList()" class="d-flex flex-row">
+              <draggable
+                v-model="places"
+                @change="changePlaceList()"
+                class="d-flex flex-row plan-content"
+              >
                 <div v-for="(place, index) in places" :key="index" class="border rounded">
                   <b-row align-h="end">
                     <b-icon
@@ -742,5 +746,9 @@ h1.fourth span {
 
 h1.fourth span:first-child {
   font-weight: 300;
+}
+
+.plan-content {
+  cursor: pointer;
 }
 </style>

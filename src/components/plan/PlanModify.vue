@@ -70,7 +70,11 @@
                     class="rounded border rounded border-5 bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
                     style="width: 100%; height: 10em"
                   >
-                    <draggable v-model="places" class="d-flex flex-row" @change="changePlaceLine()">
+                    <draggable
+                      v-model="places"
+                      class="d-flex flex-row plan-content"
+                      @change="changePlaceLine()"
+                    >
                       <div v-for="(place, index) in places" :key="index" class="border rounded">
                         <b-row align-h="end">
                           <b-icon
@@ -251,7 +255,7 @@ export default {
       };
 
       this.map = new window.kakao.maps.Map(container, options);
-      this.loadMaker(this.places, true, this.places);
+      this.loadMaker(this.places, true);
       this.places.forEach((place) => {
         this.drawLine(place, true);
       });
@@ -329,12 +333,12 @@ export default {
 
     ////////////////////// 마커 그리기 start //////////////////////
     // 지정한 위치에 마커 불러오기
-    loadMaker(positions, flag, data) {
+    loadMaker(positions, flag) {
       // flag : true(원래 여행 관광지 정보), false(새로 만드는 관광지 정보)
       const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
 
       // 이전에 추가된 마커들 제거
-      if (this.markers) {
+      if (this.markers && flag) {
         this.markers.forEach((marker) => marker.setMap(null));
         this.markers = [];
       }
@@ -367,11 +371,12 @@ export default {
         this.markers.push(marker);
 
         // 원래 여행 관광지 정보 마커 배열에 넣기
+        console.log(this.planMarkers);
         if (flag && this.planMarkers) {
           console.log("check");
           const markerData = {
             marker: marker,
-            placeId: data.placeId,
+            placeId: positions[i].placeId,
           };
           this.planMarkers.push(markerData);
         }
@@ -393,6 +398,9 @@ export default {
     },
     // 마커 삭제하기
     deleteMarker(lat, lng, data) {
+      console.log("planMarker test");
+      console.log(this.planMarkers);
+      console.log(this.markers);
       this.markers.forEach((marker) => {
         if (
           marker.getPosition().getLat().toFixed(13) === lat &&
@@ -412,12 +420,12 @@ export default {
 
           for (let i = 0; i < this.planMarkers.length; i++) {
             if (
-              this.planMarkers[i].marker.getTitle() === marker.getTitle() &&
               this.planMarkers[i].marker.getPosition().getLat().toFixed(13) ===
                 marker.getPosition().getLat().toFixed(13) &&
               this.planMarkers[i].marker.getPosition().getLng().toFixed(13) ===
                 marker.getPosition().getLng().toFixed(13)
             ) {
+              console.log("pass!!");
               planFlag = true;
               break;
             }
@@ -687,5 +695,9 @@ export default {
 .map-custom {
   width: 800px;
   height: 600px;
+}
+
+.plan-content {
+  cursor: pointer;
 }
 </style>
