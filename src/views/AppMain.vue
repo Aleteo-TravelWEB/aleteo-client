@@ -10,20 +10,21 @@
     </div>
 
     <div class="content">
-      <div>여행 계획 목록 출력
-        <main-attrction-list></main-attrction-list>
+      <div>
+        여행 계획 목록 출력
+        <main-attraction-list></main-attraction-list>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import MainAttrctionList from "@/components/main/MainAttrctionList.vue"
+import MainAttractionList from "@/components/main/MainAttractionList.vue";
 
 export default {
   name: "AppMain",
   components: {
-    MainAttrctionList,
+    MainAttractionList,
   },
   data() {
     return {
@@ -82,7 +83,7 @@ export default {
 .content {
   background: #ffffff;
   width: 100%;
-  top: 700px;
+  top: 550px;
   position: absolute;
 }
 </style>
