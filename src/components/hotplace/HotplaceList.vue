@@ -1,19 +1,34 @@
 <template>
   <b-container>
-    <div>
-      <button @click="movetoRegist" id="registbutton" class="styled-button">등록하러 가기</button>
-      <button @click="movetoMyHotplace" id="registbutton" class="styled-button">
-        나만의 핫플레이스
-      </button>
+    <div class="buttons">
+      <button
+          class="btn-hover color-9"
+          style="width: 200px"
+          variant="outline-prim"
+          @click="movetoRegist()"
+        >
+          등록하러 가기
+        </button>
+        <button
+          class="btn-hover color-9"
+          style="width: 200px"
+          variant="outline-prim"
+          @click="movetoMyHotplace()"
+        >
+          내 핫플레이스
+        </button>
     </div>
     <div class="grid">
       <div class="grid_item" v-for="hotplace in pagination" :key="hotplace.id">
         <div class="card">
           <img class="card_img" :src="`/upload/hotplace/image/${hotplace.image}`" alt="thumnail" />
           <div class="card_content">
-            <h4 class="card_header">{{ hotplace.title }}</h4>
-            <span class="card_text" v-if="hotplace.tag1 !== `null`">#{{ hotplace.tag1 }}</span>
-            <span class="card_text" v-if="hotplace.tag2 !== `null`">#{{ hotplace.tag2 }}</span>
+            <p class="card_header">{{ hotplace.title }}</p>
+            <div style="height : 55px">
+              <span class="card_text" v-if="hotplace.tag1 !== `null`">#{{ hotplace.tag1 }}</span>
+              <br>
+              <span class="card_text" v-if="hotplace.tag2 !== `null`">#{{ hotplace.tag2 }}</span>
+            </div>
             <button class="card_btn" @click="showdetail(hotplace)">
               더 보기<span>&rarr;</span>
             </button>
@@ -33,7 +48,7 @@
     <b-modal id="deatil" v-model="showDetailModal">
       <template #modal-header>
         <!-- 커스텀 헤더 내용 추가 -->
-        <b-button size="sm" variant="outline-danger" @click="close()">close</b-button>
+        <b-button size="sm" variant="outline-danger" @click="closeModal()">close</b-button>
         <h5 class="header-title">{{ hotplace.title }}</h5>
       </template>
 
@@ -87,7 +102,7 @@ export default {
     return {
       hotplaces: [],
       currentPage: 1,
-      perPage: 9,
+      perPage: 8,
       hotplace: {
         userId: null,
         image: null,
@@ -175,7 +190,7 @@ export default {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
 }
 .grid_item {
@@ -199,10 +214,10 @@ export default {
   object-fit: cover;
 }
 .card_content {
-  padding: 3rem 3rem;
+  padding: 2rem 2rem;
 }
 .card_header {
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #0d0d0d;
   margin-bottom: 1.5rem;
@@ -211,10 +226,11 @@ export default {
   text-align: center;
 }
 .card_text {
-  font-size: 1.25em;
+  font-size: 1rem;
   letter-spacing: 0.1rem;
   line-height: 1.7;
   color: #3d3d3d;
+  height: 3rem;
   margin-bottom: 2.5rem;
 }
 .card_btn {
@@ -241,5 +257,45 @@ export default {
 .card_btn:hover span,
 .card__btn:active span {
   margin-left: 1.5rem;
+}
+
+/* 이동 버튼 */
+.buttons {
+  text-align: center;
+  margin: 10px;
+}
+
+.btn-hover {
+  width: 180px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  height: 50px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  margin-left: 10px;
+
+  border-radius: 20px;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-hover:focus {
+  outline: none;
+}
+
+.btn-hover.color-9 {
+  background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+  box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
 }
 </style>

@@ -1,11 +1,28 @@
 <template>
   <b-container>
+    <div class="buttons">
+      <button
+          class="btn-hover color-9"
+          style="width: 200px"
+          variant="outline-prim"
+          @click="movetoRegist()"
+        >
+          등록하러 가기
+        </button>
+        <button
+          class="btn-hover color-9"
+          style="width: 200px"
+          variant="outline-prim"
+          @click="movetoMyHotplace()"
+        >
+          내 핫플레이스
+        </button>
+    </div>
     <div class="col-12 col-md-8 container">
       <input id="search-bar" v-model="search.keyword" @keyup.enter="searchPlaces" />
       <button class="fas fa-search btn" id="search-btn" @click="searchPlaces">검색</button>
     </div>
 
-    <button @click="movetolist">핫플레이스 목록 바로가기</button>
     <!-- 지도 출력 영역 -->
     <!-- <div id="map" style="width: 80%; height: 400px"></div> -->
     <div id="map" style="height: 400px" class="shadow rounded"></div>
@@ -32,23 +49,35 @@
     <!-- 등록 모달창 -->
     <!-- 모달 창 -->
     <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>핫플레이스 등록하기</h2>
-        <p>모달 내용을 여기에 작성하세요.</p>
-        내용 :<input
-          type="text"
-          placeholder="이 장소에 대해 설명해주세요~~"
-          v-model="hotplace.description"
-          class="modal-input"
-          id="description"
-        />
-        태그 1:<input type="text" placeholder="태그1" v-model="hotplace.tag1" class="modal-input" />
-        태그 2:<input type="text" placeholder="태그2" v-model="hotplace.tag2" class="modal-input" />
-        사진 : <input type="file" @change="hotplaceimg" />
-        <button type="button" @click="write" class="search-button">등록</button>
-        <button type="button" @click="closeModal" class="search-button">취소</button>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-5">
+          <div class="card">
+            <h2 class="card-title text-center">Hot Place</h2>
+            <div class="card-body py-md-4">
+              <form _lpchecked="1">
+              <div class="form-group">
+                <input type="text" class="form-control" v-model="hotplace.description" placeholder="내용...">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" v-model="hotplace.tag1" placeholder="태그 1">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" v-model="hotplace.tag2" placeholder="태그 2">
+              </div>
+              <div class="form-group">
+                <input type="file" @change="hotplaceimg" placeholder="사진"/>
+              </div>
+              <div class="d-flex flex-row align-items-center justify-content-between">
+                <a @click="closeModal">취소</a>
+                <button class="btn btn-primary" @click="write" >등록 하기</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
     </div>
   </b-container>
 </template>
@@ -265,6 +294,9 @@ export default {
     movetolist() {
       this.$router.push({ name: "hotplacelist" });
     },
+    movetoMyHotplace() {
+      this.$router.push({ name: "hotplacemodify" });
+    }
   },
 };
 </script>
@@ -411,5 +443,94 @@ dd {
   position: absolute;
   right: 15px;
   border-left: 0.5px solid lightgrey;
+}
+
+/* 등록 모달 */
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+
+h2{
+  padding-top: 1.5rem;
+}
+a{
+  color: #333;
+  cursor: pointer;
+}
+a:hover{
+  color: #3f72af;
+  text-decoration: none;
+}
+.card{
+  border: 0.40rem solid #f9f7f7;
+  top: 10%;
+}
+.form-control{
+  background-color: #f9f7f7;
+  padding: 20px;
+  padding: 25px 15px;
+  margin-bottom: 1.3rem;
+}
+
+.form-control:focus {
+  color: #000000;
+  background-color: #ffffff;
+  border: 3px solid #3f72af;
+  outline: 0;
+  box-shadow: none;
+
+}
+
+.btn{
+  /* padding: 0.6rem 1.2rem; */
+  background: #3f72af;
+  border: 2px solid #3f72af;
+}
+.btn-primary:hover {
+  background-color: #3f72af;
+  border-color: #3f72af;
+  transition: .3s;
+
+}
+#description {
+  height: 100px;
+}
+
+/* 이동 버튼 */
+.buttons {
+  text-align: center;
+  margin: 10px;
+}
+
+.btn-hover {
+  width: 180px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  height: 50px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  margin-left: 10px;
+
+  border-radius: 20px;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-hover:focus {
+  outline: none;
+}
+
+.btn-hover.color-9 {
+  background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+  box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
 }
 </style>
