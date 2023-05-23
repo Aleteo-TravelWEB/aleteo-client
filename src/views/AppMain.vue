@@ -11,7 +11,6 @@
 
     <div class="content">
       <div>
-        여행 계획 목록 출력
         <main-attraction-list></main-attraction-list>
       </div>
     </div>
@@ -83,7 +82,7 @@ export default {
 .content {
   background: #ffffff;
   width: 100%;
-  top: 550px;
+  top: 557px;
   position: absolute;
 }
 </style>

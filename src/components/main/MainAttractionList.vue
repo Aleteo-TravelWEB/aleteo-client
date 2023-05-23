@@ -1,151 +1,81 @@
 <template>
-  <!-- <div style="width: 100px; height: 40px; color: black"></div> -->
-  <div>
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css" />
-    <div class="slide-container swiper">
-      <div class="slide-content">
-        <div class="card-wrapper swiper-wrapper">
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
-          <!-- -- -->
-          <div class="card swiper-slide">
-            <div class="image-content">
-              <span class="overlay"></span>
-              <div class="card-image">
-                <!-- 이미지 넣어 여기다 -->
-                이미지
-              </div>
-            </div>
-            <div class="card-content">
-              <h2 class="name">이름</h2>
-              <p class="description">설명</p>
-              <button class="button">버튼</button>
-            </div>
-          </div>
-          <!-- -- -->
+  <div class="slider">
+    <link
+      rel="stylesheet"
+      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <button id="prev" class="btn"><b-icon-arrow-left class="arrow"></b-icon-arrow-left></button>
+    <div class="card-content">
+      <!-- Card start-->
+      <div class="card">
+        <b-icon-heart class="icon"></b-icon-heart>
+        <div class="card-img">
+          <img
+            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
+            alt=""
+          />
+          <img
+            class="blur"
+            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
+            alt=""
+          />
+        </div>
+        <div class="card-text">
+          <h2>제목</h2>
+          <p>description</p>
         </div>
       </div>
-      <div class="swiper-button-next swiper-navBtn"></div>
-      <div class="swiper-button-prev swiper-navBtn"></div>
-      <div class="swiper-pagination"></div>
+      <!-- Card end -->
+      <!-- Card start-->
+      <div class="card">
+        <b-icon-heart></b-icon-heart>
+        <div class="card-img">
+          <img src="" alt="" />
+          <img
+            class="blur"
+            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
+            alt=""
+          />
+        </div>
+        <div class="card-text">
+          <h2>제목</h2>
+          <p>description</p>
+        </div>
+      </div>
+      <!-- Card end -->
+      <!-- Card start-->
+      <div class="card">
+        <b-icon-heart></b-icon-heart>
+        <div class="card-img">
+          <img
+            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
+            alt=""
+          />
+          <img
+            class="blur"
+            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
+            alt=""
+          />
+        </div>
+        <div class="card-text">
+          <h2>제목</h2>
+          <p>description</p>
+        </div>
+      </div>
+      <!-- Card end -->
     </div>
+    <button id="next" class="btn">
+      <b-icon-arrow-right class="arrow"></b-icon-arrow-right>
+    </button>
   </div>
 </template>
 
 <script>
-import Swiper from "swiper";
-
 export default {
   name: "MainAttractionList",
   components: {},
@@ -155,34 +85,21 @@ export default {
     };
   },
   mounted() {
-    new Swiper(".slide-content", {
-      slidesPerView: 3,
-      spaceBetween: 25,
-      loop: true,
-      centerSlide: true,
-      fade: true,
-      grabCursor: true,
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-        dynamicBullets: true,
-      },
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-      breakpoints: {
-        0: {
-          slidesPerView: 1,
-        },
-        520: {
-          slidesPerView: 2,
-        },
-        950: {
-          slidesPerView: 3,
-        },
-      },
-    });
+    const next = document.querySelector("#next");
+    const prev = document.querySelector("#prev");
+
+    function handleScrollNext() {
+      const cards = document.querySelector(".card-content");
+      cards.scrollLeft = cards.scrollLeft +=
+        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
+    }
+    function handleScrollPrev() {
+      const cards = document.querySelector(".card-content");
+      cards.scrollLeft = cards.scrollLeft -=
+        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
+    }
+    next.addEventListener("click", handleScrollNext);
+    prev.addEventListener("click", handleScrollPrev);
   },
   created() {},
   methods: {},
@@ -190,139 +107,130 @@ export default {
 </script>
 
 <style scoped>
-/* Google Fonts - Poppins */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+/* 슬라이드 */
+body {
+  font-family: Inter;
 }
-.template {
-  min-height: 100vh;
+
+.card {
+  width: 300px;
+  height: auto;
+  background: #fff;
+  border-radius: 30px;
+  position: relative;
+  z-index: 10;
+  margin: 25px;
+  min-height: 330px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+  transform: translate(0, -10px);
+  box-shadow: 0px 17px 35px 0px rgba(0, 0, 0, 0.07);
+}
+
+.card .icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 15px;
+  font-size: 1rem;
+  line-height: 3.2rem;
+}
+.card .card-text {
+  padding: 20px;
+}
+
+p {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-top: 10px;
+}
+
+.card .card-img {
+  transform: translate(90px, -10px);
+  margin: 0 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #efefef;
+  transition: all 0.35s ease-out;
 }
-.slide-container {
-  max-width: 800px;
-  width: 80%;
-  padding: 10px 0;
+
+.card img {
+  height: 180px;
 }
-.slide-content {
-  margin: 0 40px;
-  overflow: hidden;
-  border-radius: 25px;
+.card img.blur {
+  position: absolute;
+  filter: blur(15px);
+  z-index: -1;
+  opacity: 0.4;
+  transform: translate(-160px, 30px);
+  transition: all 0.35s ease-out;
 }
-.card {
-  border-radius: 25px;
-  background-color: #fff;
+.card:hover .card-img {
+  transform: translate(70px, -15px);
 }
-.image-content,
+
+.card:hover .card-img img.blur {
+  transform: translate(-100px, 35px) scale(0.85);
+  opacity: 0.25;
+  filter: blur(20px);
+}
+
 .card-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 10px 14px;
-}
-.image-content {
-  position: relative;
-  row-gap: 5px;
-  padding: 25px 0;
-}
-.overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
+  justify-content: flex-start;
   width: 100%;
-  background-color: #4070f4;
-  border-radius: 25px 25px 0 25px;
+  overflow: auto;
+  padding-left: 60px;
+  padding-right: 50px;
+  scroll-behavior: smooth;
 }
-.overlay::before,
-.overlay::after {
+
+.card-content::-webkit-scrollbar {
+  height: 0px;
+}
+
+.card-content:after {
   content: "";
-  position: absolute;
-  right: 0;
-  bottom: -40px;
-  height: 40px;
-  width: 40px;
-  background-color: #4070f4;
-}
-.overlay::after {
-  border-radius: 0 25px 0 0;
-  background-color: #fff;
-}
-.card-image {
+  display: block;
+  min-width: 20px;
+  height: 100px;
   position: relative;
-  height: 150px;
-  width: 150px;
-  border-radius: 50%;
+}
+
+.btn {
+  min-width: 60px;
+  margin: auto 30px;
+  height: 60px;
+  border-radius: 20px;
   background: #fff;
-  padding: 3px;
-}
-.card-image .card-img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid #4070f4;
-}
-.name {
-  font-size: 18px;
-  font-weight: 500;
-  color: #333;
-}
-.description {
-  font-size: 14px;
-  color: #707070;
-  text-align: center;
-}
-.button {
-  border: none;
-  font-size: 16px;
-  color: #fff;
-  padding: 8px 16px;
-  background-color: #4070f4;
-  border-radius: 6px;
-  margin: 14px;
+  border: 0px;
+  outline: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  z-index: 9999;
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
 }
-.button:hover {
-  background: #265df2;
+
+.btn:hover {
+  box-shadow: 0px 17px 35px 0px rgba(0, 0, 0, 0.07);
 }
-.swiper-navBtn {
-  color: #6e93f7;
-  transition: color 0.3s ease;
+
+.btn .arrow {
+  font-size: 1.2rem;
 }
-.swiper-navBtn:hover {
-  color: #4070f4;
-}
-.swiper-navBtn::before,
-.swiper-navBtn::after {
-  font-size: 35px;
-}
-.swiper-button-next {
-  right: 0;
-}
-.swiper-button-prev {
-  left: 0;
-}
-.swiper-pagination-bullet {
-  background-color: #6e93f7;
-  opacity: 1;
-}
-.swiper-pagination-bullet-active {
-  background-color: #4070f4;
-}
-@media screen and (max-width: 768px) {
-  .slide-content {
-    margin: 0 10px;
-  }
-  .swiper-navBtn {
-    display: none;
-  }
+
+.slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(242, 243, 248);
+  width: 100%;
+  height: 40vh;
+  overflow: hidden;
 }
 </style>
