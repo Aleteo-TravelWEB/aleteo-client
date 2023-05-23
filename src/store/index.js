@@ -10,9 +10,6 @@ import attractionStore from '@/store/modules/attractionStore';
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-    UserId: "ssafy"
-  },
   getters: {
   },
   mutations: {

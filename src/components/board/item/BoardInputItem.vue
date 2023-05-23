@@ -24,6 +24,9 @@
             style="height: 500px;"
           ></b-form-textarea>
         </b-form-group>
+        <b-form-group id="image-group" label="사진" label-for="images" style="color: black">
+          <b-form-file id="images" placeholder="파일 없음" v-model="board.image"></b-form-file>
+        </b-form-group>
 
         <div class="d-flex flex-row mt-3">
         <button type="submit" class="m-1 btn btn-jelly" v-if="this.type === 'write'">글작성</button>
@@ -38,6 +41,10 @@
 
 <script>
 import { writeBoard, modifyBoard, viewBoard } from "@/api/board";
+import { mapState } from "vuex";
+
+const userStore = "userStore";
+
 
 export default {
   name: 'BoardInputItem',
@@ -71,6 +78,9 @@ export default {
       this.ifUserid = true;
     }
   },
+  computed: {
+    ...mapState(userStore, ["userInfo"]),
+  },
   methods: {
     moveList() {
       this.$router.push({ name: "boardlist"});
@@ -100,7 +110,7 @@ export default {
     },
     writeBoard() {
       let param = {
-        userId:this.$store.state.UserId,
+        userId: this.userInfo.userId,
         title: this.board.title,
         content: this.board.content,
       };
