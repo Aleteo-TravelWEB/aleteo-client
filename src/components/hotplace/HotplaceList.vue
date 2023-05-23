@@ -135,9 +135,6 @@ export default {
     listHotplace(
       ({ data }) => {
         this.hotplaces = data;
-        for (let i = 0; i < data.length; i++) {
-          console.log(data[i]);
-        }
       },
       (error) => {
         console.log(error);

@@ -55,7 +55,7 @@
             <div class="card">
               <h2 class="card-title text-center">Hot Place</h2>
               <div class="card-body py-md-4">
-                <form _lpchecked="1">
+                <div _lpchecked="1">
                   <div class="form-group">
                     <input
                       type="text"
@@ -87,7 +87,7 @@
                     <a @click="closeModal">취소</a>
                     <button class="btn btn-primary" @click="write">등록 하기</button>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
