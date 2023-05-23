@@ -119,7 +119,9 @@ export default {
       },
       showModal: false,
       img: null,
-      imagechanged: false
+      imagechanged: false,
+      // marker: null,
+      map: null,
     };
   },
   mounted() {
@@ -157,7 +159,6 @@ export default {
       const keyword = this.search.keyword;
 
       if (keyword === null || keyword.length === 0) {
-        // 검색창 흔들리는 것으로 바꾸고 싶당.
         alert("검색어를 입력하세요!");
         return;
       }
@@ -170,9 +171,8 @@ export default {
         this.search.results = data;
         console.log(data);
 
-        console.log(status);
-
         if (status === window.kakao.maps.services.Status.OK) {
+          this.displayMarker(data);
           this.displayPagination(pagination);
         } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
           alert("검색 결과가 없습니다.");
@@ -182,6 +182,31 @@ export default {
           return;
         }
       });
+    },
+    displayMarker(data) {
+      const bounds = new window.kakao.maps.LatLngBounds();
+
+        console.log(this.markers);
+
+        this.markers.forEach(marker => {
+          console.log("marker ::");
+          console.log(marker)
+          marker.setMap(null);
+        })
+        this.markers = [];
+
+        for(let i=0;i<data.length;i++){
+          var marker = new window.kakao.maps.Marker({
+            map: this.map, // 마커를 표시할 지도
+            position: new window.kakao.maps.LatLng(data[i].y, data[i].x), // 마커를 표시할 위치
+            title: data[i].place_name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+          });
+
+          this.markers.push(marker);
+          bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x));
+        }
+
+        this.map.setBounds(bounds);
     },
     displayPagination(pagination) {
       const paginationEl = document.getElementById("pagination");

@@ -3,8 +3,8 @@ import { apiInstance } from "./index.js";
 const api = apiInstance();
 
 // Hotplace 목록 반환
-function listHotplace(success, fail) {
-  api.get(`/hotplace/list`).then(success).catch(fail);
+async function listHotplace(success, fail) {
+  await api.get(`/hotplace/list`).then(success).catch(fail);
 }
 // Hotplace id 별로 가져오기
 function viewHotplace(hotplaceId, success, fail) {
