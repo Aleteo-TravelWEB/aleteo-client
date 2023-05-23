@@ -113,7 +113,10 @@
             </div>
           </div>
           <div class="d-flex justify-content-center mt-2" v-if="isShowAdmin">
-            <input type="text" width="400px;" v-model="adminCheck">
+            <input class="form-input p-3" type="text" style="width: 400px; border: 1px solid black; border-radius:20px;" v-model="adminNumber" placeholder="입력 후 엔터" @keyup.enter="adminCheck">
+          </div>
+          <div class="d-flex justify-content-center mt-2" v-if="adminResultDiv">
+            <p style="color: #0261ce;">이메일 인증이 완료되었습니다.</p>
           </div>
           <div class="d-flex justify-content-center mt-2" v-if="isShowJoin">
             <div :class="{ 'shake-effect': isShaking }" style="color: crimson">
@@ -170,20 +173,19 @@ export default {
       isShowJoin: false,
       isShaking: false,
       isEmailPass: false, // 이메일 인증
-      adminCheck: null, // 인증 번호
+      adminNumber: null, // 인증 번호
       isShowAdmin: false,
+      adminResultDiv: false, // 이메일 인증이 성공시 결과 출력화면
     };
   },
   computed: {
-    ...mapState(userStore, ["isValidId", "isJoin", "adminNum"]),
+    ...mapState(userStore, ["isValidId", "isJoin", "adminKey", "isSendAdminMail"]),
   },
   methods: {
     ...mapActions(userStore, ["idConfirm", "userJoin", "sendUserAdminEmail"]),
     async confirmId() {
       let resultDiv = document.querySelector("#check-id-result");
-      if (this.user.userId === null) {
-        return;
-      }
+  
       if (this.user.userId.length < 6 || this.user.userId.length > 16) {
         resultDiv.setAttribute("class", "mb-3 text-danger");
         resultDiv.textContent = "아이디는 6자 이상 16자 이하 입니다.";
@@ -200,6 +202,9 @@ export default {
           resultDiv.textContent = "사용할 수 없는 아이디 입니다.";
           this.isJoinIdPass = false;
         }
+      }
+      if (this.user.userId || this.user.userName || this.user.userPwd || !this.isEmailPass) {
+        return;
       }
     },
     async join() {
@@ -257,14 +262,23 @@ export default {
       await this.sendUserAdminEmail([this.user.emailId, this.user.emailDomain]); 
       if (this.isSendAdminMail) {
         alert("메일 전송이 완료되었습니다.");
-        console.log("adminCheck :: " + this.adminCheck);
-        this.adminCheck = this.adminNum;
+        // console.log("adminCheck :: " + this.adminKey);
       } else {
         console.log("admin mail send :: fail");
       }
     },
     // 인증번호와 맞는지 비교
-
+    adminCheck() {
+      if (this.adminNumber && (this.adminNumber === this.adminKey)) {
+        alert("인증이 완료되었습니다.");
+        this.isEmailPass = true;
+        this.adminResultDiv = true;
+        this.isShowAdmin = false;
+      } else {
+        console.log(this.adminKey);
+        console.log("admin check :: fail");
+      }
+    },
   },
 };
 </script>

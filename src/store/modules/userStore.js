@@ -14,7 +14,7 @@ const userStore = {
     isModify: false,
     isSendPwdMail: false,
     isSendAdminMail: false,
-    adminNum: null,
+    adminKey: null,
   },
   getters: {
     checkUserInfo: function (state) {
@@ -72,6 +72,7 @@ const userStore = {
             commit("SET_IS_VALID_TOKEN", true);
             sessionStorage.setItem("access-token", accessToken);
             sessionStorage.setItem("refresh-token", refreshToken);
+            alert("회원가입이 완료되었습니다");
           } else {
             commit("SET_IS_LOGIN", false);
             commit("SET_IS_LOGIN_ERROR", true);
@@ -244,6 +245,8 @@ const userStore = {
         [emailId, emailDomain],
         ({ data }) => {
           if (data.message === "success") {
+            // console.log("data ::");
+            // console.log(data);
             commit("SET_IS_SEND_ADMIN_MAIL", true);
             commit("SET_ADMIN_NUM", data.adminKey);
           } else {
