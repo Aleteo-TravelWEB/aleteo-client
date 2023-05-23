@@ -85,6 +85,32 @@ const routes = [
     path: "/notice",
     name: "notice",
     component: AppNotice,
+    redirect: "notice/list",
+    children: [
+      {
+        path: "list",
+        name: "noticelist",
+        component: () => import("@/components/notice/NoticeList"),
+      }, 
+      {
+        path: "write",
+        name: "noticewrite",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/notice/NoticeWrite"),
+      },
+      {
+        path: "view/:id",
+        name: "noticeview",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/notice/NoticeView"),
+      },
+      {
+        path: "delete",
+        name: "deletenotice",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/notice/NoticeDelete"),
+      },
+    ]
   },
   {
     path: "/plan",

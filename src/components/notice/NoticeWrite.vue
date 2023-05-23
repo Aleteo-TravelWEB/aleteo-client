@@ -2,19 +2,19 @@
     <b-container class="bv-example-row mt-3">
     <b-row>
       <b-col>
-        <h3 style="color: black;">팁 등록</h3>
+        <h3 style="color: black;">공지사항 등록</h3>
       </b-col>
     </b-row>
-    <board-input-item type="write" class="mb-5" />
+    <notice-input-item type="write" class="mb-5" />
   </b-container>
 </template>
 
 <script>
-import BoardInputItem from './item/BoardInputItem.vue';
+import NoticeInputItem from './item/NoticeInputItem.vue';
 
 export default {
-  name: 'BoardWrite',
-  components: {BoardInputItem},
+  name: 'NoticeWrite',
+  components: {NoticeInputItem},
   data() {
     return {
       message: '',

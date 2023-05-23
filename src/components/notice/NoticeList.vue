@@ -3,41 +3,48 @@
     <b-container class="bv-example-row mt-3">
       <b-row>
         <b-col>
-          <div class="mt-3 mb-4"><h3 style="color: black">여행해 듀오</h3></div>
+          <div class="mt-3 mb-4"><h3 style="color: black">공지사항</h3></div>
         </b-col>
       </b-row>
-      <b-row class="mb-5 border p-3 d-flex align-items-center" style="border-radius: 20px">
-      <div class="mx-2" style="color: black">두근두근 설레는 여행을 떠나보자</div>
-      <b-col class="text-right buttons">
-        <button
-          class="btn-hover color-9"
-          style="width: 400px"
-          variant="outline-prim"
-          @click="moveWrite()"
-        >
-          나만의 팁 공유하기
-        </button>
-      </b-col>
-    </b-row>
+      <template v-if="userInfo && userInfo.grade === '관리자'">
+      <b-row class="mb-5 p-3 d-flex align-items-center" style="border-radius: 20px">
+        <b-col class="text-right buttons">
+          <button
+            class="btn-hover color-9"
+            style="width: 400px"
+            variant="outline-prim"
+            @click="moveWrite()"
+          >
+            공지사항 등록하기
+          </button>
+        </b-col>
+      </b-row>
+      </template>
       <b-row>
         <b-col>
           <b-table
             id="list"
             hover
-            :items="boards"
+            :items="notices"
             :per-page="perpage"
             :current-page="currentPage"
             :fields="fields"
-            @row-clicked="viewBoard"
+            @row-clicked="viewNotice"
             class="table-hover"
+            :tbody-tr-class="rowClass"
           >
             <template #cell(index)="data">
-              {{ boards.length - data.index - (currentPage - 1) * perpage }}
+              {{ notices.length - data.index - (currentPage - 1) * perpage }}
             </template>
             <template #cell(title)="data">
-              <router-link :to="{ name: 'boardview', params: { id: data.item.id } }" class="link">
+              <router-link :to="{ name: 'noticeview', params: { id: data.item.id } }" class="link">
                 {{ data.item.title }}
               </router-link>
+            </template>
+            <template #row="rowProps">
+              <b-tr class="highlight-row">
+                <slot name="row" v-bind="rowProps"></slot>
+              </b-tr>
             </template>
           </b-table>
         </b-col>
@@ -55,21 +62,24 @@
 </template>
 
 <script>
-import { listBoard } from "@/api/board";
+import { listNotice } from "@/api/notice";
+import { mapState } from 'vuex';
+
+const userStore = "userStore";
 
 export default {
-  name: "BoardList",
-  components: {},
+  name: "NoticeList",
+  components: {
+  },
   props: {
     userId: String,
   },
   data() {
     return {
-      boards: [],
+      notices: [],
       currentPage: 1,
       perpage: 10,
       fields: [
-        // { key: "id", label: "글번호", tdClass: "tdClass" },
         { key: "index", label: "NO", tdClass: "tdClass" },
         { key: "title", label: "제목", tdClass: "tdClass" },
         { key: "userName", label: "작성자", tdClass: "tdClass" },
@@ -85,11 +95,15 @@ export default {
       key: null,
       word: null,
     };
-    listBoard(
+    listNotice(
       param,
       ({ data }) => {
-        this.boards = data;
+        this.notices = data;
         console.log(data);
+        this.notices.forEach(element => {
+          if (element.pin > 0) element.isPin = true;
+          else element.isPin = false;
+        });
       },
       (error) => {
         console.log(error);
@@ -97,18 +111,23 @@ export default {
     );
   },
   computed: {
+    ...mapState(userStore, ["userInfo"]),
     rows() {
-      return this.boards.length;
+      return this.notices.length;
     },
   },
   methods: {
-    moveWrite() {
-      this.$router.push({ name: "boardwrite" });
+    rowClass(item, type) {
+      if (!item || type !== 'row') return
+      if (item.pin > 0) return 'table-secondary'
     },
-    viewBoard(board) {
+    moveWrite() {
+      this.$router.push({ name: "noticewrite" });
+    },
+    viewNotice(notice) {
       this.$router.push({
-        name: "boardview",
-        params: { id: board.id },
+        name: "noticeview",
+        params: { id: notice.id },
       });
     },
   },
@@ -169,5 +188,9 @@ export default {
 .link {
   text-decoration: none;
   color: black;
+}
+
+.highlight-row {
+  background-color: yellow; 
 }
 </style>

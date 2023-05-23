@@ -1,5 +1,5 @@
 <template>
-  <div>자유 게시판</div>
+  <router-view></router-view>
 </template>
 
 <script>
