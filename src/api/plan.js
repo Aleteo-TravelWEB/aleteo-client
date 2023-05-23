@@ -53,7 +53,7 @@ function getAttrImg(title, success, fail) {
 
 // 좋아요한 여행 게획 불러오기
 function viewGoodPlan(userId, success, fail) {
-  api.get(`/plan/good/list/${userId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
+  api.get(`/plan/good/${userId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
 }
 
 export { listPlan, regist, viewPlan, modify, deletePlan, getAttrImg, viewGoodPlan };
