@@ -49,7 +49,7 @@
     />
     <!-- 모달창 -->
 
-    <b-modal id="deatil" v-model="showDetailModal">
+    <b-modal id="deatil" v-model="showDetailModal" hide-footer>
       <template #modal-header>
         <!-- 커스텀 헤더 내용 추가 -->
         <div class="hover-div d-flex flex-end mb-3" @click="closeModal()">

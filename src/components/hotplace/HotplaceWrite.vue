@@ -436,20 +436,20 @@ dl {
 }
 
 dl > div {
-  background: antiquewhite;
+  background: #dbe2ef;
   padding: 1rem;
 }
 
 dl > div:nth-child(4n - 2) {
-  background: lavenderblush;
+  background: #dbe2ef;
 }
 
 dl > div:nth-child(4n - 1) {
-  background: azure;
+  background: #dbe2ef;
 }
 
 dl > div:nth-child(4n) {
-  background: lavender;
+  background: #dbe2ef;
 }
 
 dt {
