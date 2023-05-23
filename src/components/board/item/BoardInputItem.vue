@@ -25,19 +25,14 @@
           ></b-form-textarea>
         </b-form-group>
         <b-form-group id="image-group" label="사진" label-for="images" style="color: black">
-          <b-form-file
-            id="images"
-            placeholder="파일 없음"
-            @change="boardimg"
-            v-model="this.img"
-          ></b-form-file>
+          <input type="file" @change="boardimg" placeholder="사진" />
         </b-form-group>
 
         <div class="d-flex flex-row mt-3">
           <button type="submit" class="m-1 btn btn-jelly" v-if="this.type === 'write'">
             글작성
           </button>
-          <bbutton type="submit" class="m-1 btn btn-jelly" v-else>글수정</bbutton>
+          <button type="submit" class="m-1 btn btn-jelly" v-else>글수정</button>
           <button type="reset" class="m-1 btn btn-jelly" style="background-color: #ff4141">
             초기화
           </button>
@@ -61,7 +56,8 @@ export default {
   data() {
     return {
       board: {
-        user_id: "",
+        userId: "",
+        userName: "",
         title: "",
         content: "",
       },
@@ -72,7 +68,6 @@ export default {
   },
   props: {
     type: { type: String },
-    UserId: { type: String },
   },
   created() {
     if (this.type == "modify") {
@@ -102,8 +97,7 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.board.title &&
-        ((msg = "제목을 입력해주세요"), (err = false), this.$refs.titile.focus());
+      !this.board.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs.title.focus());
       err &&
         !this.board.content &&
         ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
@@ -116,6 +110,7 @@ export default {
 
       this.board.title = "";
       this.board.content = "";
+      this.img = "";
       // this.moveList();
     },
     onMove() {
@@ -126,7 +121,7 @@ export default {
     writeBoard() {
       let param = {
         userId: this.userInfo.userId,
-        userName: this.userInof.userName,
+        userName: this.userInfo.userName,
         title: this.board.title,
         content: this.board.content,
       };
@@ -146,13 +141,16 @@ export default {
       );
     },
     modifyBoard() {
+      console.log(this.board);
       let param = {
-        id: this.$route.params.id,
+        userId: this.userInfo.userId,
+        id: this.board.id,
+        userName: this.userInfo.userName,
         title: this.board.title,
         content: this.board.content,
       };
       modifyBoard(
-        param,
+        [param, this.img],
         ({ data }) => {
           let msg = "수정 처리시 문제가 발생 했습니다.";
           if (data === "success") {
@@ -167,17 +165,16 @@ export default {
       );
     },
     boardimg(event) {
-      this.img = event.target.files[0];
-      this.imagechanged = true;
-      if (this.img) {
-        this.fileToBlob(this.img)
-          .then((data) => {
-            console.log(data);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+      if (event.target.files[0] !== undefined) {
+        this.img = event.target.files[0];
+        this.imagechanged = true;
+        console.log("참");
+      } else {
+        this.img = null;
+        this.imagechanged = false;
+        console.log("엘스");
       }
+      console.log(event.target.files[0]);
     },
   },
 };
