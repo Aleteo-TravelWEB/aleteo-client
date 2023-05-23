@@ -26,6 +26,14 @@ export default {
 </script>
 
 <style>
+@font-face {
+    font-family: 'neon';
+    src:  url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+}
+
+* {
+  font-family: 'neon';
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -42,6 +42,8 @@
             <div>좋아요한 여행들</div>
           </div>
 
+          <hr>
+
           <b-button variant="outline-primary" href="#" class="mr-1">
             <router-link :to="{ name: 'modify' }" class="link">내정보수정</router-link>
           </b-button>

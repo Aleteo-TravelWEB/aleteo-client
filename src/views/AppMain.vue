@@ -10,15 +10,21 @@
     </div>
 
     <div class="content">
-      <div>여행 계획 목록 출력</div>
+      <div>여행 계획 목록 출력
+        <main-attrction-list></main-attrction-list>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import MainAttrctionList from "@/components/main/MainAttrctionList.vue"
+
 export default {
   name: "AppMain",
-  components: {},
+  components: {
+    MainAttrctionList,
+  },
   data() {
     return {
       message: "",

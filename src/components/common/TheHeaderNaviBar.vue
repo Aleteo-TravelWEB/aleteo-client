@@ -11,20 +11,18 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item href="/attraction">관광지</b-nav-item>
-          <b-nav-item href="/plan">여행계획</b-nav-item>
+          <b-nav-item href="/plan">나만의플랜</b-nav-item>
           <b-nav-item href="/hotplace">핫플레이스</b-nav-item>
           <b-nav-item href="/notice">공지사항</b-nav-item>
-          <b-nav-item href="/board">게시판</b-nav-item>
+          <b-nav-item href="/board">여행해듀오</b-nav-item>
         </b-navbar-nav>
         <!-- after login -->
         <b-navbar-nav class="ml-auto" v-if="userInfo">
           <b-nav-item class="align-self-center">
+            
+            <router-link :to="{ name: 'mypage' }" class="link align-self-center">
             <b-avatar variant="light"></b-avatar> {{ userInfo.userName }}님 환영합니다.
-          </b-nav-item>
-          <b-nav-item class="align-self-center">
-            <router-link :to="{ name: 'mypage' }" class="link align-self-center"
-              >마이페이지</router-link
-            >
+            </router-link>
           </b-nav-item>
           <b-nav-item class="align-self-center link" @click.prevent="onClickLogout"
             >로그아웃</b-nav-item
