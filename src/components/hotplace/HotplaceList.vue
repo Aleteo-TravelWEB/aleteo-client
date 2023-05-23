@@ -5,21 +5,21 @@
     </div>
     <div class="buttons mb-5">
       <button
-          class="btn-hover color-9 mx-3"
-          style="width: 200px"
-          variant="outline-prim"
-          @click="movetoRegist()"
-        >
-          등록하러 가기
-        </button>
-        <button
-          class="btn-hover color-9"
-          style="width: 200px"
-          variant="outline-prim"
-          @click="movetoMyHotplace()"
-        >
-          내 핫플레이스
-        </button>
+        class="btn-hover color-9 mx-3"
+        style="width: 200px"
+        variant="outline-prim"
+        @click="movetoRegist()"
+      >
+        등록하러 가기
+      </button>
+      <button
+        class="btn-hover color-9"
+        style="width: 200px"
+        variant="outline-prim"
+        @click="movetoMyHotplace()"
+      >
+        내 핫플레이스
+      </button>
     </div>
     <div class="grid mb-5">
       <div class="grid_item" v-for="hotplace in pagination" :key="hotplace.id">
@@ -27,9 +27,9 @@
           <img class="card_img" :src="`/upload/hotplace/image/${hotplace.image}`" alt="thumnail" />
           <div class="card_content">
             <p class="card_header">{{ hotplace.title }}</p>
-            <div style="height : 55px">
+            <div style="height: 55px">
               <span class="card_text" v-if="hotplace.tag1 !== `null`">#{{ hotplace.tag1 }}</span>
-              <br>
+              <br />
               <span class="card_text" v-if="hotplace.tag2 !== `null`">#{{ hotplace.tag2 }}</span>
             </div>
             <button class="card_btn" @click="showdetail(hotplace)">
@@ -52,7 +52,9 @@
     <b-modal id="deatil" v-model="showDetailModal">
       <template #modal-header>
         <!-- 커스텀 헤더 내용 추가 -->
-        <b-button size="sm" variant="outline-danger" @click="closeModal()">close</b-button>
+        <div class="hover-div d-flex flex-end mb-3" @click="closeModal()">
+          <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
+        </div>
         <h5 class="header-title">{{ hotplace.title }}</h5>
       </template>
 
@@ -72,8 +74,12 @@
             style="object-fit: contain"
           />
           <hr style="width: 100%; border: none; border-top: 1px solid lightgray" />
-          <div class="d-flex justify-content-end">
-            <b-icon icon="heart"></b-icon>
+          <div class="d-flex justify-content-end mb-3">
+            <b-icon
+              :class="{ 'heart-effect': isHeart, 'default-effect': true }"
+              :icon="isHeart ? 'suit-heart-fill' : 'suit-heart'"
+              @click="pushHeart()"
+            ></b-icon>
           </div>
           <div style="display: flex">
             <div v-if="hotplace.tag1 !== `null`" style="margin-right: 10px">
@@ -85,8 +91,10 @@
           </div>
           <div>작성자 : {{ hotplace.userId }}</div>
           <hr style="width: 100%; border: none; border-top: 1px solid lightgray" />
-          <div>{{ hotplace.description }}</div>
-          <a :href="hotplace.mapUrl" target="_blank">지도상에서 확인하기</a>
+          <div class="mb-3">{{ hotplace.description }}</div>
+          <a :href="hotplace.mapUrl" target="_blank"
+            ><b-icon icon="pin-map"></b-icon><span class="mx-1">지도상에서 확인하기</span></a
+          >
         </div>
       </template>
     </b-modal>
@@ -96,6 +104,7 @@
 <script>
 import { listHotplace } from "@/api/hotplace";
 import { mapState } from "vuex";
+import http from "@/api/http";
 
 const userStore = "userStore";
 
@@ -116,9 +125,10 @@ export default {
         tag2: null,
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
-        mapUrl: null
+        mapUrl: null,
       },
       showDetailModal: false,
+      isHeart: false, // 하트 눌러져있는지 확인
     };
   },
   created() {
@@ -163,6 +173,18 @@ export default {
     showdetail(hotplace) {
       this.hotplace = hotplace;
       this.showDetailModal = true;
+      http
+        .get(`/hotplace/good/${this.userInfo.userId}/${this.hotplace.num}`, {
+          headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") },
+        })
+        .then(({ data }) => {
+          if (data.message === "success") {
+            this.isHeart = true;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       console.log(this.hotplace);
       console.log(this.showDetailModal);
     },
@@ -172,6 +194,50 @@ export default {
     closeModal() {
       this.showDetailModal = false;
     },
+    //////// 좋아요 start /////////
+    pushHeart() {
+      if (this.isHeart) {
+        this.isHeart = false;
+        console.log("좋아요에 제거");
+        http
+          .delete(`/hotplace/good/${this.userInfo.userId}/${this.hotplace.num}`, {
+            headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") },
+          })
+          .then(({ data }) => {
+            if (data.message === "success") {
+              // alert("좋아요 삭제 성공!");
+            } else {
+              console.log("좋아요 삭제 실패..");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        this.isHeart = true;
+        // console.log("좋아요에 추가");
+        // 좋아요에 추가
+        const goodHot = {
+          userId: this.userInfo.userId,
+          hotplaceId: this.hotplace.num,
+        };
+        http
+          .post(`/hotplace/good`, goodHot, {
+            headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") },
+          })
+          .then(({ data }) => {
+            if (data.message === "success") {
+              // alert("좋아요 등록!");
+            } else {
+              // console.log("좋아요 등록 실패ㅜ");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    //////// 좋아요 end /////////
   },
 };
 </script>
@@ -300,5 +366,32 @@ export default {
 .btn-hover.color-9 {
   background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
   box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+}
+
+.hover-div {
+  cursor: pointer;
+}
+
+/* heart effect  */
+
+@keyframes heart {
+  0% {
+    transform: scale(1);
+  }
+  17.5% {
+    transform: scale(0.5);
+  }
+}
+
+.default-effect {
+  cursor: pointer;
+}
+
+.heart-effect {
+  cursor: pointer;
+  will-change: transform;
+  transform-origin: 50% 50%;
+  animation: heart 0.5s;
+  color: crimson;
 }
 </style>

@@ -70,20 +70,22 @@
                     class="rounded border rounded border-5 bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
                     style="width: 100%; height: 10em"
                   >
-                    <div v-for="(place, index) in places" :key="index" class="border rounded">
-                      <b-row align-h="end">
-                        <b-icon
-                          class="col-3"
-                          icon="dash-square-fill"
-                          variant="danger"
-                          @click="deletePlace(place.placeId)"
-                        ></b-icon>
-                      </b-row>
-                      <div class="text-center p-2">
-                        <div class="place-title">{{ place.name }}</div>
-                        <div>{{ place.address }}</div>
+                    <draggable v-model="places" class="d-flex flex-row" @change="changePlaceLine()">
+                      <div v-for="(place, index) in places" :key="index" class="border rounded">
+                        <b-row align-h="end">
+                          <b-icon
+                            class="col-3"
+                            icon="dash-square-fill"
+                            variant="danger"
+                            @click="deletePlace(place.placeId)"
+                          ></b-icon>
+                        </b-row>
+                        <div class="text-center p-2">
+                          <div class="place-title">{{ place.name }}</div>
+                          <div>{{ place.address }}</div>
+                        </div>
                       </div>
-                    </div>
+                    </draggable>
                   </div>
                 </div>
                 <div class="divider mb-3"></div>
@@ -156,13 +158,16 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { viewPlan } from "@/api/plan";
+import draggable from "vuedraggable";
 
 const userStore = "userStore";
 const planStore = "planStore";
 
 export default {
   name: "PlanModify",
-  components: {},
+  components: {
+    draggable,
+  },
   computed: {
     ...mapState(planStore, ["isModify"]),
     ...mapState(userStore, ["userInfo"]),
@@ -616,6 +621,17 @@ export default {
         this.$router.push({ name: "planview", params: { planId: this.plan.id } });
       }
     },
+    //////////////////// 관광지 드래그 앤 드롭 start ///////////////////
+    changePlaceLine() {
+      this.deleteLine();
+
+      this.drawingFlag = false;
+
+      this.places.forEach((place) => {
+        this.drawLine(place, true);
+      });
+    },
+    //////////////////// 관광지 드래그 앤 드롭 end ///////////////////
   },
 };
 </script>
