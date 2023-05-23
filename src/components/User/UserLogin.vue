@@ -1,5 +1,5 @@
 <template>
-  <div class="signin">
+  <div class="signin mb-5">
     <div class="sign-container">
       <div class="signin">
         <form id="signin-form" method="POST" action="${root}/user/signin" role="search">
@@ -75,7 +75,7 @@
       </div>
     </div>
     <!-- 모달 창 start -->
-    <div v-if="showModal" class="modal shadow">
+    <div v-if="showModal" class="modal shadow mb-5">
       <div class="modal-content container">
         <div class="hover-div d-flex flex-end mb-3" @click="closeModal()">
           <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
@@ -156,7 +156,7 @@ export default {
       domains: [
         { value: null, text: "선택" },
         { value: "ssafy.com", text: "싸피" },
-        { value: "google.com", text: "구글" },
+        { value: "gmail.com", text: "구글" },
         { value: "naver.com", text: "네이버" },
         { value: "kakao.com", text: "카카오" },
       ],
@@ -198,10 +198,12 @@ export default {
     async findPwd() {
       console.log("findUser :: ");
       console.log(this.findUser);
+      alert("메일 전송이 완료되었습니다.");
       await this.sendUserPwdMail(this.findUser);
       if (this.isSendPwdMail) {
-        alert("메일 전송이 완료되었습니다.");
+        console.log("mail send :: true");
         this.showModal = false;
+        this.findUser = [];
       } else {
         this.isShowPwdResult = true;
         this.isShakingModal = true;

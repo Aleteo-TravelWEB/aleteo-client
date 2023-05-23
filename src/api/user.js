@@ -41,4 +41,12 @@ async function sendPwdMail(findUser, success, fail) {
   await api.post(`/user/find`, findUser, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail };
+async function sendAdminEmail([emailId, emailDomain], success, fail) {
+  const data = {
+    emailId: emailId,
+    emailDomain: emailDomain,
+  }
+  await api.post(`/user/email`, data , { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail, sendAdminEmail };

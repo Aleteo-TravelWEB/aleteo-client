@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail } from "@/api/user";
+import { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail, sendAdminEmail } from "@/api/user";
 
 const userStore = {
   namespaced: true,
@@ -13,6 +13,8 @@ const userStore = {
     isJoin: false,
     isModify: false,
     isSendPwdMail: false,
+    isSendAdminMail: false,
+    adminNum: null,
   },
   getters: {
     checkUserInfo: function (state) {
@@ -48,6 +50,12 @@ const userStore = {
     },
     SET_IS_SEND_PWD_MAIL: (state, isSendPwdMail) => {
       state.isSendPwdMail = isSendPwdMail;
+    },
+    SET_IS_SEND_ADMIN_MAIL: (state, isSendAdminMail) => {
+      state.isSendAdminMail = isSendAdminMail;
+    },
+    SET_ADMIN_NUM: (state, adminKey) => {
+      state.adminKey = adminKey;
     }
   },
   actions: {
@@ -229,7 +237,21 @@ const userStore = {
           }
         }
       )
-    }
+    },
+    // 이메일 인증 보내기
+    async sendUserAdminEmail({ commit }, [emailId, emailDomain]) {
+      await sendAdminEmail(
+        [emailId, emailDomain],
+        ({ data }) => {
+          if (data.message === "success") {
+            commit("SET_IS_SEND_ADMIN_MAIL", true);
+            commit("SET_ADMIN_NUM", data.adminKey);
+          } else {
+            commit("SET_IS_SEND_ADMIN_MAIL", false);
+          }
+        }
+      )
+    },
   }
 };
 

@@ -38,8 +38,8 @@
               />
             </div>
           </div>
-          <div class="row d-flex justify-content-center mt-4 mb-3">
-            <div class="col-10">
+          <div class=" d-flex justify-content-center mt-4 mb-3">
+            <div style="width: 400px;">
               <input
                 type="text"
                 v-model="user.userName"
@@ -50,8 +50,8 @@
               />
             </div>
           </div>
-          <div class="row d-flex justify-content-center my-4">
-            <div class="col-10">
+          <div class="d-flex justify-content-center my-4">
+            <div style="width: 400px;">
               <input
                 type="text"
                 v-model="user.userId"
@@ -63,13 +63,13 @@
               />
             </div>
           </div>
-          <div class="row d-flex justify-content-center my-4">
-            <div class="col-10">
+          <div class="d-flex justify-content-center my-4">
+            <div style="width: 400px;">
               <div id="check-id-result"></div>
             </div>
           </div>
-          <div class="row d-flex justify-content-center mt-4 mb-3">
-            <div class="col-10">
+          <div class="d-flex justify-content-center mt-4 mb-3">
+            <div style="width: 400px;">
               <input
                 type="password"
                 v-model="user.userPwd"
@@ -80,8 +80,8 @@
               />
             </div>
           </div>
-          <div class="row d-flex justify-content-center mt-4 mb-3">
-            <div class="col-10">
+          <div class="d-flex justify-content-center mt-4 mb-3">
+            <div style="width: 400px;">
               <input
                 type="password"
                 v-model="pwdCheck"
@@ -96,19 +96,24 @@
             </div>
           </div>
           <div class="d-flex row justify-content-center mt-4 mb-3">
-            <div class="col-10 d-flex">
+            <div class="d-flex align-items-center">
               <input
+                style="width: 200px;"
                 type="text"
                 v-model="user.emailId"
-                class="form-control col-5"
+                class="form-control"
                 name="emailId"
                 id="signin-emailId"
                 placeholder="이메일아이디"
               />
-              <span class="col-2 d-flex justify-content-center align-items-center">@</span>
+              <span class="mx-1 d-flex justify-content-center align-items-center">@</span>
 
-              <b-form-select v-model="user.emailDomain" :options="domains"></b-form-select>
+              <b-form-select style="width:100px;" v-model="user.emailDomain" :options="domains"></b-form-select>
+              <div class="mx-1 p-2 admin" @click="sendEmail">인증<br/>보내기</div>
             </div>
+          </div>
+          <div class="d-flex justify-content-center mt-2" v-if="isShowAdmin">
+            <input type="text" width="400px;" v-model="adminCheck">
           </div>
           <div class="d-flex justify-content-center mt-2" v-if="isShowJoin">
             <div :class="{ 'shake-effect': isShaking }" style="color: crimson">
@@ -156,7 +161,7 @@ export default {
       domains: [
         { value: null, text: "선택" },
         { value: "ssafy.com", text: "싸피" },
-        { value: "google.com", text: "구글" },
+        { value: "gmail.com", text: "구글" },
         { value: "naver.com", text: "네이버" },
         { value: "kakao.com", text: "카카오" },
       ],
@@ -164,13 +169,16 @@ export default {
       isJoinPwdPass: false,
       isShowJoin: false,
       isShaking: false,
+      isEmailPass: false, // 이메일 인증
+      adminCheck: null, // 인증 번호
+      isShowAdmin: false,
     };
   },
   computed: {
-    ...mapState(userStore, ["isValidId", "isJoin"]),
+    ...mapState(userStore, ["isValidId", "isJoin", "adminNum"]),
   },
   methods: {
-    ...mapActions(userStore, ["idConfirm", "userJoin"]),
+    ...mapActions(userStore, ["idConfirm", "userJoin", "sendUserAdminEmail"]),
     async confirmId() {
       let resultDiv = document.querySelector("#check-id-result");
       if (this.user.userId === null) {
@@ -239,6 +247,24 @@ export default {
     clickInputTag() {
       this.$refs["image"].click();
     },
+    // 인증 이메일 보내기
+    async sendEmail() {
+      this.isShowAdmin = true;
+      console.log("admin email :: ");
+      console.log(this.user.emailId);
+      console.log(this.user.emailDomain);
+      alert("인증번호가 발송되었습니다.")
+      await this.sendUserAdminEmail([this.user.emailId, this.user.emailDomain]); 
+      if (this.isSendAdminMail) {
+        alert("메일 전송이 완료되었습니다.");
+        console.log("adminCheck :: " + this.adminCheck);
+        this.adminCheck = this.adminNum;
+      } else {
+        console.log("admin mail send :: fail");
+      }
+    },
+    // 인증번호와 맞는지 비교
+
   },
 };
 </script>
@@ -306,4 +332,9 @@ export default {
 .image-content {
   cursor: pointer;
 }
+
+.admin:hover {
+  cursor: pointer;
+}
+
 </style>
