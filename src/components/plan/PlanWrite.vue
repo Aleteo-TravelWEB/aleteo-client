@@ -6,7 +6,6 @@
       </div>
       <div class="map-area">
         <div class="searchbox rounded">
-          <!-- <form class="d-flex my-3" onsubmit="return false;" role="search"> -->
           <div class="d-flex flex-row justify-content-center">
             <input
               id="search-keyword"
@@ -27,7 +26,6 @@
               검색
             </button>
           </div>
-          <!-- </form> -->
           <div class="results">
             <div
               class="place d-flex justify-content-between"
@@ -66,20 +64,22 @@
               class="rounded bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
               style="width: 100%; height: 10em"
             >
-              <div v-for="(place, index) in places" :key="index" class="border rounded">
-                <b-row align-h="end">
-                  <b-icon
-                    class="col-3"
-                    icon="dash-square-fill"
-                    variant="danger"
-                    @click="deletePlace(place.placeId)"
-                  ></b-icon>
-                </b-row>
-                <div class="text-center p-2">
-                  <div class="place-title">{{ place.name }}</div>
-                  <div>{{ place.address }}</div>
+              <draggable v-model="places" @change="changePlaceList()" class="d-flex flex-row">
+                <div v-for="(place, index) in places" :key="index" class="border rounded">
+                  <b-row align-h="end">
+                    <b-icon
+                      class="col-3"
+                      icon="dash-square-fill"
+                      variant="danger"
+                      @click="deletePlace(place.placeId)"
+                    ></b-icon>
+                  </b-row>
+                  <div class="text-center p-2">
+                    <div class="place-title">{{ place.name }}</div>
+                    <div>{{ place.address }}</div>
+                  </div>
                 </div>
-              </div>
+              </draggable>
             </div>
           </div>
         </div>
@@ -153,6 +153,7 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 // import { attrImageInstance } from "@/api/index";
 import axios from "axios";
+import draggable from "vuedraggable";
 
 // const http = attrImageInstance();
 
@@ -162,7 +163,9 @@ const attractionStore = "attractionStore";
 
 export default {
   name: "PlanWrite",
-  components: {},
+  components: {
+    draggable,
+  },
   computed: {
     ...mapState(planStore, ["isRegist"]),
     ...mapState(userStore, ["userInfo"]),
@@ -529,8 +532,8 @@ export default {
       };
       this.places.push(placeData);
 
-      console.log(" data :: ");
-      console.log(placeData);
+      // console.log(" data :: ");
+      // console.log(placeData);
 
       // 선택된 애를 제외하고 마크 삭제
       let lat = (data.y * 1).toFixed(13);
@@ -592,7 +595,7 @@ export default {
           `https://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=wRLehfal1iPUgU5lXebqFzRhzIiCoN%2B%2FiJxmXuf2GQy4b6eK9SxyBpjfC6%2FnQuwQbakh6HgE%2BNpykN%2B691jFUw%3D%3D&keyword=${encode}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&arrange=A&_type=json`
         )
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           if (data.response.body.items !== "") {
             this.attrImage = data.response.body.items.item[0].galWebImageUrl;
           } else {
@@ -618,6 +621,19 @@ export default {
         this.$router.push({ name: "planlist" });
       }
     },
+    ///////////////////// 관광지 리스트 드래그 start /////////////////////
+    changePlaceList() {
+      console.log("change::");
+
+      this.deleteLine();
+
+      this.drawingFlag = false;
+
+      this.places.forEach((place) => {
+        this.drawLine(place, true);
+      });
+    },
+    ///////////////////// 관광지 리스트 드래그 end /////////////////////
   },
 };
 </script>
