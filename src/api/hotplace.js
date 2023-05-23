@@ -32,7 +32,7 @@ function writeHotplace([hotplace, image], success, fail) {
     .post(`/hotplace`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") 
+        "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")
       },
     })
     .then(success)
@@ -57,19 +57,24 @@ async function modifyHotplace1([hotplace, image], success, fail) {
     .put(`/hotplace`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") 
+        "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")
       },
     })
     .then(success)
     .catch(fail);
 }
 async function modifyHotplace2(hotplace, success, fail) {
-  await api.put(`/hotplace/${hotplace.num}`, JSON.stringify(hotplace),  { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
+  await api.put(`/hotplace/${hotplace.num}`, JSON.stringify(hotplace), { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
 }
 
 // Hotplace 글 삭제
 function deleteHotplace(hotplaceId, success, fail) {
-  api.delete(`/hotplace/${hotplaceId}`,  { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
+  api.delete(`/hotplace/${hotplaceId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
+}
+
+// 좋아요한 핫플레이스 불러오기
+function viewGoodHotplace(userId, success, fail) {
+  api.get(`/hotplace/good/${userId}`, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
 }
 
 export {
@@ -79,4 +84,5 @@ export {
   writeHotplace,
   modifyHotplace1,
   modifyHotplace2,
+  viewGoodHotplace,
 };

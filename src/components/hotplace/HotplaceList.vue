@@ -58,7 +58,7 @@
         <h5 class="header-title">{{ hotplace.title }}</h5>
       </template>
 
-      <template #default>
+      <template>
         <div
           style="
             display: flex;
@@ -126,6 +126,7 @@ export default {
         latitude: null, // 위도 => y
         longitude: null, // 경도 => x
         mapUrl: null,
+        num: null,
       },
       showDetailModal: false,
       isHeart: false, // 하트 눌러져있는지 확인
@@ -190,6 +191,7 @@ export default {
     },
     closeModal() {
       this.showDetailModal = false;
+      this.isHeart = false;
     },
     //////// 좋아요 start /////////
     pushHeart() {

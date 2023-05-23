@@ -32,17 +32,29 @@
           </b-container>
           <hr class="my-4" />
 
-          <div class="mb-3">
-            <b-icon
-              icon="bookmark-heart"
-              font-scale="6"
-              class="mb-2 plan-icon"
-              @click="showGoodPlans()"
-            />
-            <div>좋아요한 여행들</div>
+          <div class="d-flex flex-row justify-content-around">
+            <div class="mb-3">
+              <b-icon
+                icon="bookmark-heart"
+                font-scale="6"
+                class="mb-2 plan-icon"
+                @click="showGoodPlans()"
+              />
+              <div>좋아요한 여행들</div>
+            </div>
+
+            <div class="mb-3">
+              <b-icon
+                icon="hash"
+                font-scale="6"
+                class="mb-2 plan-icon"
+                @click="showGoodHotplaces()"
+              />
+              <div>좋아요한 핫플레이스들</div>
+            </div>
           </div>
 
-          <hr>
+          <hr />
 
           <b-button variant="outline-primary" href="#" class="mr-1">
             <router-link :to="{ name: 'modify' }" class="link">내정보수정</router-link>
@@ -52,6 +64,7 @@
       </b-col>
       <b-col></b-col>
     </b-row>
+    <!-- 여행 계획 좋아요 모달 start -->
     <div class="modal" v-if="isShowPlanModal">
       <div class="modal-content container">
         <div class="hover-div d-flex flex-end mb-3 hover-event" @click="closePlanModal()">
@@ -67,12 +80,36 @@
         </div>
       </div>
     </div>
+    <!-- 여행 계획 좋아요 모달 end -->
+    <!-- 핫플레이스 좋아요 모달 start -->
+    <div class="modal" v-if="isShowHotplaceModal">
+      <div class="modal-content container">
+        <div class="hover-div d-flex flex-end mb-3 hover-event" @click="closeHotplaceModal()">
+          <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
+        </div>
+        <div v-if="goodHotplaces.length !== null && goodHotplaces.length !== 0">
+          <b-table
+            hover
+            :items="goodHotplaces"
+            :fields="hotplaceFields"
+            @row-clicked="viewHotplace"
+          >
+            <template #cell(index)="data">{{ data.index + 1 }}</template>
+          </b-table>
+        </div>
+        <div v-else>
+          <p>아직 좋아요한 게시글이 없습니다</p>
+        </div>
+      </div>
+    </div>
+    <!-- 핫플레이스 좋아요 모달 end -->
   </b-container>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
 import { viewGoodPlan } from "@/api/plan";
+import { viewGoodHotplace } from "@/api/hotplace";
 
 const userStore = "userStore";
 
@@ -82,13 +119,23 @@ export default {
   data() {
     return {
       isShowPlanModal: false,
+      isShowHotplaceModal: false,
       goodPlans: [], // 좋아요한 여행 계획들 담는 배열
+      goodHotplaces: [], // 좋아요한 핫플레이스들 담는 배열
       fields: [
         { key: "index", label: "NO", tdClass: "tdClass" },
         { key: "title", label: "제목", tdClass: "tdSubject" },
         { key: "userId", label: "작성자", tdClass: "tdClass" },
         { key: "createdAt", label: "작성일", tdClass: "tdClass" },
         { key: "hit", label: "조회수", tdClass: "tdClass" },
+      ],
+      hotplaceFields: [
+        { key: "index", label: "NO", tdClass: "tdClass" },
+        { key: "title", label: "제목", tdClass: "tdSubject" },
+        { key: "userId", label: "작성자", tdClass: "tdClass" },
+        { key: "tag1", label: "#", tdClass: "tdClass" },
+        { key: "tag2", label: "#", tdClass: "tdClass" },
+        { key: "joinDate", label: "작성일", tdClass: "tdClass" },
       ],
     };
   },
@@ -100,6 +147,17 @@ export default {
         console.log("good plan data:: ");
         console.log(data);
         this.goodPlans = data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    viewGoodHotplace(
+      userId,
+      ({ data }) => {
+        console.log("good hotplace data :: ");
+        console.log(data);
+        this.goodHotplaces = data;
       },
       (error) => {
         console.log(error);
@@ -122,11 +180,20 @@ export default {
     showGoodPlans() {
       this.isShowPlanModal = true;
     },
+    showGoodHotplaces() {
+      this.isShowHotplaceModal = true;
+    },
     closePlanModal() {
       this.isShowPlanModal = false;
     },
+    closeHotplaceModal() {
+      this.isShowHotplaceModal = false;
+    },
     viewPlan(plan) {
       this.$router.push({ name: "planview", params: { planId: plan.id } });
+    },
+    viewHotplace(hotplace) {
+      this.$router.push({ name: "hotplacelist", params: { hotplaceId: hotplace.id } });
     },
   },
 };
