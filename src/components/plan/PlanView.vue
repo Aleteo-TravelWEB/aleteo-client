@@ -96,12 +96,7 @@
                 <div
                   class="mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
                 >
-                  <img
-                    :src="place.imageUrl"
-                    :alt="place.name"
-                    style="width: 130px"
-                    class="me-2"
-                  />
+                  <img :src="place.imageUrl" :alt="place.name" style="width: 130px" class="me-2" />
                   <div class="travel-info">
                     <div class="mb-3">
                       <b-icon icon="pin-fill" class="mx-1" /><strong class="place_name">{{
@@ -149,17 +144,28 @@
           <button
             type="button"
             id="btn-list"
-            class="btn btn-outline-primary mb-3"
+            class="btn btn-jelly mb-3"
+            style="background-color: #f7f7f7"
             @click="moveList()"
           >
             목록
           </button>
           <!-- 본인일때만 글수정, 글 삭제 버튼 보이도록 함 -->
           <div v-if="userInfo.userId === plan.userId || userInfo.grade === '관리자'">
-            <button type="button" class="btn btn-outline-success mb-3 mx-2" @click="moveModify()">
+            <button
+              type="button"
+              class="btn btn-jelly mb-3 mx-2"
+              @click="moveModify()"
+              id="modify-button"
+            >
               <b-icon icon="pencil-square" /> 수정
             </button>
-            <button type="button" class="btn btn-outline-danger mb-3" @click="moveDelete()">
+            <button
+              type="button"
+              class="btn btn-jelly mb-3"
+              style="background-color: #ff4141"
+              @click="moveDelete()"
+            >
               삭제
             </button>
           </div>
@@ -558,7 +564,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 .reco-path-custom {
   transition: all 0.2s linear;
 }
@@ -631,7 +637,7 @@ export default {
 .modal {
   display: block;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   left: 0;
   top: 0;
   width: 100%;
@@ -656,5 +662,36 @@ export default {
 
 .place_name {
   color: #3f72af;
+}
+
+.btn {
+  margin: 1rem;
+  background-color: #4199ff;
+  color: black;
+  font-weight: 400;
+
+  &-jelly {
+    &:hover {
+      animation: jelly 0.5s;
+    }
+  }
+}
+
+#modify-button {
+  background-color: #4caf50;
+}
+
+@keyframes jelly {
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
 }
 </style>
