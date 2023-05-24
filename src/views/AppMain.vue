@@ -16,12 +16,15 @@
         <top-ten-vue></top-ten-vue>
       </div>
     </div>
+    <div>
+      <!-- <top-hotplace-vue></top-hotplace-vue> -->
+    </div>
   </div>
 </template>
 
 <script>
 import TopTenVue from "@/components/main/TopTen.vue";
-// import TopHotplaceVue from '@/components/main/TopHotplace.vue';
+// import TopHotplaceVue from "@/components/main/TopHotplace.vue";
 
 export default {
   name: "AppMain",

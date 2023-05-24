@@ -12,6 +12,12 @@ async function viewPlaceImg(keyword, success, fail) {
   await kakao.get(`/image?query=${keyword}&sort=accuracy&page=1&size=1`).then(success).catch(fail);
 }
 
+// 핫플레이스 top ten 가져오기
+function getTopTenHotplace(success, fail) {
+  api.get(`/hotplace/top`).then(success).catch(fail);
+}
+
+
 // 핫플레이스 중 등록된 Top
 
-export { viewTopTenPlanPlaces, viewPlaceImg };
+export { viewTopTenPlanPlaces, viewPlaceImg, getTopTenHotplace };

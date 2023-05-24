@@ -8,7 +8,7 @@
         <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
         <div>
           <div class="card-img">
-            <img :src="place.imageUrl" :alt="place.placeId" />
+            <img :src="place.imageUrl" :alt="place.placeId" style="width: 150px; height: 150px" />
           </div>
           <div class="card-text d-flex flex-column">
             <h2>{{ place.name }}</h2>
@@ -29,11 +29,15 @@
         <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
         <div>
           <div class="card-img">
-            <img :src="place.imageUrl" :alt="place.placeId" />
+            <img
+              :src="`/upload/hotplace/image/${place.image}`"
+              style="width: 150px; height: 150px"
+            />
           </div>
           <div class="card-text d-flex flex-column">
-            <h2>{{ place.name }}</h2>
-            <p>{{ place.address }}</p>
+            <h2>{{ place.title }}</h2>
+            <p v-if="place.tag1 !== `null`">{{ place.tag1 }}</p>
+            <p v-if="place.tag2 !== `null`">{{ place.tag2 }}</p>
           </div>
         </div>
       </swiper-slide>
@@ -45,7 +49,7 @@
 </template>
 
 <script>
-import { viewTopTenPlanPlaces } from "@/api/main";
+import { viewTopTenPlanPlaces, getTopTenHotplace } from "@/api/main";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 
@@ -92,6 +96,17 @@ export default {
       }
     );
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 end //////////////////
+    ////////////////// top ten 핫플 리스트 start //////////////////
+    getTopTenHotplace(({ data }) => {
+      if (data.length > 0) {
+        console.log("핫플 탑텐 성공");
+        console.log(data);
+        this.topHotplaces = data;
+      } else {
+        console.log("핫플 탑텐 실패");
+      }
+    });
+    ////////////////// top ten 핫플 리스트 start //////////////////
     ////////////////// 관광지에 대한 이미지 리스트 start //////////////////
 
     ////////////////// top 핫플레이스에 넣은 관광지 리스트 start //////////////////
