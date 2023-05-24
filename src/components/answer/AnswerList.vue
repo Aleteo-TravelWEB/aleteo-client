@@ -1,14 +1,32 @@
 <template>
   <div id="container">
     <div>댓글 목록</div>
-    <div v-for="(answer, index) in answers" :key="index">
-      <b-card class="col-12">
+    <div v-for="(answer, index) in answers" :key="index"> 
+      <div class="card-container">
+      <b-card class="col-12 answerbody">
         <b-card-text>{{ answer.content }}</b-card-text>
+        <div class="delete-button-wrapper" v-if="userInfo.userId===answer.userId">
+          <!-- <button id="delete-button" v-if="userInfo.userId===answer.userId" @click="deleteAnswer(answer.id)" class="styled-button"> -->
+          <p class="h4 mb-2">
+          <b-icon
+            icon="chat-dots"
+            variant="success"
+            @click="showModal(index)"
+          ></b-icon>
+          </p>
+          <p class="h4 mb-2">
+          <b-icon
+            icon="trash"
+            variant="danger"
+            @click="deleteAnswer(answer.id)"
+          ></b-icon>
+          </p>
+          <!-- </button> -->
+          
+        </div>
       </b-card>
-      <button id="delete-button" v-if="userInfo.userId===answer.userId" @click="deleteAnswer(answer.id)" class="styled-button">
-        삭제
-      </button>
-      <button @click="showModal(index)" id="modalVisible[index]" v-if="userInfo.userId===answer.userId" class="styled-button">수정</button>
+      
+      </div>
       <!-- 입력 모달 창 -->
       <b-modal v-model="modalVisible[index].visible" :key="answer.id">
         <form @submit.stop.prevent="handleOk">
@@ -129,7 +147,7 @@ export default {
   margin: 10px;
 }
 
-.styled-button {
+/* .styled-button {
   background-color: #4CAF50;
   border: none;
   color: white;
@@ -141,10 +159,50 @@ export default {
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 4px;
-}
+} */
 
 #delete-button {
-   background-color: #fc0303;
+  background-color: #fc0303;
+}
+.delete-button-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.card-container {
+  display: flex;
+  align-items: flex-start;
+
+}
+
+.answerbody {
+  width: 80%;
+}
+
+.card-container .answerbody {
+  margin-bottom: 1rem; /* 버튼 위쪽에 일정한 마진을 추가합니다. */
+}
+
+
+.card-container button {
+
+  text-align: center;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  margin-left: 2px;
+}
+
+.button-text {
+  white-space: nowrap;
+  text-align: center;
+  justify-content: center;
+  font-size: 20px;
+  padding: 2px;
+  
 }
 
 .inputbox {
