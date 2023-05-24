@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-5">
     <div class="container">
       <div class="map-area">
         <div class="searchbox rounded">
@@ -19,6 +19,7 @@
               class="border btn submit-btn col-3 m-2"
               type="button"
               @click="searchPlace"
+              style="height: 40px"
             >
               검색
             </button>
@@ -31,7 +32,7 @@
               :key="rs.id"
               @click="showPlace(rs)"
             >
-              <!-- <img :src="rs." :alt=""> -->
+              <img :src="rs.phone" :alt="rs.place_name" style="width 4em; height: 4em;" />
               <div class="col-8">
                 <Strong>{{ rs.place_name }}</Strong>
                 <div class="addr">{{ rs.address_name }}</div>
@@ -78,15 +79,20 @@
                       <div v-for="(place, index) in places" :key="index" class="border rounded">
                         <b-row align-h="end">
                           <b-icon
-                            class="col-3"
+                            class="col-2"
                             icon="dash-square-fill"
                             variant="danger"
                             @click="deletePlace(place.placeId)"
                           ></b-icon>
                         </b-row>
-                        <div class="text-center p-2">
-                          <div class="place-title">{{ place.name }}</div>
-                          <div>{{ place.address }}</div>
+                        <div class="text-center p-2 d-flex flex-row">
+                          <div>
+                            <img :src="place.imageUrl" style="width: 100px; height: 100px" />
+                          </div>
+                          <div>
+                            <div class="place-title">{{ place.name }}</div>
+                            <div>{{ place.address }}</div>
+                          </div>
                         </div>
                       </div>
                     </draggable>
@@ -101,7 +107,7 @@
                     id="title"
                     v-model="plan.title"
                     placeholder="계획 이름"
-                    class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle"
+                    class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle p-2"
                     style="width: 70%"
                   />
                   <br />
@@ -116,8 +122,8 @@
                       v-model="plan.startDate"
                       id="start_datepicker"
                       placeholder="년도-월-일"
-                      style="width: 8em; height: 1.8em"
-                      class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle"
+                      style="width: 10em; height: 1.8em"
+                      class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle p-2"
                     />
                     <label for="end_datepicker"><strong>도착일</strong></label>
                     <input
@@ -126,8 +132,8 @@
                       v-model="plan.endDate"
                       id="end_datepicker"
                       placeholder="년도-월-일"
-                      style="width: 8em; height: 1.8em"
-                      class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle"
+                      style="width: 10em; height: 1.8em"
+                      class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle p-2"
                     />
                   </div>
                   <label for="description"><strong>상세 계획</strong></label>
@@ -136,12 +142,12 @@
                     v-model="plan.description"
                     id="description"
                     placeholder="상세 계획을 적어보자!"
-                    class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle"
+                    class="plan-detail-content align-middle ms-2 mt-2 rounded shadow border-light-subtle p-2"
                     style="width: 70%; height: 10em"
                   ></textarea>
                   <br />
                   <button
-                    class="place-add z-3 border rounded btn btn-primary shadow p-2"
+                    class="place-add z-3 border rounded btn btn-primary shadow p-2 mb-5"
                     id="plan-save-btn"
                     style="top: 5px; left: 120px"
                     type="button"
@@ -162,6 +168,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { viewPlan } from "@/api/plan";
+import { viewPlaceImg } from "@/api/main";
 import draggable from "vuedraggable";
 
 const userStore = "userStore";
@@ -199,6 +206,7 @@ export default {
       addVal: null,
       places: [],
       isAddFlag: false, // 검색한 여행지 추가 후 타이틀을 선택했는지 판단하는 flag
+      attrImage: null,
     };
   },
   created() {
@@ -278,10 +286,14 @@ export default {
       const ps = new window.kakao.maps.services.Places();
 
       // 키워드로 장소를 검색합니다
-      ps.keywordSearch(keyword, (data, status, pgn) => {
+      ps.keywordSearch(keyword, async (data, status, pgn) => {
         this.search.keyword = keyword;
         this.search.pgn = pgn;
         this.search.results = data;
+
+        for (let i = 0; i < this.search.results.length; i++) {
+          await this.getImg(this.search.results[i].place_name, i, true);
+        }
       });
 
       this.map.setLevel(8);
@@ -386,7 +398,11 @@ export default {
           this.overlays.forEach((overlay) => {
             overlay.setMap(null);
           });
-          this.displayCustomOverlay(positions[i], true);
+          if (flag) {
+            this.displayCustomOverlay(positions[i], true);
+          } else {
+            this.displayCustomOverlay(positions[i], false);
+          }
         });
       }
 
@@ -440,14 +456,10 @@ export default {
 
     ////////////////////// 커스텀 오버레이 start //////////////////////
     //커스텀 오버레이 표시 함수
-    displayCustomOverlay(marker, flag) {
+    async displayCustomOverlay(marker, flag) {
       // flag : true(원래 여행 관광지 정보), false(새로 만드는 관광지 정보)
-      let image = "";
-      if (marker.image !== "") {
-        image = marker.image;
-      } else {
-        image = require("@/assets/img/noimage.png");
-      }
+      await this.getImg(marker.place_name, 0, false);
+      var image = this.attrImage;
 
       var content = null;
       var y = null;
@@ -462,7 +474,7 @@ export default {
 				</div>
 				<div class="body">
 					<div class="img">
-						<img src="${image}" width="73" height="70">
+						<img src="${marker.imageUrl}" width="73" height="70">
 					</div>
 					<div class="desc">
 						<div class="ellipsis mb-1">${marker.address}</div>
@@ -616,6 +628,30 @@ export default {
       });
     },
     ////////////////////// 관광지를 여행계획에 넣기 end //////////////////////
+
+    ////////////////////// 관광지 이미지 가져오기 start //////////////////////
+    async getImg(title, index, flag) {
+      console.log(title);
+      await viewPlaceImg(title, ({ data }) => {
+        console.log("image data :: ");
+        // console.log(data.documents[0].image_url);
+        if (data.documents.length > 0) {
+          this.attrImage = data.documents[0].thumbnail_url;
+          console.log(index);
+          if (flag) {
+            this.search.results[index].phone = data.documents[0].thumbnail_url;
+          }
+          // console.log(data);
+        } else {
+          this.attrImage = require("@/assets/img/noimage.png");
+          if (flag) {
+            this.search.results[index].phone = require("@/assets/img/noimage.png");
+          }
+        }
+        // console.log(this.attrImage);
+      });
+    },
+    ////////////////////// 관광지 이미지 가져오기 end //////////////////////
     async modifyPlan() {
       console.log("places: " + this.places);
       if (!confirm("수정 하시겠습니까?")) {

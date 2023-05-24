@@ -45,8 +45,8 @@
           </div>
           <div class="row justify-content-center">
             <div class="d-flex justify-content center">
-              <div id="find-id" class="hover-div " @click="moveFindId()">아이디 찾기</div>
-              <p class="mx-2"> | </p>
+              <div id="find-id" class="hover-div" @click="moveFindId()">아이디 찾기</div>
+              <p class="mx-2">|</p>
               <div id="find-password" class="hover-div" @click="moveFindPwd()">비밀번호 찾기</div>
             </div>
           </div>
@@ -60,16 +60,16 @@
             </div>
           </div>
           <div class="d-flex justify-content-center mb-3">
-              <button
-                type="button"
-                @click="confirm"
-                id="signin-btn"
-                class="btn btn-jelly"
-                style="width: 80%; background-color: #888;"
-                :class="{ 'shake-effect': isShaking }"
-              >
-                로그인
-              </button>
+            <button
+              type="button"
+              @click="confirm"
+              id="signin-btn"
+              class="btn btn-jelly"
+              style="width: 80%; background-color: #888"
+              :class="{ 'shake-effect': isShaking }"
+            >
+              로그인
+            </button>
           </div>
         </form>
       </div>
@@ -286,24 +286,21 @@ export default {
     async findUserId() {
       console.log("findId :: ");
       const user = {
-        userName : this.findId.userName,
+        userName: this.findId.userName,
         emailId: this.findId.emailId,
         emailDomain: this.findId.emailDomain,
-      }
-      await findId(
-        user,
-        ({data}) => {
-          if (data.message === "success") {
-            this.isShowIdResult = false;
-            console.log("아이디 찾기 성공");
-            this.isIdNotFind = false;
-            this.idResult = data.userId;
-          } else {
-            console.log('아이디 찾기 실패')
-            this.isShowIdResult = true;
-          }
+      };
+      await findId(user, ({ data }) => {
+        if (data.message === "success") {
+          this.isShowIdResult = false;
+          console.log("아이디 찾기 성공");
+          this.isIdNotFind = false;
+          this.idResult = data.userId;
+        } else {
+          console.log("아이디 찾기 실패");
+          this.isShowIdResult = true;
         }
-      )
+      });
     },
     moveFindId() {
       this.showIdModal = true;
@@ -385,7 +382,7 @@ export default {
 .modal {
   display: block;
   position: fixed;
-  z-index: 1;
+  z-index: 10000;
   left: 0;
   top: 0;
   width: 100%;
@@ -401,7 +398,6 @@ export default {
   border: 1px solid #888;
   border-radius: 15px;
   width: 70%;
-  top: 100px;
   max-width: 600px;
 }
 
@@ -412,12 +408,9 @@ export default {
 .hover-div:hover {
   color: #3f72af;
 }
-
-
 </style>
 
 <style lang="scss">
-
 .btn {
   margin: 1rem;
   background-color: #4199ff;

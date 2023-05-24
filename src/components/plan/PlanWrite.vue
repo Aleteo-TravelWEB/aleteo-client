@@ -19,7 +19,7 @@
             <button
               id="btn-search"
               class="btn submit-btn col-3 m-2"
-              style="border: 1px solid #c1c1c1"
+              style="border: 1px solid #c1c1c1; height: 40px"
               type="button"
               @click="searchPlace()"
             >
@@ -72,17 +72,25 @@
                 <div v-for="(place, index) in places" :key="index" class="border rounded">
                   <b-row align-h="end">
                     <b-icon
-                      class="col-3"
+                      class="col-2"
                       icon="dash-square-fill"
                       variant="danger"
                       @click="deletePlace(place.placeId)"
                     ></b-icon>
                   </b-row>
                   <div class="text-center p-2 d-flex justify-content-center">
-                    <img :src="place.imageUrl" style="width: 100px; height: 100px;"/>
+                    <img :src="place.imageUrl" style="width: 100px; height: 100px" />
                     <div>
                       <div class="place-title">{{ place.name }}</div>
                       <div>{{ place.address }}</div>
+                      <div class="mt-2">
+                        <a :href="place.placeUrl">자세히보기</a>
+                        <br />
+                        <a
+                          :href="`https://map.kakao.com/link/to/${place.name},${place.lat},${place.lng}`"
+                          ><b-icon icon="binoculars-fill" class="mx-1" />길찾기</a
+                        >
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -114,7 +122,7 @@
                 v-model="plan.startDate"
                 id="start_datepicker"
                 placeholder="년도-월-일"
-                style="width: 8em; height: 1.8em"
+                style="width: 10em; height: 1.8em"
                 class="plan-detail-content plan-detail-start ms-2 me-2 align-middle rounded shadow border-light-subtle p-2"
               />
             </div>
@@ -126,7 +134,7 @@
                 v-model="plan.endDate"
                 id="end_datepicker"
                 placeholder="년도-월-일"
-                style="width: 8em; height: 1.8em"
+                style="width: 10em; height: 1.8em"
                 class="plan-detail-content plan-detail-end ms-2 me-2 align-middle rounded shadow border-light-subtle p-2"
               />
             </div>
@@ -161,7 +169,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 // import { attrImageInstance } from "@/api/index";
 // import axios from "axios";
 import draggable from "vuedraggable";
-import { viewPlaceImg } from "@/api/main"
+import { viewPlaceImg } from "@/api/main";
 
 // const http = attrImageInstance();
 
@@ -238,7 +246,6 @@ export default {
       handler() {
         if (this.search.results.length > 0) {
           this.loadMaker(this.search.results);
-          console.log(this.search.results);
         }
       },
       deep: true,
@@ -292,12 +299,9 @@ export default {
         this.search.keyword = keyword;
         this.search.pgn = pgn;
         this.search.results = data;
-        // console.log(data);
-        // console.log("check");
+
         for (let i = 0; i < this.search.results.length; i++) {
-          // console.log("place_name:: " + this.search.results[i].place_name);
           await this.getImg(this.search.results[i].place_name, i, true);
-          // this.search.results[i].imageUrl = this.attrImage;
         }
       });
 
@@ -449,9 +453,11 @@ export default {
 					</div>
 					<div class="desc">
 						<div class="ellipsis mb-1">${marker.address_name}</div>
-						<div class="mt-1">`;
+						<div class="mt-3">`;
 
-      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
+      content += `<a href="${marker.place_url}" target="_blank" class="me-2 mx-2" style="color: #3f72af;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>자세히보기</a>`;
+
+      content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: #3f72af;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
 						</div>
 					</div>
 				</div>
@@ -578,9 +584,7 @@ export default {
     ////////////////////// 관광지 이미지 가져오기 start //////////////////////
     async getImg(title, index, flag) {
       console.log(title);
-      await viewPlaceImg(
-      title,
-      ({data}) => {
+      await viewPlaceImg(title, ({ data }) => {
         console.log("image data :: ");
         // console.log(data.documents[0].image_url);
         if (data.documents.length > 0) {
@@ -597,8 +601,7 @@ export default {
           }
         }
         // console.log(this.attrImage);
-        }
-      )
+      });
     },
     ////////////////////// 관광지 이미지 가져오기 end //////////////////////
 

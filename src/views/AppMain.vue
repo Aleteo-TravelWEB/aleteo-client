@@ -5,7 +5,7 @@
         <h1 class="title-content">ALETEO</h1>
       </div>
       <div class="d-flex flex-row justify-content-center mb-2 search" style="width: 100%">
-        <div class="today mx-3 p-2 shadow px-5" @click="moveAttraction()">
+        <div class="today mx-3 p-2 shadow px-5" @click="moveAttraction()" style="color: black">
           오늘의 관광지는? <b-icon class="px-3" icon="search" animation="fade" />
         </div>
       </div>
@@ -71,7 +71,7 @@ export default {
 }
 
 .today {
-  background: #ffffff2b;
+  background: #ffffff8f;
   width: 300px;
   border: 2px solid #c1c1c1;
   border-radius: 10px;
