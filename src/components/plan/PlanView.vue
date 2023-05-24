@@ -97,7 +97,7 @@
                   class="mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
                 >
                   <img
-                    src="@/assets/img/noimage.png"
+                    :src="place.imageUrl"
                     :alt="place.name"
                     style="width: 130px"
                     class="me-2"
@@ -123,7 +123,7 @@
                   class="mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
                 >
                   <img
-                    src="@/assets/img/noimage.png"
+                    :src="place.imageUrl"
                     :alt="place.name"
                     style="width: 130px"
                     class="me-2 card-img"

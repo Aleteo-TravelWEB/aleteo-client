@@ -72,10 +72,8 @@ export default {
       ,(error) => {
         console.log(error);
       }
-    ),
+    )
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 end //////////////////
-    ////////////////// 관광지에 대한 이미지 리스트 start //////////////////
-    http.get
   },
   computed: {
     topPlanPlcesPagination() {

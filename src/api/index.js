@@ -22,4 +22,14 @@ function attrImageInstance() {
   return instance;
 }
 
-export { apiInstance, attrImageInstance };
+function kakaoImageInstance() {
+  const instance = axios.create({
+    baseURL: "https://dapi.kakao.com/v2/search",
+    headers: {
+      'Authorization': 'KakaoAK e06563fda9880e07900c4bb32f43e45b',
+    },
+  });
+  return instance;
+}
+
+export { apiInstance, attrImageInstance, kakaoImageInstance };

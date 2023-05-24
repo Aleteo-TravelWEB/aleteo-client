@@ -33,7 +33,7 @@
               :key="rs.id"
               @click="showPlace(rs)"
             >
-              <!-- <img :src="rs.imageUrl" :alt="rs.place_name" style="width: 4em; height: 4em" /> -->
+              <img :src="rs.phone" :alt="rs.place_name" style="width: 4em; height: 4em" />
               <div class="col-8">
                 <Strong>{{ rs.place_name }}</Strong>
                 <div class="addr">{{ rs.address_name }}</div>
@@ -78,9 +78,12 @@
                       @click="deletePlace(place.placeId)"
                     ></b-icon>
                   </b-row>
-                  <div class="text-center p-2">
-                    <div class="place-title">{{ place.name }}</div>
-                    <div>{{ place.address }}</div>
+                  <div class="text-center p-2 d-flex justify-content-center">
+                    <img :src="place.imageUrl" style="width: 100px; height: 100px;"/>
+                    <div>
+                      <div class="place-title">{{ place.name }}</div>
+                      <div>{{ place.address }}</div>
+                    </div>
                   </div>
                 </div>
               </draggable>
@@ -156,8 +159,9 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 // import { attrImageInstance } from "@/api/index";
-import axios from "axios";
+// import axios from "axios";
 import draggable from "vuedraggable";
+import { viewPlaceImg } from "@/api/main"
 
 // const http = attrImageInstance();
 
@@ -234,6 +238,7 @@ export default {
       handler() {
         if (this.search.results.length > 0) {
           this.loadMaker(this.search.results);
+          console.log(this.search.results);
         }
       },
       deep: true,
@@ -291,7 +296,7 @@ export default {
         // console.log("check");
         for (let i = 0; i < this.search.results.length; i++) {
           // console.log("place_name:: " + this.search.results[i].place_name);
-          await this.getImg(this.search.results[i].place_name);
+          await this.getImg(this.search.results[i].place_name, i, true);
           // this.search.results[i].imageUrl = this.attrImage;
         }
       });
@@ -428,7 +433,7 @@ export default {
     async displayCustomOverlay(marker) {
       // 관광지 이미지 정보 불러오기
       var image = this.attrImage;
-      await this.getImg(marker.place_name);
+      await this.getImg(marker.place_name, 0, false);
       image = this.attrImage;
 
       let content = `
@@ -440,7 +445,7 @@ export default {
 				</div>
 				<div class="body">
 					<div class="img">
-						<img src="${image}" width="73" height="70">
+						<img src=${image} width="73" height="70">
 					</div>
 					<div class="desc">
 						<div class="ellipsis mb-1">${marker.address_name}</div>
@@ -532,7 +537,7 @@ export default {
         address: data.address_name,
         lat: data.y,
         lng: data.x,
-        // imageUrl: data.imageUrl,
+        imageUrl: data.phone,
       };
       this.places.push(placeData);
 
@@ -571,44 +576,29 @@ export default {
     ////////////////////// 관광지를 여행계획에 넣기 end //////////////////////
 
     ////////////////////// 관광지 이미지 가져오기 start //////////////////////
-    async getImg(title) {
+    async getImg(title, index, flag) {
       console.log(title);
-      // getAttrImg(
-      //   title,
-      //   ({ data }) => {
-      //     console.log("image data :: ");
-      //     console.log(data);
-      //     if (data.response === "undefined") {
-      //       console.log(data.response);
-      //       this.attrImage = require("@/assets/img/noimage.png");
-      //     } else {
-      //       console.log(data.response.body.items.item.galWebImageUrl);
-      //       this.attrImage = data.response.body.items.item.galWebImageUrl;
-      //     }
-      //   },
-      //   (error) => {
-      //     this.attrImage = require("@/assets/img/noimage.png");
-      //     console.log(error);
-      //   }
-      // );
-      const encode = encodeURI(title);
-      // const SERVICE_KEY = process.env.VUE_APP_TRIP_API_KEY;
-      // `${SERVICE_KEY}&keyword=${encode}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&arrange=A&_type=json`
-      await axios
-        .get(
-          `https://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=wRLehfal1iPUgU5lXebqFzRhzIiCoN%2B%2FiJxmXuf2GQy4b6eK9SxyBpjfC6%2FnQuwQbakh6HgE%2BNpykN%2B691jFUw%3D%3D&keyword=${encode}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&arrange=A&_type=json`
-        )
-        .then(({ data }) => {
-          // console.log(data);
-          if (data.response.body.items !== "") {
-            this.attrImage = data.response.body.items.item[0].galWebImageUrl;
-          } else {
-            this.attrImage = require("@/assets/img/noimage.png");
+      await viewPlaceImg(
+      title,
+      ({data}) => {
+        console.log("image data :: ");
+        // console.log(data.documents[0].image_url);
+        if (data.documents.length > 0) {
+          this.attrImage = data.documents[0].thumbnail_url;
+          console.log(index);
+          if (flag) {
+            this.search.results[index].phone = data.documents[0].thumbnail_url;
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          // console.log(data);
+        } else {
+          this.attrImage = require("@/assets/img/noimage.png");
+          if (flag) {
+            this.search.results[index].phone = require("@/assets/img/noimage.png");
+          }
+        }
+        // console.log(this.attrImage);
+        }
+      )
     },
     ////////////////////// 관광지 이미지 가져오기 end //////////////////////
 
