@@ -15,15 +15,7 @@
       <div class="card">
         <b-icon-heart class="icon"></b-icon-heart>
         <div class="card-img">
-          <img
-            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
-            alt=""
-          />
-          <img
-            class="blur"
-            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
-            alt=""
-          />
+          
         </div>
         <div class="card-text">
           <h2>제목</h2>
@@ -33,14 +25,9 @@
       <!-- Card end -->
       <!-- Card start-->
       <div class="card">
-        <b-icon-heart></b-icon-heart>
+        <b-icon-heart class="icon"></b-icon-heart>
         <div class="card-img">
-          <img src="" alt="" />
-          <img
-            class="blur"
-            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
-            alt=""
-          />
+          
         </div>
         <div class="card-text">
           <h2>제목</h2>
@@ -50,17 +37,9 @@
       <!-- Card end -->
       <!-- Card start-->
       <div class="card">
-        <b-icon-heart></b-icon-heart>
+        <b-icon-heart class="icon"></b-icon-heart>
         <div class="card-img">
-          <img
-            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
-            alt=""
-          />
-          <img
-            class="blur"
-            src="https://photo-cdn.icons8.com/assets/sata/editor/object/244/fc8f52e5-219e-47a0-8475-b96d4f3e6529.png"
-            alt=""
-          />
+          
         </div>
         <div class="card-text">
           <h2>제목</h2>
@@ -133,8 +112,8 @@ body {
 
 .card .icon {
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 11;
+  top: -4;
   padding: 15px;
   font-size: 1rem;
   line-height: 3.2rem;

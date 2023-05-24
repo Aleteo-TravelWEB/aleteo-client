@@ -40,6 +40,7 @@
           </div>
           <div class=" d-flex justify-content-center mt-4 mb-3">
             <div style="width: 400px;">
+              <label for="signin-name" v-if="user.userName">이름</label><br>
               <input
                 type="text"
                 v-model="user.userName"
@@ -52,6 +53,7 @@
           </div>
           <div class="d-flex justify-content-center my-4">
             <div style="width: 400px;">
+              <label for="joinin-id" v-if="user.userId">아이디</label><br>
               <input
                 type="text"
                 v-model="user.userId"
@@ -70,6 +72,7 @@
           </div>
           <div class="d-flex justify-content-center mt-4 mb-3">
             <div style="width: 400px;">
+              <label for="signin-password" v-if="user.userPwd">비밀번호</label><br>
               <input
                 type="password"
                 v-model="user.userPwd"
@@ -82,6 +85,7 @@
           </div>
           <div class="d-flex justify-content-center mt-4 mb-3">
             <div style="width: 400px;">
+              <label for="signin-pwdcheck" v-if="pwdCheck">비밀번호 확인</label><br>
               <input
                 type="password"
                 v-model="pwdCheck"
@@ -96,6 +100,8 @@
             </div>
           </div>
           <div class="d-flex row justify-content-center mt-4 mb-3">
+            <label for="signin-emailId" v-if="!user.emailId && !isEmailPass">이메일 인증 후 진행해 주세요</label>
+            <label for="signin-emailId" id="inputemail" v-else-if="user.emailId && !isEmailPass">이메일 아이디</label>
             <div class="d-flex align-items-center">
               <input
                 style="width: 200px;"
@@ -109,7 +115,7 @@
               <span class="mx-1 d-flex justify-content-center align-items-center">@</span>
 
               <b-form-select style="width:100px;" v-model="user.emailDomain" :options="domains"></b-form-select>
-              <div class="mx-1 p-2 admin" @click="sendEmail">&nbsp;&nbsp;인증<br/>보내기</div>
+              <div class="mx-1 p-2 admin" @click="sendEmail" style="height=38px; text-align: center;">번호 전송</div>
             </div>
           </div>
           <div class="d-flex justify-content-center mt-2" v-if="isShowAdmin">
@@ -124,15 +130,14 @@
             </div>
           </div>
           <div class="row d-flex justify-content-center my-4">
-            <div class="col-10">
+            <div class="col-10 join-btn">
               <button
                 type="button"
                 @click="join"
                 id="joinin-btn"
                 :class="{ 'shake-effect': isShaking }"
-                style="width: 100%"
               >
-                회원가입
+                가입하기
               </button>
             </div>
           </div>
@@ -292,7 +297,7 @@ export default {
   border-radius: 1rem;
   margin-top: 5rem;
   margin-bottom: 5rem;
-  background-color: #fff;
+  /* background-color: #fff; */
   position: relative;
 }
 
@@ -303,6 +308,11 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
+}
+
+label {
+  margin-bottom: 3px;
+  margin-left: 11px;
 }
 
 .sign-main::before{
@@ -333,6 +343,10 @@ export default {
   color: white;
 }
 
+/* #inputemail {
+  margin-bottom: -5px;
+  margin-left: -121px;
+} */
 .submit-btn:hover {
   /* background-color: white; */
   background-color: #8fa5b8;
@@ -344,6 +358,20 @@ export default {
   border: 1px solid #ced4da;
   border-color: rgb(204, 6, 6);
   box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+}
+
+#joinin-btn {
+  width: 30%; 
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.join-btn {
+  justify-items: center;
+  justify-content: center;
+  display: flex;
+
 }
 
 @keyframes shake {
@@ -370,6 +398,13 @@ export default {
 
 .image-content {
   cursor: pointer;
+}
+
+.admin {
+  border: 1px solid #ced4da;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0;
 }
 
 .admin:hover {
