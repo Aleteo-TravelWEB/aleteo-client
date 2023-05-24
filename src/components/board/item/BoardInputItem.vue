@@ -9,7 +9,6 @@
             type="text"
             required
             placeholder="제목 입력..."
-            class="shadow"
           ></b-form-input>
         </b-form-group>
 
@@ -20,7 +19,6 @@
             placeholder="내용 입력..."
             rows="10"
             max-rows="15"
-            class="shadow"
             style="height: 500px"
           ></b-form-textarea>
         </b-form-group>
