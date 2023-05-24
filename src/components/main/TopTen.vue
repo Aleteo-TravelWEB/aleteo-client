@@ -9,7 +9,8 @@
       rel="stylesheet"
     />
 
-    <button id="prev" class="btn"><b-icon-arrow-left class="arrow"></b-icon-arrow-left></button>
+    <div class></div>
+    <button id="prev" class="btn"><b-icon-arrow-left class="arrow" id="arrow-left"></b-icon-arrow-left></button>
     <div class="card-content">
       <!-- Card start-->
       <div class="card" v-for="place in topPlanPlaces" :key="place.place_id">
@@ -24,7 +25,7 @@
       <!-- Card end -->
     </div>
     <button id="next" class="btn">
-      <b-icon-arrow-right class="arrow"></b-icon-arrow-right>
+      <b-icon-arrow-right class="arrow" id="arrow-right"></b-icon-arrow-right>
     </button>
   </div>
 </template>
@@ -37,6 +38,7 @@ export default {
   components: {},
   data() {
     return {
+      totalPages: 3,
       currentPage: 1,
       perPage: 4,
       attractions: [],
@@ -44,21 +46,39 @@ export default {
     };
   },
   mounted() {
-    const next = document.querySelector("#next");
-    const prev = document.querySelector("#prev");
+    let currentPage1 = 1;
+    let totalPages1 = 3;
 
-    function handleScrollNext() {
-      const cards = document.querySelector(".card-content");
-      cards.scrollLeft = cards.scrollLeft +=
-        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
+    function createPagination() {
+      const prevButton = document.getElementById('arrow-left');
+      prevButton.addEventListener('click', () => {
+        console.log("prev clicked");
+        if(currentPage1 > 1) {
+          currentPage1--;
+          updatePagination();
+        }
+      });
+
+      const nextButton = document.getElementById('arrow-right');
+      nextButton.addEventListener('click', () => {
+        console.log("next clicked");
+        if(currentPage1 < totalPages1) {
+          currentPage1++;
+          updatePagination();
+        }
+      })
     }
-    function handleScrollPrev() {
-      const cards = document.querySelector(".card-content");
-      cards.scrollLeft = cards.scrollLeft -=
-        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
+    function updatePagination() {
+      const paginationLinks = Array.from(document.getElementsByClassName('arrow'));
+      paginationLinks.forEach((link) => {
+        link.parentNode.classList.remove('active');
+        if(parseInt(link.textContent) === currentPage1) {
+          link.parentNode.classList.add('active');
+        }
+      });
     }
-    next.addEventListener("click", handleScrollNext);
-    prev.addEventListener("click", handleScrollPrev);
+    createPagination();
+    updatePagination();
   },
   created() {
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 start //////////////////
@@ -67,13 +87,13 @@ export default {
         console.log("data ::");
         console.log(data);
         this.topPlanPlaces = data;
-        
       }
       ,(error) => {
         console.log(error);
       }
-    )
+    );
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 end //////////////////
+    ////////////////// 관광지에 대한 이미지 리스트 start //////////////////
   },
   computed: {
     topPlanPlcesPagination() {
