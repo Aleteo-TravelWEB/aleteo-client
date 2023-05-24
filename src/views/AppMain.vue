@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import TopTenVue from '@/components/main/TopTen.vue';
+import TopTenVue from "@/components/main/TopTen.vue";
 // import TopHotplaceVue from '@/components/main/TopHotplace.vue';
 
 export default {

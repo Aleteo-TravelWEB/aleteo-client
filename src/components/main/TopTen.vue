@@ -1,5 +1,5 @@
 <template>
-  <div class="slider">
+  <div>
     <link
       rel="stylesheet"
       href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
@@ -9,29 +9,31 @@
       rel="stylesheet"
     />
 
-    <div class></div>
-    <button id="prev" class="btn"><b-icon-arrow-left class="arrow" id="arrow-left"></b-icon-arrow-left></button>
-    <div class="card-content">
-      <!-- Card start-->
-      <div class="card" v-for="place in topPlanPlaces" :key="place.place_id">
-        <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
-        <div class="card-img">
+    <div class="slider">
+      <button id="prev" class="btn" @click="handleScrollPrev()">
+        <b-icon-arrow-left class="arrow" id="arrow-left"></b-icon-arrow-left>
+      </button>
+      <div class="card-content" ref="cardcontent">
+        <!-- Card start-->
+        <div class="card" v-for="place in topPlanPlaces" :key="place.place_id">
+          <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
+          <div class="card-img"></div>
+          <div class="card-text">
+            <h2>{{ place.name }}</h2>
+            <p>{{ place.address }}</p>
+          </div>
         </div>
-        <div class="card-text">
-          <h2>{{place.name}}</h2>
-          <p>{{place.address}}</p>
-        </div>
+        <!-- Card end -->
       </div>
-      <!-- Card end -->
+      <button id="next" class="btn" @click="handleScrollNext()">
+        <b-icon-arrow-right class="arrow" id="arrow-right"></b-icon-arrow-right>
+      </button>
     </div>
-    <button id="next" class="btn">
-      <b-icon-arrow-right class="arrow" id="arrow-right"></b-icon-arrow-right>
-    </button>
   </div>
 </template>
 
 <script>
-import { viewTopTenPlanPlaces } from "@/api/main"
+import { viewTopTenPlanPlaces } from "@/api/main";
 
 export default {
   name: "TopTen",
@@ -46,49 +48,47 @@ export default {
     };
   },
   mounted() {
-    let currentPage1 = 1;
-    let totalPages1 = 3;
-
-    function createPagination() {
-      const prevButton = document.getElementById('arrow-left');
-      prevButton.addEventListener('click', () => {
-        console.log("prev clicked");
-        if(currentPage1 > 1) {
-          currentPage1--;
-          updatePagination();
-        }
-      });
-
-      const nextButton = document.getElementById('arrow-right');
-      nextButton.addEventListener('click', () => {
-        console.log("next clicked");
-        if(currentPage1 < totalPages1) {
-          currentPage1++;
-          updatePagination();
-        }
-      })
-    }
-    function updatePagination() {
-      const paginationLinks = Array.from(document.getElementsByClassName('arrow'));
-      paginationLinks.forEach((link) => {
-        link.parentNode.classList.remove('active');
-        if(parseInt(link.textContent) === currentPage1) {
-          link.parentNode.classList.add('active');
-        }
-      });
-    }
-    createPagination();
-    updatePagination();
+    // let currentPage1 = 1;
+    // let totalPages1 = 3;
+    // function createPagination() {
+    //   const prevButton = document.getElementById("arrow-left");
+    //   prevButton.addEventListener("click", () => {
+    //     console.log("prev clicked");
+    //     if (currentPage1 > 1) {
+    //       currentPage1--;
+    //       updatePagination();
+    //     }
+    //   });
+    //   const nextButton = document.getElementById("arrow-right");
+    //   nextButton.addEventListener("click", () => {
+    //     console.log("next clicked");
+    //     if (currentPage1 < totalPages1) {
+    //       currentPage1++;
+    //       updatePagination();
+    //     }
+    //   });
+    // }
+    // function updatePagination() {
+    //   const paginationLinks = Array.from(document.getElementsByClassName("arrow"));
+    //   paginationLinks.forEach((link) => {
+    //     link.parentNode.classList.remove("active");
+    //     if (parseInt(link.textContent) === currentPage1) {
+    //       link.parentNode.classList.add("active");
+    //     }
+    //   });
+    // }
+    // createPagination();
+    // updatePagination();
   },
   created() {
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 start //////////////////
     viewTopTenPlanPlaces(
-      ({data}) => {
+      ({ data }) => {
         console.log("data ::");
         console.log(data);
         this.topPlanPlaces = data;
-      }
-      ,(error) => {
+      },
+      (error) => {
         console.log(error);
       }
     );
@@ -102,11 +102,29 @@ export default {
       return this.topPlanPlaces.slice(startIndex, endIndex);
     },
   },
-  methods: {},
+  methods: {
+    //     const next=document.querySelector('#next')
+    // const prev=document.querySelector('#prev')
+
+    handleScrollNext() {
+      const cards = this.$refs.cardcontent;
+      console.log("cards: ");
+      console.log(cards);
+      cards.scrollLeft = cards.scrollLeft +=
+        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
+
+      console.log("cards.scrollLeft2, " + cards.scrollLeft);
+    },
+    handleScrollPrev() {
+      const cards = this.$refs.cardcontent;
+      cards.scrollLeft = cards.scrollLeft -=
+        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style>
 /* 슬라이드 */
 body {
   font-family: Inter;
@@ -232,5 +250,25 @@ p {
   width: 100%;
   height: 40vh;
   overflow: hidden;
+}
+
+.slider:after {
+  content: "";
+  left: 98px;
+  height: 90vh;
+  position: absolute;
+  width: 150px;
+  z-index: 100;
+  background: linear-gradient(90deg, rgb(242, 243, 248) 0%, rgba(242, 243, 248, 0) 100%);
+}
+
+.slider:before {
+  content: "";
+  right: 98px;
+  height: 90vh;
+  position: absolute;
+  width: 150px;
+  z-index: 100;
+  background: linear-gradient(90deg, rgba(242, 243, 248, 0) 0%, rgba(242, 243, 248, 1) 100%);
 }
 </style>
