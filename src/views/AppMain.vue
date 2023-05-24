@@ -11,19 +11,19 @@
 
     <div class="content">
       <div>
-        <main-attraction-list></main-attraction-list>
+        <top-ten-vue></top-ten-vue>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import MainAttractionList from "@/components/main/MainAttractionList.vue";
+import TopTenVue from '@/components/main/TopTen.vue';
 
 export default {
   name: "AppMain",
   components: {
-    MainAttractionList,
+    TopTenVue,
   },
   data() {
     return {

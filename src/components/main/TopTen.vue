@@ -12,38 +12,13 @@
     <button id="prev" class="btn"><b-icon-arrow-left class="arrow"></b-icon-arrow-left></button>
     <div class="card-content">
       <!-- Card start-->
-      <div class="card">
-        <b-icon-heart class="icon"></b-icon-heart>
+      <div class="card" v-for="place in topPlanPlaces" :key="place.place_id">
+        <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
         <div class="card-img">
-          
         </div>
         <div class="card-text">
-          <h2>제목</h2>
-          <p>description</p>
-        </div>
-      </div>
-      <!-- Card end -->
-      <!-- Card start-->
-      <div class="card">
-        <b-icon-heart class="icon"></b-icon-heart>
-        <div class="card-img">
-          
-        </div>
-        <div class="card-text">
-          <h2>제목</h2>
-          <p>description</p>
-        </div>
-      </div>
-      <!-- Card end -->
-      <!-- Card start-->
-      <div class="card">
-        <b-icon-heart class="icon"></b-icon-heart>
-        <div class="card-img">
-          
-        </div>
-        <div class="card-text">
-          <h2>제목</h2>
-          <p>description</p>
+          <h2>{{place.name}}</h2>
+          <p>{{place.address}}</p>
         </div>
       </div>
       <!-- Card end -->
@@ -55,12 +30,17 @@
 </template>
 
 <script>
+import { viewTopTenPlanPlaces } from "@/api/main"
+
 export default {
-  name: "MainAttractionList",
+  name: "TopTen",
   components: {},
   data() {
     return {
+      currentPage: 1,
+      perPage: 4,
       attractions: [],
+      topPlanPlaces: [],
     };
   },
   mounted() {
@@ -80,7 +60,27 @@ export default {
     next.addEventListener("click", handleScrollNext);
     prev.addEventListener("click", handleScrollPrev);
   },
-  created() {},
+  created() {
+    ////////////////// top ten 여행 계획에 넣은 관광지 리스트 //////////////////
+    viewTopTenPlanPlaces(
+      ({data}) => {
+        console.log("data ::");
+        console.log(data);
+        this.topPlanPlaces = data;
+        
+      }
+      ,(error) => {
+        console.log(error);
+      }
+    )
+  },
+  computed: {
+    topPlanPlcesPagination() {
+      const startIndex = (this.currentPage - 1) * this.perPage;
+      const endIndex = startIndex + this.perPage;
+      return this.topPlanPlaces.slice(startIndex, endIndex);
+    },
+  },
   methods: {},
 };
 </script>
