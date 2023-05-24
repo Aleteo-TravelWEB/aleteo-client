@@ -16,9 +16,6 @@
         <top-ten-vue></top-ten-vue>
       </div>
     </div>
-    <div>
-      <!-- <top-hotplace-vue></top-hotplace-vue> -->
-    </div>
   </div>
 </template>
 
@@ -48,7 +45,7 @@ export default {
 
 <style scoped>
 .background {
-  height: 100vh;
+  height: 50vh;
   overflow: hidden;
   margin: 0;
   background-size: cover;
@@ -86,11 +83,11 @@ export default {
   box-shadow: 2px 3px 10px 0px;
 }
 
-.content {
+/* .content {
   background: #ffffff;
   width: 100%;
   top: 557px;
   position: absolute;
   height: auto;
-}
+} */
 </style>

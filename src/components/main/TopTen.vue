@@ -3,7 +3,7 @@
     <div class="mt-3">
       <h3>인기 여행지 TOP 10</h3>
     </div>
-    <swiper class="swiper p-5" :options="swiperOption">
+    <swiper class="swiper" :options="swiperOption">
       <swiper-slide v-for="(place, index) in topPlanPlaces" :key="index">
         <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
         <div>
@@ -24,7 +24,7 @@
     <div class="mt-3">
       <h3>핫플 TOP 10</h3>
     </div>
-    <swiper class="swiper p-5" :options="swiperOption">
+    <swiper class="swiper" :options="swiperOption">
       <swiper-slide v-for="(place, index) in topHotplaces" :key="index">
         <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
         <div>
@@ -265,5 +265,12 @@ p {
   width: 150px;
   z-index: 100;
   background: linear-gradient(90deg, rgba(242, 243, 248, 0) 0%, rgba(242, 243, 248, 1) 100%);
+}
+
+.swiper {
+  padding-top: 0px;
+  padding-bottom: 48px;
+  padding-left: 48px;
+  padding-right: 48px;
 }
 </style>
