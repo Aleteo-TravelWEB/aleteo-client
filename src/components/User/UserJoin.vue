@@ -1,5 +1,5 @@
 <template>
-  <div class="signin">
+  <div class="sign-main">
     <div class="sign-container">
       <div class="signin">
         <form id="signin-form" method="POST" action="${root}/user/signin" role="search">
@@ -7,8 +7,8 @@
             <h2>회원가입</h2>
           </div>
           <hr />
-          <div class="row d-flex justify-content-center mt-4 mb-3">
-            <div class="col-10">
+          <div class="row d-flex justify-content-center mt-4 mb-3 join-main">
+            <!-- <div class="col-10">
               <input ref="image" type="file" @change="userProfile" style="display: none" />
             </div>
             <div class="border p-4 image-content" @click="clickInputTag()" v-if="!user.image">
@@ -36,7 +36,7 @@
                 font-scale="5"
                 @click="clickInputTag()"
               />
-            </div>
+            </div> -->
           </div>
           <div class=" d-flex justify-content-center mt-4 mb-3">
             <div style="width: 400px;">
@@ -109,7 +109,7 @@
               <span class="mx-1 d-flex justify-content-center align-items-center">@</span>
 
               <b-form-select style="width:100px;" v-model="user.emailDomain" :options="domains"></b-form-select>
-              <div class="mx-1 p-2 admin" @click="sendEmail">인증<br/>보내기</div>
+              <div class="mx-1 p-2 admin" @click="sendEmail">&nbsp;&nbsp;인증<br/>보내기</div>
             </div>
           </div>
           <div class="d-flex justify-content-center mt-2" v-if="isShowAdmin">
@@ -292,11 +292,35 @@ export default {
   border-radius: 1rem;
   margin-top: 5rem;
   margin-bottom: 5rem;
+  position: relative;
 }
 
-.signin {
-  text-align: center;
+/* .sign-main{
+  overflow: hidden;
+  margin: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
 }
+
+.sign-main::before{
+  content: "";
+  background-image: url("@/assets/img/background4.jpg");
+  background-size: cover;
+  opacity: 0.4;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+} 
+
+.signin {
+  opacity: 1;
+  position: relative;
+} */
+
 
 #find-password:link {
   color: #4d5054;
