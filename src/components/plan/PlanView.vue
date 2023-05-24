@@ -178,8 +178,14 @@
         <div class="hover-div d-flex flex-end mb-3" @click="closeRePath()">
           <b-icon icon="x-circle-fill" class="close-modal" style="color: #e86154"></b-icon>
         </div>
-        <div><h4 class="text-secondary mb-3">추천경로</h4></div>
+        <div><h4 class="mb-3" style="color: black">추천경로</h4></div>
         <div ref="mapModal" style="width: 100%; height: 500px"></div>
+        <div class="d-flex flex-row justify-content-center mt-3">
+          <div v-for="(place, index) in fastPlaces" :key="index" class="d-flex flex-row">
+            <h6 style="color: #3f72af">{{ place.name }}</h6>
+            <b-icon icon="arrow-right-short" v-if="index !== fastPlaces.length - 1" class="mx-1" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -395,13 +401,6 @@ export default {
     },
     //커스텀 오버레이 표시 함수
     displayCustomOverlay(marker) {
-      let image = "";
-      if (marker.image !== "") {
-        image = marker.image;
-      } else {
-        image = require("@/assets/img/noimage.png");
-      }
-
       let content = `
 		<div class="wrap">
 			<div class="info">
@@ -411,7 +410,7 @@ export default {
 				</div>
 				<div class="body">
 					<div class="img">
-						<img src="${image}" width="73" height="70">
+						<img src="${marker.imageUrl}" width="73" height="70">
 					</div>
 					<div class="desc">
 						<div class="ellipsis mb-1">${marker.address}</div>
