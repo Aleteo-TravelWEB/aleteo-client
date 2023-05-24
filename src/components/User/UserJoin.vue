@@ -115,7 +115,7 @@
               <span class="mx-1 d-flex justify-content-center align-items-center">@</span>
 
               <b-form-select style="width:100px;" v-model="user.emailDomain" :options="domains"></b-form-select>
-              <div class="mx-1 p-2 admin" @click="sendEmail" style="height=38px; text-align: center;">번호 전송</div>
+              <div class="mx-1 p-2 admin btn btn-jelly" @click="sendEmail">번호 전송</div>
             </div>
           </div>
           <div class="d-flex justify-content-center mt-2" v-if="isShowAdmin">
@@ -136,6 +136,7 @@
                 @click="join"
                 id="joinin-btn"
                 :class="{ 'shake-effect': isShaking }"
+                class =" btn btn-jelly" 
               >
                 가입하기
               </button>
@@ -288,7 +289,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 .sign-container {
   display: inline-block;
   width: 430px;
@@ -360,11 +361,24 @@ label {
   box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
 }
 
+
 #joinin-btn {
-  width: 30%; 
+  width: 25%; 
+  height: 47px;
   border: 1px solid #ced4da;
-  background-color: #ffffff;
   border-radius: 8px;
+  background-color: rgba(241, 241, 255, 0.801);
+  opacity: 1;
+}
+
+.btn {
+  height: 47px;
+
+  &-jelly {
+    &:hover {
+      animation: jelly 0.5s;
+    }
+  }
 }
 
 .join-btn {
@@ -391,7 +405,19 @@ label {
     transform: translateX(0);
   }
 }
+@keyframes jelly {
+  25% {
+    transform: scale(0.9, 1.1);
+  }
 
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+ }
 .shake-effect {
   animation: shake 0.5s;
 }
@@ -402,9 +428,12 @@ label {
 
 .admin {
   border: 1px solid #ced4da;
-  background-color: #fff;
+  background-color: rgb(158, 160, 248, 0.5);
   border-radius: 8px;
-  padding: 0;
+  padding-top: -10px;
+  height: 38px;
+  // text-align: center;
+  justify-items: center;
 }
 
 .admin:hover {
