@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="mb-5">
-      <button class="btn btn-primary" @click="confirmPw">확인</button>
+      <button type="submit" class="m-1 btn btn-jelly" @click="confirmPw">확인</button>
     </div>
   </div>
 </template>
@@ -64,5 +64,35 @@ export default {
 <style scoped>
 .form-control {
   width: 200px;
+}
+</style>
+
+<style lang="scss">
+
+.btn {
+  margin: 1rem;
+  background-color: #4199ff;
+  color: black;
+  font-weight: 400;
+
+  &-jelly {
+    &:hover {
+      animation: jelly 0.5s;
+    }
+  }
+}
+
+@keyframes jelly {
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
 }
 </style>
