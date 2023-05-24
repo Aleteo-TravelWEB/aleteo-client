@@ -41,11 +41,6 @@
                 {{ data.item.title }}
               </router-link>
             </template>
-            <template #row="rowProps">
-              <b-tr class="highlight-row">
-                <slot name="row" v-bind="rowProps"></slot>
-              </b-tr>
-            </template>
           </b-table>
         </b-col>
       </b-row>
@@ -119,7 +114,7 @@ export default {
   methods: {
     rowClass(item, type) {
       if (!item || type !== 'row') return
-      if (item.pin > 0) return 'table-secondary'
+      if (item.pin > 0) return 'highlight-row'
     },
     moveWrite() {
       this.$router.push({ name: "noticewrite" });
@@ -185,12 +180,18 @@ export default {
   cursor: pointer;
 }
 
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
 .link {
   text-decoration: none;
   color: black;
 }
 
 .highlight-row {
-  background-color: yellow; 
+  background-color: #6091c959;
+  color: black;
 }
+
 </style>

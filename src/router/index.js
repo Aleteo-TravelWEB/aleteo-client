@@ -105,6 +105,12 @@ const routes = [
         component: () => import("@/components/notice/NoticeView"),
       },
       {
+        path: "modify",
+        name: "noticemodify",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/notice/NoticeModify"),
+      },
+      {
         path: "delete",
         name: "deletenotice",
         beforeEnter: onlyAuthUser,
