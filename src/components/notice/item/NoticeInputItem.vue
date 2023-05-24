@@ -39,13 +39,16 @@
 
 <script>
 import { writeNotice, modifyNotice, viewNotice } from "@/api/notice";
+import { mapState } from 'vuex';
+
+const userStore = "userStore";
 
 export default {
   name: 'NoticeInputItem',
   data() {
     return {
       notice: {
-        user_id: "",
+        userId: "",
         title: "",
         content: "",
         pin: 0,
@@ -75,6 +78,9 @@ export default {
       this.ifUserid = true;
     }
   },
+  computed: {
+    ...mapState(userStore, ["userInfo"]),
+  },
   methods: {
     moveList() {
       this.$router.push({ name: "noticelist"});
@@ -90,6 +96,7 @@ export default {
       
       let err = true;
       let msg= "";
+      this.notice.userId = this.userInfo.userId;
       console.log("submit :: " + this.notice.pin);
       !this.notice.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs.titile.focus());
       err && !this.notice.content && ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
@@ -111,7 +118,7 @@ export default {
     },
     writeNotice() {
       let param = {
-        userId:this.$store.state.UserId,
+        userId:this.userInfo.userId,
         title: this.notice.title,
         content: this.notice.content,
         pin: this.notice.pin,
