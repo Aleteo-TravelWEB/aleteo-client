@@ -62,6 +62,7 @@ export default {
       perPage: 4,
       attractions: [],
       topPlanPlaces: [],
+      topHotplaces: [],
       swiperOption: {
         slidesPerView: 1,
         spaceBetween: 30,
@@ -92,6 +93,8 @@ export default {
     );
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 end //////////////////
     ////////////////// 관광지에 대한 이미지 리스트 start //////////////////
+
+    ////////////////// top 핫플레이스에 넣은 관광지 리스트 start //////////////////
   },
   computed: {},
   methods: {},
