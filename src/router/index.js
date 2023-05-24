@@ -191,6 +191,12 @@ const routes = [
         component: () => import("@/components/user/UserMyPage"),
       },
       {
+        path: "pwconfirm",
+        name: "pwconfirm",
+        beforeEnter: onlyAuthUser,
+        component: () => import("@/components/user/UserPwConfirm"),
+      },
+      {
         path: "modify",
         name: "modify",
         beforeEnter: onlyAuthUser,

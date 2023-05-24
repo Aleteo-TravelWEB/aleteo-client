@@ -8,7 +8,6 @@ async function login(user, success, fail) {
 
 async function findById(userId, success, fail) {
   api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
-  console.log("userId: " + userId);
   await api.get(`/user/info/${userId}`).then(success).catch(fail);
 }
 
@@ -49,4 +48,9 @@ async function sendAdminEmail([emailId, emailDomain], success, fail) {
   await api.post(`/user/email`, data , { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail, sendAdminEmail };
+// 비밀번호 재확인
+async function confirmPwd(user, success, fail) {
+  await api.post(`/user/confirm`, JSON.stringify(user), { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail, sendAdminEmail, confirmPwd };

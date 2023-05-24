@@ -57,7 +57,7 @@
           <hr />
 
           <b-button variant="outline-primary" href="#" class="mr-1">
-            <router-link :to="{ name: 'modify' }" class="link">내정보수정</router-link>
+            <router-link :to="{ name: 'pwconfirm' }" class="link">내정보수정</router-link>
           </b-button>
           <b-button variant="outline-danger" href="#" @click="resignUser"> 탈퇴하기 </b-button>
         </b-jumbotron>
