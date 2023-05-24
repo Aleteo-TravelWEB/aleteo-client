@@ -56,20 +56,28 @@
       <!-- kakao map end -->
       <div>
         <!-- 여행 계획 들어가는 영역 -->
-        <div class="d-flex flex-column p-2 mt-5" style="width: 100%; height: 20em">
+        <div
+          class="d-flex flex-column p-2 mt-5"
+          style="width: 100%; height: 20em; overflow-x: auto"
+        >
           <h3 id="plan-title" class="text-center p-2"><strong>여행 계획</strong></h3>
           <div>
             <div
               id="plan-content"
-              class="rounded bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
-              style="width: 100%; height: 10em"
+              class="rounded bg-light shadow mb-2 mx-auto p-2 d-flex justify-content-center"
+              style="width: 100%; height: 12em; overflow-x: auto"
             >
               <draggable
                 v-model="places"
                 @change="changePlaceList()"
                 class="d-flex flex-row plan-content"
               >
-                <div v-for="(place, index) in places" :key="index" class="border rounded">
+                <div
+                  v-for="(place, index) in places"
+                  :key="index"
+                  class="border rounded"
+                  style="width: 400px"
+                >
                   <b-row align-h="end">
                     <b-icon
                       class="col-2"
@@ -80,7 +88,7 @@
                   </b-row>
                   <div class="text-center p-2 d-flex justify-content-center">
                     <img :src="place.imageUrl" style="width: 100px; height: 100px" />
-                    <div>
+                    <div class="mx-2">
                       <div class="place-title">{{ place.name }}</div>
                       <div>{{ place.address }}</div>
                       <div class="mt-2">
