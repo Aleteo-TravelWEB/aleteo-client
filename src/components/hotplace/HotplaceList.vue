@@ -21,7 +21,7 @@
         내 핫플레이스
       </button>
     </div>
-    <div class="grid mb-5">
+    <div class="grid">
       <div class="grid_item" v-for="hotplace in pagination" :key="hotplace.id">
         <div class="card">
           <img class="card_img" :src="`/upload/hotplace/image/${hotplace.image}`" alt="thumnail" />
@@ -115,7 +115,7 @@ export default {
     return {
       hotplaces: [],
       currentPage: 1,
-      perPage: 8,
+      perPage: 6,
       hotplace: {
         userId: null,
         image: null,
@@ -242,26 +242,12 @@ export default {
 </script>
 
 <style scoped>
-.styled-button {
-  background-color: #4caf50;
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 10px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 20px;
 }
-.grid_item {
+/* .grid_item {
   background-color: #fff;
   height: 30rem;
   border-radius: 0.4rem;
@@ -274,7 +260,7 @@ export default {
 .grid_item:hover {
   transform: translateY(-0.5%);
   box-shadow: 0 4rem 8rem rgba(0, 0, 0, 0.2);
-}
+} */
 
 .card_img {
   display: block;
