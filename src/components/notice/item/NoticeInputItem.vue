@@ -28,7 +28,7 @@
 
         <div class="d-flex flex-row mt-3">
         <button type="submit" class="m-1 btn btn-jelly" v-if="this.type === 'write'">글작성</button>
-        <bbutton type="submit" class="m-1 btn btn-jelly" v-else>글수정</bbutton>
+        <button type="submit" class="m-1 btn btn-jelly" v-else>글수정</button>
         <button type="reset" class="m-1 btn btn-jelly" style="background-color: #ff4141">초기화</button>
         <button @click="onMove()" class="m-1 btn btn-jelly" style="background-color: #f7f7f7">글목록</button>
         </div>

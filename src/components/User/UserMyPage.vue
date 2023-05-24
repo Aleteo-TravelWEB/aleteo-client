@@ -55,11 +55,9 @@
           </div>
 
           <hr />
-
-          <b-button variant="outline-primary" href="#" class="mr-1">
-            <router-link :to="{ name: 'pwconfirm' }" class="link">내정보수정</router-link>
-          </b-button>
-          <b-button variant="outline-danger" href="#" @click="resignUser"> 탈퇴하기 </b-button>
+          
+          <button type="submit" class="m-1 mx-2 btn btn-jelly" ><router-link :to="{ name: 'pwconfirm' }" class="link">내정보수정</router-link></button>
+          <button type="submit" class="m-1 mx-2 btn btn-jelly" @click="resignUser" style="background-color: #ff4141">탈퇴하기</button>
         </b-jumbotron>
       </b-col>
       <b-col></b-col>
@@ -247,5 +245,35 @@ export default {
 
 .hover-event:hover {
   cursor: pointer;
+}
+</style>
+
+<style lang="scss">
+
+.btn {
+  margin: 1rem;
+  background-color: #4199ff;
+  color: black;
+  font-weight: 400;
+
+  &-jelly {
+    &:hover {
+      animation: jelly 0.5s;
+    }
+  }
+}
+
+@keyframes jelly {
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
 }
 </style>
