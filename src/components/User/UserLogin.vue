@@ -44,40 +44,102 @@
             </div>
           </div>
           <div class="row justify-content-center">
-            <div class="col-4 me-2">
+            <div class="d-flex justify-content center">
+              <div id="find-id" class="hover-div " @click="moveFindId()">아이디 찾기</div>
+              <p class="mx-2"> | </p>
               <div id="find-password" class="hover-div" @click="moveFindPwd()">비밀번호 찾기</div>
             </div>
           </div>
           <div
             id="login-result-div"
-            class="row d-flex justify-content-center my-4"
+            class="row d-flex justify-content-center"
             v-if="isLoginConfirm"
           >
             <div :class="{ 'shake-effect': isShaking }" style="color: crimson">
               아이디 또는 비밀번호를 확인해주세요.
             </div>
           </div>
-          <div class="row d-flex justify-content-center my-4">
-            <div class="col-10">
+          <div class="d-flex justify-content-center mb-3">
               <button
                 type="button"
                 @click="confirm"
                 id="signin-btn"
-                class="btn submit-btn"
-                style="width: 100%"
+                class="btn btn-jelly"
+                style="width: 80%; background-color: #888;"
                 :class="{ 'shake-effect': isShaking }"
               >
                 로그인
               </button>
-            </div>
           </div>
         </form>
       </div>
     </div>
-    <!-- 모달 창 start -->
-    <div v-if="showModal" class="modal shadow mb-5">
+    <!-- 아이디 찾기 모달 창 start -->
+    <div v-if="showIdModal" class="modal shadow mb-5">
       <div class="modal-content container">
-        <div class="hover-div d-flex flex-end mb-3" @click="closeModal()">
+        <div class="hover-div d-flex flex-end mb-3" @click="closeIdModal()">
+          <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
+        </div>
+        <h4 class="text-secondary mb-3">
+          <b-icon icon="key-fill"></b-icon> <strong>아이디 찾기</strong>
+        </h4>
+        <div class="container" v-if="isIdNotFind">
+          <div class="mt-2 mb-2 d-flex justify-content-center col-12">
+            <b-input-group class="px-2 d-flex justify-content-center">
+              <b-input-group-prepend is-text>
+                <b-icon icon="person-fill"></b-icon>
+              </b-input-group-prepend>
+              <input
+                type="text"
+                class="form-control col-12"
+                id="find-user-id"
+                placeholder="이름을 입력해주세요"
+                v-model="findId.userName"
+              />
+            </b-input-group>
+          </div>
+          <div class="mt-4"></div>
+          <div class="mt-2 mb-2 d-flex justify-content-center col-12">
+            <b-input-group class="px-2 d-flex justify-content-center">
+              <b-input-group-prepend is-text>
+                <b-icon icon="envelope"></b-icon>
+              </b-input-group-prepend>
+              <input
+                type="text"
+                class="form-control col-5"
+                id="find-user-id"
+                v-model="findId.emailId"
+                placeholder="이메일"
+              />
+              <span class="border col-1 d-flex justify-content-center align-items-center">@</span>
+              <b-form-select
+                :options="domains"
+                class="col-5"
+                v-model="findId.emailDomain"
+              ></b-form-select>
+            </b-input-group>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mt-2" v-if="isShowIdResult">
+          <div :class="{ 'shake-effect': isShakingModal }" style="color: crimson">
+            이름 또는 이메일을 확인해주세요.
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mt-2 mb-3" v-if="idResult != `null`">
+          <div>
+            {{ idResult }}
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-2" v-if="!idResult">
+          <button class="mx-5 m-1 btn btn-jelly" @click="findUserId()">찾기</button>
+        </div>
+      </div>
+    </div>
+    <!-- 아이디 찾기 모달 창 end -->
+    <!-- 비밀번호 찾기 모달 창 start -->
+    <div v-if="showPwModal" class="modal shadow mb-5">
+      <div class="modal-content container">
+        <div class="hover-div d-flex flex-end mb-3" @click="closePwModal()">
           <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
         </div>
         <h4 class="text-secondary mb-3">
@@ -126,7 +188,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-end mt-2">
-          <b-button variant="outline-primary" class="mx-5" @click="findPwd()">전송</b-button>
+          <button class="mx-5 m-1 btn btn-jelly" @click="findPwd()">전송</button>
         </div>
       </div>
     </div>
@@ -136,6 +198,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { findId } from "@/api/user";
 
 const userStore = "userStore";
 
@@ -152,7 +215,8 @@ export default {
       isLoginConfirm: false,
       isShaking: false,
       isShakingModal: false,
-      showModal: false, // 모달 창
+      showIdModal: false, // 아이디 찾기 모달 창
+      showPwModal: false, // 비밀번호 찾기 모달 창
       domains: [
         { value: null, text: "선택" },
         { value: "ssafy.com", text: "싸피" },
@@ -160,12 +224,20 @@ export default {
         { value: "naver.com", text: "네이버" },
         { value: "kakao.com", text: "카카오" },
       ],
+      findId: {
+        userName: null,
+        emailId: null,
+        emailDomain: null,
+      },
       findUser: {
         userId: null,
         emailId: null,
         emailDomain: null,
       },
       isShowPwdResult: false,
+      isShowIdResult: false,
+      isIdNotFind: true, // 아이디 찾은 후
+      idResult: null,
     };
   },
   computed: {
@@ -180,7 +252,7 @@ export default {
       if (this.isLogin) {
         this.isLoginConfirm = false;
         await this.getUserInfo(token);
-        console.log("4. confirm() userInfo :: ", this.userInfo);
+        // console.log("4. confirm() userInfo :: ", this.userInfo);
         this.$router.push({ name: "main" });
       } else {
         this.isLoginConfirm = true;
@@ -196,13 +268,11 @@ export default {
     },
     ////////////////// 비밀번호 찾기 start //////////////////
     async findPwd() {
-      console.log("findUser :: ");
-      console.log(this.findUser);
       alert("메일 전송이 완료되었습니다.");
       await this.sendUserPwdMail(this.findUser);
       if (this.isSendPwdMail) {
         console.log("mail send :: true");
-        this.showModal = false;
+        this.showPwModal = false;
         this.findUser = [];
       } else {
         this.isShowPwdResult = true;
@@ -213,11 +283,45 @@ export default {
         }, 1000);
       }
     },
-    moveFindPwd() {
-      this.showModal = true;
+    async findUserId() {
+      console.log("findId :: ");
+      const user = {
+        userName : this.findId.userName,
+        emailId: this.findId.emailId,
+        emailDomain: this.findId.emailDomain,
+      }
+      await findId(
+        user,
+        ({data}) => {
+          if (data.message === "success") {
+            this.isShowIdResult = false;
+            console.log("아이디 찾기 성공");
+            this.isIdNotFind = false;
+            this.idResult = data.userId;
+          } else {
+            console.log('아이디 찾기 실패')
+            this.isShowIdResult = true;
+          }
+        }
+      )
     },
-    closeModal() {
-      this.showModal = false;
+    moveFindId() {
+      this.showIdModal = true;
+      this.findId.emailDomain = null;
+    },
+    moveFindPwd() {
+      this.showPwModal = true;
+      this.findUser.emailDomain = null;
+    },
+    closeIdModal() {
+      this.showIdModal = false;
+      this.isIdNotFind = true;
+      this.idResult = null;
+      this.isShowIdResult = false;
+      this.findId = [];
+    },
+    closePwModal() {
+      this.showPwModal = false;
       this.findUser = [];
       this.isShakingModal = false;
     },
@@ -297,6 +401,7 @@ export default {
   border: 1px solid #888;
   border-radius: 15px;
   width: 70%;
+  top: 100px;
   max-width: 600px;
 }
 
@@ -306,5 +411,37 @@ export default {
 
 .hover-div:hover {
   color: #3f72af;
+}
+
+
+</style>
+
+<style lang="scss">
+
+.btn {
+  margin: 1rem;
+  background-color: #4199ff;
+  color: black;
+  font-weight: 400;
+
+  &-jelly {
+    &:hover {
+      animation: jelly 0.5s;
+    }
+  }
+}
+
+@keyframes jelly {
+  25% {
+    transform: scale(0.9, 1.1);
+  }
+
+  50% {
+    transform: scale(1.1, 0.9);
+  }
+
+  75% {
+    transform: scale(0.95, 1.05);
+  }
 }
 </style>

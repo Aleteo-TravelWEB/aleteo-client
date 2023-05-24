@@ -53,4 +53,9 @@ async function confirmPwd(user, success, fail) {
   await api.post(`/user/confirm`, JSON.stringify(user), { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail, sendAdminEmail, confirmPwd };
+// 아이디 찾기
+async function findId(user, success, fail) {
+  await api.post(`/user/id`, user, { headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")}}).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, idCheck, join, modify, resign, sendPwdMail, sendAdminEmail, confirmPwd , findId};

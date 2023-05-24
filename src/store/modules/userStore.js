@@ -97,6 +97,9 @@ const userStore = {
             // console.log("3. getUserInfo data >> ", data);
           } else {
             console.log("유저 정보 없음!!!!");
+            commit("SET_IS_LOGIN", false);
+            commit("SET_USER_INFO", null);
+            commit("SET_IS_VALID_TOKEN", false);
           }
         },
         async (error) => {
