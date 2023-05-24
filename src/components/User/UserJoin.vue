@@ -292,10 +292,11 @@ export default {
   border-radius: 1rem;
   margin-top: 5rem;
   margin-bottom: 5rem;
+  background-color: #fff;
   position: relative;
 }
 
-/* .sign-main{
+.sign-main{
   overflow: hidden;
   margin: 0;
   background-size: cover;
@@ -319,7 +320,7 @@ export default {
 .signin {
   opacity: 1;
   position: relative;
-} */
+}
 
 
 #find-password:link {
