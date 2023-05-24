@@ -1,43 +1,60 @@
 <template>
   <div>
-    <link
-      rel="stylesheet"
-      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <div class="slider">
-      <button id="prev" class="btn" @click="handleScrollPrev()">
-        <b-icon-arrow-left class="arrow" id="arrow-left"></b-icon-arrow-left>
-      </button>
-      <div class="card-content" ref="cardcontent">
-        <!-- Card start-->
-        <div class="card" v-for="place in topPlanPlaces" :key="place.place_id">
-          <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
-          <div class="card-img"></div>
-          <div class="card-text">
+    <div class="mt-3">
+      <h3>인기 여행지 TOP 10</h3>
+    </div>
+    <swiper class="swiper p-5" :options="swiperOption">
+      <swiper-slide v-for="(place, index) in topPlanPlaces" :key="index">
+        <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
+        <div>
+          <div class="card-img">
+            <img :src="place.imageUrl" :alt="place.placeId" />
+          </div>
+          <div class="card-text d-flex flex-column">
             <h2>{{ place.name }}</h2>
             <p>{{ place.address }}</p>
           </div>
         </div>
-        <!-- Card end -->
-      </div>
-      <button id="next" class="btn" @click="handleScrollNext()">
-        <b-icon-arrow-right class="arrow" id="arrow-right"></b-icon-arrow-right>
-      </button>
+      </swiper-slide>
+      <div class="swiper-pagination" slot="pagination"></div>
+      <div class="swiper-button-prev" slot="button-prev"></div>
+      <div class="swiper-button-next" slot="button-next"></div>
+    </swiper>
+
+    <div class="mt-3">
+      <h3>핫플 TOP 10</h3>
     </div>
+    <swiper class="swiper p-5" :options="swiperOption">
+      <swiper-slide v-for="(place, index) in topHotplaces" :key="index">
+        <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
+        <div>
+          <div class="card-img">
+            <img :src="place.imageUrl" :alt="place.placeId" />
+          </div>
+          <div class="card-text d-flex flex-column">
+            <h2>{{ place.name }}</h2>
+            <p>{{ place.address }}</p>
+          </div>
+        </div>
+      </swiper-slide>
+      <div class="swiper-pagination" slot="pagination"></div>
+      <div class="swiper-button-prev" slot="button-prev"></div>
+      <div class="swiper-button-next" slot="button-next"></div>
+    </swiper>
   </div>
 </template>
 
 <script>
 import { viewTopTenPlanPlaces } from "@/api/main";
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
 
 export default {
   name: "TopTen",
-  components: {},
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
   data() {
     return {
       totalPages: 3,
@@ -45,41 +62,22 @@ export default {
       perPage: 4,
       attractions: [],
       topPlanPlaces: [],
+      swiperOption: {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      },
     };
   },
-  mounted() {
-    // let currentPage1 = 1;
-    // let totalPages1 = 3;
-    // function createPagination() {
-    //   const prevButton = document.getElementById("arrow-left");
-    //   prevButton.addEventListener("click", () => {
-    //     console.log("prev clicked");
-    //     if (currentPage1 > 1) {
-    //       currentPage1--;
-    //       updatePagination();
-    //     }
-    //   });
-    //   const nextButton = document.getElementById("arrow-right");
-    //   nextButton.addEventListener("click", () => {
-    //     console.log("next clicked");
-    //     if (currentPage1 < totalPages1) {
-    //       currentPage1++;
-    //       updatePagination();
-    //     }
-    //   });
-    // }
-    // function updatePagination() {
-    //   const paginationLinks = Array.from(document.getElementsByClassName("arrow"));
-    //   paginationLinks.forEach((link) => {
-    //     link.parentNode.classList.remove("active");
-    //     if (parseInt(link.textContent) === currentPage1) {
-    //       link.parentNode.classList.add("active");
-    //     }
-    //   });
-    // }
-    // createPagination();
-    // updatePagination();
-  },
+  mounted() {},
   created() {
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 start //////////////////
     viewTopTenPlanPlaces(
@@ -95,36 +93,15 @@ export default {
     ////////////////// top ten 여행 계획에 넣은 관광지 리스트 end //////////////////
     ////////////////// 관광지에 대한 이미지 리스트 start //////////////////
   },
-  computed: {
-    topPlanPlcesPagination() {
-      const startIndex = (this.currentPage - 1) * this.perPage;
-      const endIndex = startIndex + this.perPage;
-      return this.topPlanPlaces.slice(startIndex, endIndex);
-    },
-  },
-  methods: {
-    //     const next=document.querySelector('#next')
-    // const prev=document.querySelector('#prev')
-
-    handleScrollNext() {
-      const cards = this.$refs.cardcontent;
-      console.log("cards: ");
-      console.log(cards);
-      cards.scrollLeft = cards.scrollLeft +=
-        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
-
-      console.log("cards.scrollLeft2, " + cards.scrollLeft);
-    },
-    handleScrollPrev() {
-      const cards = this.$refs.cardcontent;
-      cards.scrollLeft = cards.scrollLeft -=
-        window.innerWidth / 2 > 600 ? window.innerWidth / 2 : window.innerWidth - 100;
-    },
-  },
+  computed: {},
+  methods: {},
 };
 </script>
 
 <style>
+.slide {
+  height: 500px;
+}
 /* 슬라이드 */
 body {
   font-family: Inter;

@@ -1,20 +1,19 @@
 <template>
-  <div class="background">
-    <div class="title d-flex flex-row justify-content-center" style="width: 100%">
-      <h1 class="title-content">ALETEO</h1>
-    </div>
-    <div class="d-flex flex-row justify-content-center mb-2 search" style="width: 100%">
-      <div class="today mx-3 p-2 shadow px-5" @click="moveAttraction()">
-        오늘의 관광지는? <b-icon class="px-3" icon="search" animation="fade" />
+  <div>
+    <div class="background">
+      <div class="title d-flex flex-row justify-content-center" style="width: 100%">
+        <h1 class="title-content">ALETEO</h1>
+      </div>
+      <div class="d-flex flex-row justify-content-center mb-2 search" style="width: 100%">
+        <div class="today mx-3 p-2 shadow px-5" @click="moveAttraction()">
+          오늘의 관광지는? <b-icon class="px-3" icon="search" animation="fade" />
+        </div>
       </div>
     </div>
 
     <div class="content">
       <div>
         <top-ten-vue></top-ten-vue>
-      </div>
-      <div>
-        <!-- <top-hotplace-vue></top-hotplace-vue> -->
       </div>
     </div>
   </div>
@@ -89,5 +88,6 @@ export default {
   width: 100%;
   top: 557px;
   position: absolute;
+  height: auto;
 }
 </style>
