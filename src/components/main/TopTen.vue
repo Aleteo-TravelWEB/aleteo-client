@@ -5,6 +5,7 @@
     </div>
     <swiper class="swiper" :options="swiperOption">
       <swiper-slide v-for="(place, index) in topPlanPlaces" :key="index">
+        <a :href="`https://place.map.kakao.com/${place.placeId}`" class="hotplace" target = "_blank">
         <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
         <div>
           <div class="card-img">
@@ -15,6 +16,7 @@
             <p>{{ place.address }}</p>
           </div>
         </div>
+        </a>
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination"></div>
       <div class="swiper-button-prev" slot="button-prev"></div>
