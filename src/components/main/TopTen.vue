@@ -26,6 +26,7 @@
     </div>
     <swiper class="swiper" :options="swiperOption">
       <swiper-slide v-for="(place, index) in topHotplaces" :key="index">
+        <a :href="place.mapUrl" class="hotplace" target="_blank">
         <b-icon-heart-fill class="icon" style="color: #e86154"></b-icon-heart-fill>
         <div>
           <div class="card-img">
@@ -40,6 +41,7 @@
             <p v-if="place.tag2 !== `null`">{{ place.tag2 }}</p>
           </div>
         </div>
+        </a>
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination"></div>
       <div class="swiper-button-prev" slot="button-prev"></div>
@@ -272,5 +274,14 @@ p {
   padding-bottom: 48px;
   padding-left: 48px;
   padding-right: 48px;
+}
+
+.hotplace {
+  text-decoration: none;
+  color: black;
+}
+
+.hotplace:hover {
+  color: black;
 }
 </style>
