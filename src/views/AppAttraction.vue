@@ -227,4 +227,7 @@ export default {
 .hover:hover {
   background: #cfcfcf;
 }
+.hover-div:hover {
+  cursor: pointer;
+}
 </style>
