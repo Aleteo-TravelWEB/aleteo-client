@@ -43,12 +43,42 @@
         {{ type.name }}
       </b-form-checkbox>
     </div>
+    <div>
+      <button v-if="isSearch" @click="showModal()" class="rounded p-1 mb-2 hover shadow" style="border: 1px solid gray"><Strong style="color: #3f72af">{{clicks.title}}</Strong>자세히 보기</button>
+    </div>
     <kakao-map-vue class="mb-4 p-3"></kakao-map-vue>
+    
+    <!-- 모달창 -->
+    <div v-if="show" class="modal shadow mb-5">
+      <div class="modal-content container">
+        <div class="hover-div d-flex flex-end mb-3" @click="closeModal()">
+          <b-icon icon="x-circle-fill" style="color: #e86154"></b-icon>
+        </div>
+        <h4 class="text-secondary mb-3">
+          <b-icon icon="clipboard-check"></b-icon> <strong>{{ clicks.title }}</strong>
+        </h4>
+        <div>
+          <div>
+            <img :src="clicks.first_image" :alt="clicks.title" style="width: 500px;">
+          </div>
+          <div>
+            <div><span>{{clicks.addr1}}</span></div>
+            <div>
+              <p>{{clicks.zipcode}}</p>
+              <p v-if="clicks.tel !== null">{{clicks.tel}}</p>
+            </div>
+            <div>
+              <p>{{clicks.overview}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </b-container>
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 import KakaoMapVue from "@/components/kakaoMap/KakaoMap.vue";
 
 const attractionStore = "attractionStore";
@@ -64,20 +94,26 @@ export default {
       gugunCode: null,
       contentTypeIds: [],
       toggleOn: false,
+      show: false,
+      clickAttr: [],
     };
   },
   computed: {
-    ...mapState(attractionStore, ["sidos", "guguns", "types", "checkedTypes", "attractions"]),
+    ...mapState(attractionStore, ["sidos", "guguns", "types", "checkedTypes", "attractions", "clicks", "isSearch"]),
+    ...mapGetters(attractionStore, ["getClicks"]),
   },
   created() {
     this.CLEAR_SIDO_LIST();
     this.CLEAR_ATTRACTION_LIST();
+    this.CLEAR_CLICK_LIST();
+    this.CLEAR_IS_SEARCH();
     this.getSido();
   },
   watch: {
     contentTypeIds(newIds) {
       if (newIds.length == 0) {
         this.CLEAR_POSITION_LIST();
+        this.CLEAR_IS_SEARCH();
         window.kakao.maps.load(this.loadMap);
       }
     },
@@ -96,6 +132,8 @@ export default {
       "CLEAR_TYPE_LIST",
       "CLEAR_ATTRACTION_LIST",
       "CLEAR_POSITION_LIST",
+      "CLEAR_CLICK_LIST",
+      "CLEAR_IS_SEARCH",
     ]),
     gugunList() {
       this.CLEAR_GUGUN_LIST();
@@ -130,6 +168,15 @@ export default {
 
       this.map = new window.kakao.maps.Map(container, options);
     },
+    // 관광지 결과 보여주기
+    showModal() {
+      // 모달창 띄우기
+      this.show = true;
+      this.clickAttr = this.getClicks;
+    },
+    closeModal() {
+      this.show = false;
+    }
   },
 };
 </script>
@@ -153,5 +200,31 @@ export default {
   cursor: pointer;
   border: 2px groove #789dca;
   color: #0d3668;
+}
+
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 15px;
+  width: 70%;
+  max-width: 600px;
+}
+
+.hover:hover {
+  background: #cfcfcf;
 }
 </style>

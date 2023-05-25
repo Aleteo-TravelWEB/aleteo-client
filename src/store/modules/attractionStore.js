@@ -19,8 +19,14 @@ const attractionStore = {
     attractions: [],
     attraction: null,
     positions: [],
+    isSearch: false,
+    clickAttr: null, // 선택한 관광지
+    clicks: [], // 선택한 관광지 반환 정보
   },
   getters: {
+    getClicks: function(state) {
+      return state.clicks;
+    }
   },
   mutations: {
     //////////////////// Attraction start ////////////////////`
@@ -50,6 +56,12 @@ const attractionStore = {
     CLEAR_POSITION_LIST(state) {
       state.positions = [];
     },
+    CLEAR_CLICK_LIST(state) {
+      state.clicks = [];
+    },
+    CLEAR_IS_SEARCH(state) {
+      state.isSearch = false;
+    },
     SET_TYPE(state, contentTypeIds) {
       state.checkedTypes = Object.values(contentTypeIds).map((type) => type.id);
     },
@@ -74,6 +86,13 @@ const attractionStore = {
           tel: position["tel"]
         })
       })
+    },
+    SET_CLICK_LIST(state, clicks) {
+      console.log(clicks);
+      state.clicks = clicks;
+    },
+    SET_IS_SEARCH(state, search) {
+      state.isSearch = search;
     }
     //////////////////// Attraction end ////////////////////`
   },
@@ -141,6 +160,19 @@ const attractionStore = {
     detailAttr({ commit }, attraction) {
       commit("SET_DETAIL_ATTRACTION", attraction);
     },
+    getClickAttr({ commit }, clickTitle) {
+      http
+        .get(`/attraction/detail/${clickTitle}`)
+        .then(({ data }) => {
+          if (data) {
+            commit("SET_CLICK_LIST", data);
+            commit("SET_IS_SEARCH", true);
+          }
+        })
+        .catch((error) => { 
+          console.log(error); 
+        })
+    }
     //////////////////// Attraction end ////////////////////`
   },
 };

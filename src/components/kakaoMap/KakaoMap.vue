@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 const attractionStore = "attractionStore";
 
@@ -40,7 +40,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(attractionStore, ["CLEAR_POSITION_LIST"]),
+    ...mapMutations(attractionStore, ["CLEAR_POSITION_LIST", "CLEAR_CLICK_LIST"]),
+    ...mapActions(attractionStore, ["getClickAttr"]),
     // api 불러오기
     loadScript() {
       const script = document.createElement("script");
@@ -84,12 +85,16 @@ export default {
         marker.setMap(this.map);
 
         // 마커에 클릭 이벤트 등록
-        window.kakao.maps.event.addListener(marker, "click", () => {
+        window.kakao.maps.event.addListener(marker, "click", async () => {
           // 지금까지 열려있는 오버레이 다 닫기
           this.overlays.forEach((overlay) => {
             overlay.setMap(null);
           });
           this.displayCustomOverlay("", positions[i]);
+          var clickAttr = marker.Gb;
+          console.log(clickAttr);
+          this.CLEAR_CLICK_LIST();
+          await this.getClickAttr(clickAttr);
         });
       }
 
@@ -106,11 +111,11 @@ export default {
       }
 
       let content = `
-		<div class="wrap">
+		<div class="wrap" @mouseup="showModal()">
 			<div class="info">
 				<div class="title">
 					${marker.title}
-					<div class="close" @click="closeOverlay(this)" title="닫기"></div>
+					<div class="close" ref="close" @click="closeOverlay(this)" title="닫기"></div>
 				</div>
 				<div class="body">
 					<div class="img">
@@ -144,8 +149,9 @@ export default {
     },
     // 커스텀 오버레이를 닫는 함수
     closeOverlay(btn) {
+      console.log("test");
       btn.parentNode.parentNode.parentNode.remove();
-      // overlay.setMap(null);
+      // btn.overlay.setMap(null);
     },
   },
 };
@@ -248,5 +254,26 @@ export default {
 }
 .info .link {
   color: #5085bb;
+}
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 15px;
+  width: 70%;
+  max-width: 600px;
 }
 </style>
