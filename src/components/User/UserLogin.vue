@@ -268,6 +268,15 @@ export default {
     },
     ////////////////// 비밀번호 찾기 start //////////////////
     async findPwd() {
+      if (this.findUser.emailId === null || this.findUser.emailDomain === null) {
+        this.isShowPwdResult = true;
+        this.isShakingModal = true;
+
+        setTimeout(() => {
+          this.isShakingModal = false;
+        }, 1000);
+        return;
+      }
       alert("메일 전송이 완료되었습니다.");
       await this.sendUserPwdMail(this.findUser);
       if (this.isSendPwdMail) {
@@ -285,6 +294,10 @@ export default {
     },
     async findUserId() {
       console.log("findId :: ");
+      if (this.findId.userName === null || this.findId.emailId === null || this.findId.emailDomain === null) {
+        this.isShowIdResult = true;
+        return;
+      }
       const user = {
         userName: this.findId.userName,
         emailId: this.findId.emailId,

@@ -263,14 +263,13 @@ export default {
     },
     // 인증 이메일 보내기
     async sendEmail() {
+      if (this.user.emailId === null || this.user.emailDomain === null){
+        return;
+      }
       this.isShowAdmin = true;
-      console.log("admin email :: ");
-      console.log(this.user.emailId);
-      console.log(this.user.emailDomain);
       alert("인증번호가 발송되었습니다.")
       await this.sendUserAdminEmail([this.user.emailId, this.user.emailDomain]); 
       if (this.isSendAdminMail) {
-        alert("메일 전송이 완료되었습니다.");
         // console.log("adminCheck :: " + this.adminKey);
       } else {
         console.log("admin mail send :: fail");
