@@ -65,8 +65,17 @@ function modifyBoard1([board, img], success, fail) {
     .then(success)
     .catch(fail);
 }
+
 function modifyBoard2(board, success, fail) {
-  api.put(`/board/${board.id}`, JSON.stringify(board), {headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
+  console.log(board);
+  api.put(`/board/${board.id}`, JSON.stringify(board),
+    {
+      headers: {
+        "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token")
+      }
+    }).
+    then(success)
+    .catch(fail);
 }
 
 
