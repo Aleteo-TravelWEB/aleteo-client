@@ -45,7 +45,7 @@ function writeBoard([board, img], success, fail) {
 }
 
 // 게시글 수정
-function modifyBoard([board, img], success, fail) {
+function modifyBoard1([board, img], success, fail) {
   const formData = new FormData();
 
   formData.append("title", board.title);
@@ -53,9 +53,7 @@ function modifyBoard([board, img], success, fail) {
   formData.append("content", board.content);
   formData.append("userId", board.userId);
   formData.append("userName", board.userName);
-  if (img !== null) {
-    formData.append("image", img);
-  }
+  formData.append("image", img);
 
   api
     .put(`/board`, formData, {
@@ -67,6 +65,11 @@ function modifyBoard([board, img], success, fail) {
     .then(success)
     .catch(fail);
 }
+function modifyBoard2(board, success, fail) {
+  api.put(`/board/${board.id}`, JSON.stringify(board), {headers: { "X-ACCESS-TOKEN": "Bearer " + sessionStorage.getItem("refresh-token") } }).then(success).catch(fail);
+}
+
+
 
 // 게시글 삭제
 function deleteBoard(boardId, success, fail) {
@@ -78,4 +81,4 @@ function deleteBoard(boardId, success, fail) {
     .catch(fail);
 }
 
-export { listBoard, viewBoard, writeBoard, modifyBoard, deleteBoard };
+export { listBoard, viewBoard, writeBoard, modifyBoard1, modifyBoard2, deleteBoard };

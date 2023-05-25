@@ -132,6 +132,9 @@ export default {
   width:95% !important;
 }
 
+.card:hover {
+  transform: none;
+}
 .image {
   height: auto;
   max-width: 100%;

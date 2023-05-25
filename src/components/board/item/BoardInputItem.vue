@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { writeBoard, modifyBoard, viewBoard } from "@/api/board";
+import { writeBoard, modifyBoard1, modifyBoard2, viewBoard } from "@/api/board";
 import { mapState } from "vuex";
 
 const userStore = "userStore";
@@ -54,6 +54,7 @@ export default {
   data() {
     return {
       board: {
+        id: "",
         userId: "",
         userName: "",
         title: "",
@@ -102,7 +103,7 @@ export default {
 
       console.log(this.type);
       if (!err) alert(msg);
-      else this.type === "write" ? this.writeBoard() : this.modifyBoard();
+      else this.type === "write" ? this.writeBoard() : this.modifyBoard(this.imagechanged);
     },
     onReset(event) {
       event.preventDefault();
@@ -140,7 +141,7 @@ export default {
         }
       );
     },
-    modifyBoard() {
+    modifyBoard(imagechanged) {
       let param = {
         userId: this.userInfo.userId,
         id: this.board.id,
@@ -148,7 +149,26 @@ export default {
         title: this.board.title,
         content: this.board.content,
       };
-      modifyBoard(
+      if(!imagechanged) {
+        // 이미지 바꾸지 않는 경우
+        modifyBoard2(
+          param,
+          ({ data }) => {
+          let msg = "수정 처리시 문제가 발생 했습니다.";
+          if (data === "success") {
+            msg = "수정 완료";
+          }
+          alert(msg);
+          this.moveList();
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      }
+      else {
+        // 이미지 바꾸는 경우
+      modifyBoard1(
         [param, this.img],
         ({ data }) => {
           let msg = "수정 처리시 문제가 발생 했습니다.";
@@ -162,6 +182,7 @@ export default {
           console.log(error);
         }
       );
+      }
     },
     boardimg(event) {
       if (event.target.files[0] !== undefined) {

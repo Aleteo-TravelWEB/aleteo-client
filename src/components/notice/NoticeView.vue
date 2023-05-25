@@ -110,6 +110,10 @@ export default {
   }
 }
 
+.card:hover {
+  transform: none;
+}
+
 @keyframes jelly {
   25% {
     transform: scale(0.9, 1.1);
