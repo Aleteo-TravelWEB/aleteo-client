@@ -44,7 +44,7 @@
       </b-form-checkbox>
     </div>
     <div>
-      <button v-if="isSearch" @click="showModal()" class="rounded p-1 mb-2 hover shadow" style="border: 1px solid gray"><Strong style="color: #3f72af">{{clicks.title}}</Strong>자세히 보기</button>
+      <button v-if="isSearch" @click="showModal()" class="rounded p-1 mb-2 hover shadow" style="border: 1px solid gray"><Strong style="color: #3f72af">{{clicks.title}}</Strong> 자세히 보기</button>
     </div>
     <kakao-map-vue class="mb-4 p-3"></kakao-map-vue>
     

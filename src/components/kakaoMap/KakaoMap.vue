@@ -66,7 +66,6 @@ export default {
     },
     // 지정한 위치에 마커 불러오기
     loadMaker(positions) {
-      console.log("positions : " + positions);
 
       const imageSrc = require("@/assets/img/icon/location.png"); // 마커 이미지의 이미지 주소
 
@@ -92,7 +91,6 @@ export default {
           });
           this.displayCustomOverlay("", positions[i]);
           var clickAttr = marker.Gb;
-          console.log(clickAttr);
           this.CLEAR_CLICK_LIST();
           await this.getClickAttr(clickAttr);
         });
@@ -102,7 +100,6 @@ export default {
     },
     //커스텀 오버레이 표시 함수
     displayCustomOverlay(mapUrl, marker) {
-      console.log(mapUrl.length);
       let image = "";
       if (marker.image !== "") {
         image = marker.image;
@@ -149,7 +146,6 @@ export default {
     },
     // 커스텀 오버레이를 닫는 함수
     closeOverlay(btn) {
-      console.log("test");
       btn.parentNode.parentNode.parentNode.remove();
       // btn.overlay.setMap(null);
     },
