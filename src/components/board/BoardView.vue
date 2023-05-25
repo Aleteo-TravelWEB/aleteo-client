@@ -27,15 +27,13 @@
           class="mb-2 border rounded cardbody w-5"
           no-body
         >
+          <b-card-body v-if="board.image !== null" class="image-container">
+            <img  class="imgage" :src="`/upload/hotplace/image/${board.image}`" style="width:100%; height:auto; max-height:100%">
+            <div @click="openModal(board)"><u>이미지 상세보기</u></div>
+          </b-card-body>
+          <hr>
           <b-card-body class="text-left">
-            <div v-if="board.image !== null">
-              <div @click="openModal(board)"><u>이미지 보기</u></div>
-              <hr>
               <div v-html="message"></div>
-            </div>
-            <div v-else>
-              <div v-html="message"></div>
-            </div>
           </b-card-body>
         </b-card>
       </b-col>
@@ -132,6 +130,15 @@ export default {
 <style lang=scss scoped>
 .card {
   width:95% !important;
+}
+
+.image {
+  height: auto;
+  max-width: 100%;
+}
+
+.image-container {
+  padding: 0px;
 }
 
 /* 이미지 모달창 */
