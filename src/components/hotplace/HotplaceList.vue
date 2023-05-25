@@ -115,7 +115,7 @@ export default {
     return {
       hotplaces: [],
       currentPage: 1,
-      perPage: 6,
+      perPage: 9,
       hotplace: {
         userId: null,
         image: null,
