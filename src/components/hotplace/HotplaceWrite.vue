@@ -478,7 +478,7 @@ dd {
   color: #f9f7f7;
   font-size: 1rem;
   position: absolute;
-  right: 15px;
+  right: -15px;
   border-left: 0.5px solid lightgrey;
 }
 
