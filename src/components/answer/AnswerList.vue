@@ -1,32 +1,29 @@
 <template>
   <div id="container">
-    <div>댓글 목록</div>
-    <div v-for="(answer, index) in answers" :key="index"> 
-      <div class="card-container">
-      <b-card class="col-12 answerbody">
-        <b-card-text>{{ answer.content }}</b-card-text>
-        <div class="delete-button-wrapper" v-if="userInfo.userId===answer.userId">
-          <!-- <button id="delete-button" v-if="userInfo.userId===answer.userId" @click="deleteAnswer(answer.id)" class="styled-button"> -->
+    <div v-for="(answer, index) in answers" :key="index">
+      <!-- 답변 리스트 -->
+      <div class="delete-button-wrapper" v-if="userInfo.userId===answer.userId">
+        <div class="answercontent">
+        <div class="icon-container">
           <p class="h4 mb-2">
-          <b-icon
-            icon="chat-dots"
-            variant="success"
-            @click="showModal(index)"
-          ></b-icon>
+            <b-icon
+              icon="trash"
+              variant="danger"
+              @click="deleteAnswer(answer.id)"
+            ></b-icon>
           </p>
-          <p class="h4 mb-2">
-          <b-icon
-            icon="trash"
-            variant="danger"
-            @click="deleteAnswer(answer.id)"
-          ></b-icon>
+          <p class="h4 mb-2 icon">
+            <b-icon
+              icon="chat-dots"
+              variant="success"
+              @click="showModal(index)"
+            ></b-icon>
           </p>
-          <!-- </button> -->
-          
         </div>
-      </b-card>
-      
+        {{ answer.content }}
       </div>
+    </div>
+
       <!-- 입력 모달 창 -->
       <b-modal v-model="modalVisible[index].visible" :key="answer.id">
         <form @submit.stop.prevent="handleOk">
@@ -144,8 +141,21 @@ export default {
 #container {
   display: flex;
   flex-direction: column;
-  margin: 10px;
 }
+
+.answercontent {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  /* padding: 2rem; */
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: row-reverse;
+  
+}
+
 
 /* .styled-button {
   background-color: #4CAF50;
@@ -160,50 +170,6 @@ export default {
   cursor: pointer;
   border-radius: 4px;
 } */
-
-#delete-button {
-  background-color: #fc0303;
-}
-.delete-button-wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: flex;
-  justify-content: flex-end;
-  padding: 0;
-}
-
-.card-container {
-  display: flex;
-  align-items: flex-start;
-
-}
-
-.answerbody {
-  width: 80%;
-}
-
-.card-container .answerbody {
-  margin-bottom: 1rem; /* 버튼 위쪽에 일정한 마진을 추가합니다. */
-}
-
-
-.card-container button {
-
-  text-align: center;
-  border-radius: 4px;
-  background-color: #4CAF50;
-  margin-left: 2px;
-}
-
-.button-text {
-  white-space: nowrap;
-  text-align: center;
-  justify-content: center;
-  font-size: 20px;
-  padding: 2px;
-  
-}
 
 .inputbox {
   width: 200px; /* 원하는 너비로 설정 */

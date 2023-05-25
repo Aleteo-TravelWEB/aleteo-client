@@ -100,6 +100,7 @@ export default {
         !this.board.content &&
         ((msg = "내용 입력해주세요"), (err = false), this.$refs.content.focus());
 
+      console.log(this.type);
       if (!err) alert(msg);
       else this.type === "write" ? this.writeBoard() : this.modifyBoard();
     },
@@ -123,6 +124,7 @@ export default {
         title: this.board.title,
         content: this.board.content,
       };
+      console.log("11");
       writeBoard(
         [param, this.img],
         ({ data }) => {
@@ -139,7 +141,6 @@ export default {
       );
     },
     modifyBoard() {
-      console.log(this.board);
       let param = {
         userId: this.userInfo.userId,
         id: this.board.id,

@@ -92,6 +92,11 @@ export default {
 
 <style lang="scss">
 
+.card {
+  width:95% !important;
+}
+
+
 .btn {
   margin: 1rem;
   background-color: #4199ff;

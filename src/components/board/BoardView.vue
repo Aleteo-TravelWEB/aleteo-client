@@ -24,17 +24,35 @@
       <b-col>
         <b-card
           :header-html="`<div><h6><strong>${board.userName}</strong></div><div>조회수 : ${board.hit}</div><div>${board.createdAt}</h6></div>`"
-          class="mb-2 border rounded"
+          class="mb-2 border rounded cardbody w-5"
           no-body
         >
           <b-card-body class="text-left">
-            <div v-html="message"></div>
+            <div v-if="board.image !== null">
+              <div @click="openModal(board)"><u>이미지 보기</u></div>
+              <hr>
+              <div v-html="message"></div>
+            </div>
+            <div v-else>
+              <div v-html="message"></div>
+            </div>
           </b-card-body>
         </b-card>
       </b-col>
     </b-row>
+    <b-row class="mb-1">
+      <b-col>
+        댓글 목록
+      </b-col>
+    </b-row>
     <answer-list></answer-list>
     <answer-write></answer-write>
+
+    <!-- 이미지 모달창 -->
+    <div id="myModal" class="modal">
+      <span class="close" @click="closeModal()">&times;</span>
+      <img class="modal-content" id="modalImage">
+    </div>
   </b-container>
 </template>
 
@@ -56,6 +74,7 @@ export default {
     return {
       board: {},
       answers: [],
+      showModal: false,
     };
   },
   computed: {
@@ -97,11 +116,56 @@ export default {
         });
       }
     },
+    openModal(board) {
+      document.getElementById('myModal').style.display = 'block';
+      document.getElementById('modalImage').src =`/upload/hotplace/image/${board.image}`;
+    },
+    // 모달 닫기
+    closeModal() {
+      document.getElementById('myModal').style.display = 'none';
+    }
   },
 };
 </script>
 
-<style lang="scss">
+
+<style lang=scss scoped>
+.card {
+  width:95% !important;
+}
+
+/* 이미지 모달창 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+.modal img {
+  width: 100%;
+  height: auto;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 90px; /* 원하는 크기로 조정합니다 */
+  line-height: 1; /* 텍스트의 수직 정렬을 조정합니다 */
+  }
+
 .btn {
   margin: 1rem;
   background-color: #4199ff;
