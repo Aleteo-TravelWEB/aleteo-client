@@ -94,10 +94,10 @@
                       <div class="place-title">{{ place.name }}</div>
                       <div>{{ place.address }}</div>
                       <div class="mt-2">
-                        <a :href="place.placeUrl">자세히보기</a>
+                        <a :href="`https://place.map.kakao.com/${place.placeId}`" target="_blank" style="color: #3f72af;"><b-icon icon="cursor-fill" class="mx-1" />자세히보기</a>
                         <br />
                         <a
-                          :href="`https://map.kakao.com/link/to/${place.name},${place.lat},${place.lng}`"
+                          :href="`https://map.kakao.com/link/to/${place.name},${place.lat},${place.lng}`" style="color: #3f72af;"
                           ><b-icon icon="binoculars-fill" class="mx-1" />길찾기</a
                         >
                       </div>

@@ -116,7 +116,7 @@
               <div class="mb-2 row">
                 <div style="width: 10em" class="col-md-4"></div>
                 <div
-                  class="mb-2 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
+                  class="mb-1 p-3 travel-box d-flex flex-row align-items-center border border-4 rounded shadow timeline-custom"
                 >
                   <img
                     :src="place.imageUrl"
@@ -125,7 +125,7 @@
                     class="me-2 card-img"
                   />
                   <div class="travel-info">
-                    <div class="mb-3">
+                    <div class="mb-1">
                       <b-icon icon="pin-fill" class="mx-1" /><strong class="place_name">{{
                         place.name
                       }}</strong>
@@ -159,8 +159,7 @@
               class="btn btn-jelly mb-3 mx-2"
               @click="moveModify()"
               id="modify-button"
-            >
-              <b-icon icon="pencil-square" /> 수정
+            > 수정
             </button>
             <button
               type="button"
