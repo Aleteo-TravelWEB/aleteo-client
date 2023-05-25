@@ -327,7 +327,7 @@ export default {
 /* 수정 삭제 폼 */
 .modal {
   display: block;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;

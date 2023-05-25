@@ -88,7 +88,7 @@ const userStore = {
       // console.log("2. getUserInfo() decodeToken :: ", decodeToken);
       await findById(
         decodeToken.userId,
-        ({ data }) => {
+        async ({ data }) => {
           // console.log(data);
           if (data.message === "success") {
             // console.log("userData :: ");
@@ -97,9 +97,11 @@ const userStore = {
             // console.log("3. getUserInfo data >> ", data);
           } else {
             console.log("유저 정보 없음!!!!");
-            commit("SET_IS_LOGIN", false);
-            commit("SET_USER_INFO", null);
+            // commit("SET_IS_LOGIN", false);
+            // commit("SET_USER_INFO", null);
+            // commit("SET_IS_VALID_TOKEN", false);
             commit("SET_IS_VALID_TOKEN", false);
+            await dispatch("tokenRegeneration");
           }
         },
         async (error) => {
