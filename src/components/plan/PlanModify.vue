@@ -19,7 +19,7 @@
               class="border btn submit-btn col-3 m-2"
               type="button"
               @click="searchPlace"
-              style="height: 40px"
+              style="border: 1px solid #c1c1c1; height: 40px"
             >
               검색
             </button>
@@ -54,22 +54,18 @@
       <div id="map" ref="map" class="shadow rounded"></div>
       <!-- kakao map end -->
       <div>
-        <div class="divider mb-5"></div>
-        <aside>
           <!-- 여행 계획 들어가는 영역 -->
           <div
-            class="d-flex flex-column justify-content-center mx-auto p-2"
-            style="width: 100%; height: 35em"
+            class="d-flex flex-column p-2 mt-5"
+            style="width: 100%; overflow-x: auto"
           >
             <h3 id="plan-title" class="text-center p-2"><strong>여행 계획</strong></h3>
-            <form id="plan-form" onsubmit="return false;" role="search" method="POST">
-              <input type="hidden" name="action" value="save" />
               <div>
                 <div>
                   <div
                     id="plan-content"
-                    class="rounded border rounded border-5 bg-light shadow mb-2 mx-auto p-2 overflow-auto d-flex justify-content-center"
-                    style="width: 100%; height: 10em"
+                    class="rounded bg-light shadow mb-2 mx-auto p-2 d-flex justify-content-center"
+                    style="width: 100%; height: 12em; overflow-x: auto"
                   >
                     <draggable
                       v-model="places"
@@ -85,20 +81,27 @@
                             @click="deletePlace(place.placeId)"
                           ></b-icon>
                         </b-row>
-                        <div class="text-center p-2 d-flex flex-row">
+                        <div class="text-center p-2 d-flex justify-content-center">
                           <div>
                             <img :src="place.imageUrl" style="width: 100px; height: 100px" />
                           </div>
-                          <div>
+                          <div class="mx-2">
                             <div class="place-title">{{ place.name }}</div>
                             <div>{{ place.address }}</div>
+                            <div class="mt-2">
+                              <a :href="`https://place.map.kakao.com/${place.placeId}`">자세히보기</a>
+                              <br />
+                              <a
+                                :href="`https://map.kakao.com/link/to/${place.name},${place.lat},${place.lng}`"
+                                ><b-icon icon="binoculars-fill" class="mx-1" />길찾기</a
+                              >
+                            </div>
                           </div>
                         </div>
                       </div>
                     </draggable>
                   </div>
                 </div>
-                <div class="divider mb-3"></div>
                 <div id="plan-detail" class="d-flex flex-column align-items-center rounded mx-auto">
                   <label for="name"><strong>계획 이름</strong></label>
                   <input
@@ -157,9 +160,7 @@
                   </button>
                 </div>
               </div>
-            </form>
           </div>
-        </aside>
       </div>
     </div>
   </div>
@@ -414,9 +415,6 @@ export default {
     },
     // 마커 삭제하기
     deleteMarker(lat, lng, data) {
-      console.log("planMarker test");
-      console.log(this.planMarkers);
-      console.log(this.markers);
       this.markers.forEach((marker) => {
         if (
           marker.getPosition().getLat().toFixed(13) === lat &&
@@ -441,7 +439,6 @@ export default {
               this.planMarkers[i].marker.getPosition().getLng().toFixed(13) ===
                 marker.getPosition().getLng().toFixed(13)
             ) {
-              console.log("pass!!");
               planFlag = true;
               break;
             }
@@ -480,7 +477,10 @@ export default {
 						<div class="ellipsis mb-1">${marker.address}</div>
 						<div class="mt-1">`;
 
-        content += `<a href="https://map.kakao.com/link/to/${marker.name},${marker.lat},${marker.lng}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
+            
+      content += `<a href="https://place.map.kakao.com/${marker.placeId}" target="_blank" class="me-2 mx-2" style="color: #3f72af;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>자세히보기</a>`;
+
+        content += `<a href="https://map.kakao.com/link/to/${marker.name},${marker.lat},${marker.lng}" target="_blank" class="me-2" style="color: #3f72af;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
 						</div>
 					</div>
 				</div>
@@ -504,8 +504,10 @@ export default {
 					<div class="desc">
 						<div class="ellipsis mb-1">${marker.address_name}</div>
 						<div class="mt-1">`;
+            
+      content += `<a href="${marker.place_url}" target="_blank" class="me-2 mx-2" style="color: #3f72af;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>자세히보기</a>`;
 
-        content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: black; text-decoration: none;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
+        content += `<a href="https://map.kakao.com/link/to/${marker.place_name},${marker.y},${marker.x}" target="_blank" class="me-2" style="color: #3f72af;"><i class="tourist-icon bi bi-sign-turn-right me-1"></i>길찾기</a>
 						</div>
 					</div>
 				</div>
@@ -728,12 +730,11 @@ export default {
   height: 20px;
 }
 
-.map-custom {
-  width: 800px;
-  height: 600px;
-}
-
 .plan-content {
   cursor: pointer;
+}
+
+.wrap {
+  z-index: 100000;
 }
 </style>

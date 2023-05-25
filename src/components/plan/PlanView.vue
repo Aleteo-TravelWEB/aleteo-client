@@ -104,8 +104,9 @@
                       }}</strong>
                     </div>
                     <p class="address">{{ place.address }}</p>
-                    <div class="lat" style="display: none">{{ place.lat }}</div>
-                    <div class="lng" style="display: none">{{ place.lng }}</div>
+                    <div>
+                      <a :href="`https://place.map.kakao.com/${place.placeId}`" class="atag" target="_blank">자세히보기</a>
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-4" style="width: 10em"></div>
@@ -130,8 +131,9 @@
                       }}</strong>
                     </div>
                     <p class="address">{{ place.address }}</p>
-                    <div class="lat" style="display: none">{{ place.lat }}</div>
-                    <div class="lng" style="display: none">{{ place.lng }}</div>
+                    <div>
+                      <a :href="`https://place.map.kakao.com/${place.placeId}`" class="atag" target="_blank">자세히보기</a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -638,7 +640,7 @@ export default {
 .modal {
   display: block;
   position: fixed;
-  z-index: 10;
+  z-index: 100000;
   left: 0;
   top: 0;
   width: 100%;
@@ -695,4 +697,15 @@ export default {
     transform: scale(0.95, 1.05);
   }
 }
+
+.atag {
+  color: #112d4e;
+  text-decoration: none;
+}
+
+.atag:hover {
+  color: black;
+}
+
+
 </style>

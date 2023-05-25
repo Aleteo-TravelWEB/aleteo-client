@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <the-header-navi-bar></the-header-navi-bar>
+    <the-header-navi-bar ></the-header-navi-bar>
     <the-footer-vue></the-footer-vue>
   </div>
 </template>

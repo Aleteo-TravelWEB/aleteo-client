@@ -87,7 +87,9 @@
                     ></b-icon>
                   </b-row>
                   <div class="text-center p-2 d-flex justify-content-center">
-                    <img :src="place.imageUrl" style="width: 100px; height: 100px" />
+                    <div>
+                      <img :src="place.imageUrl" style="width: 100px; height: 100px" />
+                    </div>
                     <div class="mx-2">
                       <div class="place-title">{{ place.name }}</div>
                       <div>{{ place.address }}</div>
@@ -422,7 +424,6 @@ export default {
 
           for (let i = 0; i < this.planMarkers.length; i++) {
             if (
-              this.planMarkers[i].marker.getTitle() === marker.getTitle() &&
               this.planMarkers[i].marker.getPosition().getLat().toFixed(13) ===
                 marker.getPosition().getLat().toFixed(13) &&
               this.planMarkers[i].marker.getPosition().getLng().toFixed(13) ===
