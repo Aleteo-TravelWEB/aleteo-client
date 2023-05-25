@@ -86,7 +86,7 @@
           <div class="d-flex justify-content-center mt-4 mb-3">
             <div style="width: 400px;">
               <label for="signin-pwdcheck" v-if="pwdCheck">비밀번호 확인</label><br>
-              <input
+              <b-form-input
                 type="password"
                 v-model="pwdCheck"
                 class="form-control"
@@ -96,6 +96,7 @@
                 @focus="addFocusStyle"
                 @blur="removeFocusStyle"
                 @keyup="confirmPwd"
+                :state="pwdCheckResult"
               />
             </div>
           </div>
@@ -182,6 +183,7 @@ export default {
       adminNumber: null, // 인증 번호
       isShowAdmin: false,
       adminResultDiv: false, // 이메일 인증이 성공시 결과 출력화면
+      pwdCheckResult: null,
     };
   },
   computed: {
@@ -235,10 +237,11 @@ export default {
       // console.log("userPwd : " + this.user.userPwd + ", pwdCheck: " + this.pwdCheck);
       if (this.user.userPwd === this.pwdCheck) {
         // 비밀번호랑 비밀번호 확인이 같다면
-        pwdResultDiv.setAttribute("class", "form-control");
+        pwdResultDiv.setAttribute("style", "");
         this.isJoinPwdPass = true;
+        this.pwdCheckResult = true;
       } else {
-        pwdResultDiv.setAttribute("class", "form-control fail-input");
+        pwdResultDiv.setAttribute("style", "transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; border: 1px solid #ced4da; border-color: rgb(204, 6, 6); box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);");
         this.isJoinPwdPass = false;
       }
     },
